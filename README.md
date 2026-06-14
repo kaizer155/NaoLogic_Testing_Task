@@ -18,6 +18,8 @@ The project prepares work-center availability, enriches work orders with manufac
 ## Project Structure
 
 ```text
+docs/
+  AI_PROMPT_DOCUMENTATION.md Extracted prompt history and reusable AI prompts
 src/
   reflow/
     availability-map.ts      Builds per-work-center available intervals
@@ -128,3 +130,8 @@ http://127.0.0.1:4177/schedule-visualization/
 - The visualisation is display-only.
 
 Future improvements are intentionally left small and visible so the next scheduling phase can evolve cleanly.
+
+## AI Prompt Documentation
+
+The prompt history and reusable AI instructions that shaped this project are documented in
+[`docs/AI_PROMPT_DOCUMENTATION.md`](docs/AI_PROMPT_DOCUMENTATION.md).
