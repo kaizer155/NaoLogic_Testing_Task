@@ -103,7 +103,10 @@ http://127.0.0.1:4177/schedule-visualization/
 5. Build a dependency DAG where edges point from predecessor to successor.
 6. Topologically sort the DAG. If there is a cycle, throw `DependencyCycleError`.
 7. Expand each manufacturing quantity into per-unit execution nodes.
-8. Schedule each execution at the earliest time allowed by:
+8. Schedule ready executions dynamically. Topological order is the stable fallback, but the
+   scheduler can prioritize a BFS dependency path when it safely unlocks work on an earlier
+   available work center.
+9. Place each execution at the earliest time allowed by:
    - its dependencies,
    - its work center's next free time,
    - its work order start/end window,
@@ -112,7 +115,7 @@ http://127.0.0.1:4177/schedule-visualization/
 ## Current Limitations
 
 - This is still a basic scheduler, not an optimizer.
-- It schedules greedily in topological order.
+- It schedules greedily from ready executions, with topological order as a fallback.
 - Maintenance work orders are not yet treated as fixed occupied intervals.
 - There is no automated test suite yet.
 - The visualisation is display-only.

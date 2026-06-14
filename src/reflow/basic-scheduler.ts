@@ -30,18 +30,31 @@ interface WorkOrderExecution {
 
 interface ExecutionGraph {
   executionsById: Map<string, WorkOrderExecution>;
+  edges: Map<string, string[]>;
+  incomingEdges: Map<string, string[]>;
   topologicalOrder: string[];
 }
 
+interface ScheduleExecutionContext {
+  availabilityByWorkCenter: Record<string, DateTimeInterval[]>;
+  horizon: DateTimeInterval;
+  scheduledWorkOrdersByExecutionId: Record<string, ScheduledWorkOrder>;
+  workCenterNextFreeAt: Map<string, DateTime>;
+}
+
+interface PrioritySelection {
+  executionId: string;
+  priorityPath: string[];
+}
+
 // This is intentionally a simple first-pass scheduler: it consumes the prepared DAG,
-// expands manufacturing quantity into per-unit executions, then places each execution
-// at the first available interval allowed by dependencies and work-center capacity.
+// expands manufacturing quantity into per-unit executions, then picks ready work with
+// a conservative work-center balancing heuristic before placing each execution.
 export function buildBasicSchedule(preparedState: PreparedScheduleState): BasicScheduleResult {
   const workOrderById = new Map(
     preparedState.enrichedWorkOrders.map((workOrder) => [workOrder.docId, workOrder]),
   );
   const executionGraph = buildExecutionGraph(preparedState, workOrderById);
-  const workCenterQueues = buildWorkCenterQueues(executionGraph);
   const availabilityByWorkCenter = flattenAvailability(preparedState);
   const horizon = validateHorizon(
     preparedState.config.horizonStartDate,
@@ -53,50 +66,17 @@ export function buildBasicSchedule(preparedState: PreparedScheduleState): BasicS
     horizon.start,
   );
   const scheduledWorkOrdersByExecutionId: Record<string, ScheduledWorkOrder> = {};
-
-  for (const executionId of executionGraph.topologicalOrder) {
-    const execution = getRequiredExecution(executionGraph.executionsById, executionId);
-    const dependencyReadyAt = getDependencyReadyAt(
-      execution,
-      scheduledWorkOrdersByExecutionId,
-      horizon.start,
-    );
-    const workCenterReadyAt =
-      workCenterNextFreeAt.get(execution.workOrder.data.workCenterId) ?? horizon.start;
-    const workOrderWindowStart = parseUtcDateTime(
-      execution.workOrder.data.startDate,
-      `${execution.workOrder.docId}.startDate`,
-    );
-    const workOrderWindowEnd = parseUtcDateTime(
-      execution.workOrder.data.endDate,
-      `${execution.workOrder.docId}.endDate`,
-    );
-    const earliestStart = maxDateTime(
-      maxDateTime(dependencyReadyAt, workCenterReadyAt),
-      workOrderWindowStart,
-    );
-    const scheduledWorkOrder = placeWorkOrder(
-      execution,
-      availabilityByWorkCenter[execution.workOrder.data.workCenterId] ?? [],
-      earliestStart,
-      workOrderWindowEnd,
-      horizon,
-    );
-
-    scheduledWorkOrdersByExecutionId[execution.executionId] = scheduledWorkOrder;
-    workCenterNextFreeAt.set(
-      execution.workOrder.data.workCenterId,
-      parseUtcDateTime(
-        scheduledWorkOrder.scheduledEndDate,
-        `${execution.executionId}.scheduledEndDate`,
-      ),
-    );
-  }
+  const scheduleOrder = scheduleExecutions(executionGraph, {
+    availabilityByWorkCenter,
+    horizon,
+    scheduledWorkOrdersByExecutionId,
+    workCenterNextFreeAt,
+  });
 
   return {
     preparedState,
-    workCenterQueues,
-    scheduledWorkOrders: executionGraph.topologicalOrder.map(
+    workCenterQueues: buildWorkCenterQueues(executionGraph, scheduleOrder),
+    scheduledWorkOrders: scheduleOrder.map(
       (executionId) => scheduledWorkOrdersByExecutionId[executionId] as ScheduledWorkOrder,
     ),
     scheduledWorkOrdersByExecutionId,
@@ -155,6 +135,8 @@ function buildExecutionGraph(
 
   return {
     executionsById,
+    edges,
+    incomingEdges,
     topologicalOrder: topologicalSortExecutions(
       executionsById,
       edges,
@@ -227,10 +209,357 @@ function compareExecutionIds(
   return leftRank - rightRank || left.unitNumber - right.unitNumber || leftId.localeCompare(rightId);
 }
 
-function buildWorkCenterQueues(executionGraph: ExecutionGraph): WorkCenterQueues {
+function scheduleExecutions(
+  executionGraph: ExecutionGraph,
+  context: ScheduleExecutionContext,
+): string[] {
+  const indegree = new Map(
+    [...executionGraph.executionsById.keys()].map((executionId) => [
+      executionId,
+      getRequiredArray(executionGraph.incomingEdges, executionId).length,
+    ]),
+  );
+  const originalOrderRank = new Map(
+    executionGraph.topologicalOrder.map((executionId, index) => [executionId, index]),
+  );
+  const ready = [...executionGraph.executionsById.keys()]
+    .filter((executionId) => (indegree.get(executionId) ?? 0) === 0)
+    .sort((left, right) => compareExecutionIdsByRank(left, right, originalOrderRank));
+  const scheduleOrder: string[] = [];
+  let priorityPath: string[] = [];
+
+  while (ready.length > 0) {
+    ready.sort((left, right) => compareExecutionIdsByRank(left, right, originalOrderRank));
+
+    const selection = selectNextExecution(
+      ready,
+      priorityPath,
+      executionGraph,
+      context,
+      originalOrderRank,
+    );
+    priorityPath = selection.priorityPath;
+    const readyIndex = ready.indexOf(selection.executionId);
+
+    if (readyIndex === -1) {
+      throw new SchedulingError(`Selected execution ${selection.executionId} is not ready.`);
+    }
+
+    ready.splice(readyIndex, 1);
+
+    const scheduledWorkOrder = scheduleExecution(
+      getRequiredExecution(executionGraph.executionsById, selection.executionId),
+      context,
+    );
+    context.scheduledWorkOrdersByExecutionId[selection.executionId] = scheduledWorkOrder;
+    context.workCenterNextFreeAt.set(
+      scheduledWorkOrder.workCenterId,
+      parseUtcDateTime(
+        scheduledWorkOrder.scheduledEndDate,
+        `${selection.executionId}.scheduledEndDate`,
+      ),
+    );
+    scheduleOrder.push(selection.executionId);
+
+    for (const dependentId of getRequiredArray(executionGraph.edges, selection.executionId)) {
+      const nextIndegree = (indegree.get(dependentId) ?? 0) - 1;
+      indegree.set(dependentId, nextIndegree);
+
+      if (nextIndegree === 0) {
+        ready.push(dependentId);
+      }
+    }
+  }
+
+  if (scheduleOrder.length !== executionGraph.executionsById.size) {
+    throw new SchedulingError("Expanded execution graph contains unscheduled executions.");
+  }
+
+  return scheduleOrder;
+}
+
+function selectNextExecution(
+  ready: string[],
+  priorityPath: string[],
+  executionGraph: ExecutionGraph,
+  context: ScheduleExecutionContext,
+  originalOrderRank: Map<string, number>,
+): PrioritySelection {
+  const readySet = new Set(ready);
+  const nextPriorityExecutionId = priorityPath.find((executionId) => readySet.has(executionId));
+
+  // Once a safe BFS path is selected, keep following it while its next nodes are ready.
+  if (nextPriorityExecutionId !== undefined) {
+    return {
+      executionId: nextPriorityExecutionId,
+      priorityPath: priorityPath.slice(priorityPath.indexOf(nextPriorityExecutionId) + 1),
+    };
+  }
+
+  // If a ready execution can use the earliest free work center immediately, take it
+  // before walking deeper through the graph.
+  const directlyAvailable = ready
+    .filter((executionId) =>
+      isWorkCenterAtEarliestReadyTime(
+        getRequiredExecution(executionGraph.executionsById, executionId).workOrder.data
+          .workCenterId,
+        context.workCenterNextFreeAt,
+      ),
+    )
+    .sort((left, right) => compareExecutionIdsByRank(left, right, originalOrderRank));
+
+  if (directlyAvailable[0] !== undefined) {
+    return { executionId: directlyAvailable[0], priorityPath: [] };
+  }
+
+  const candidates = ready
+    .map((executionId) =>
+      findWorkCenterBalancingPath(executionId, executionGraph, context, originalOrderRank),
+    )
+    .filter((candidate): candidate is { path: string[]; durationMinutes: number } => candidate !== null)
+    .sort(
+      (left, right) =>
+        left.path.length - right.path.length ||
+        left.durationMinutes - right.durationMinutes ||
+        compareExecutionIdsByRank(left.path[0] as string, right.path[0] as string, originalOrderRank),
+    );
+
+  const candidate = candidates[0];
+
+  if (candidate !== undefined) {
+    return {
+      executionId: candidate.path[0] as string,
+      priorityPath: candidate.path.slice(1),
+    };
+  }
+
+  return { executionId: ready[0] as string, priorityPath: [] };
+}
+
+function findWorkCenterBalancingPath(
+  startExecutionId: string,
+  executionGraph: ExecutionGraph,
+  context: ScheduleExecutionContext,
+  originalOrderRank: Map<string, number>,
+): { path: string[]; durationMinutes: number } | null {
+  const startExecution = getRequiredExecution(executionGraph.executionsById, startExecutionId);
+  const targetWorkCenterIds = getEarlierReadyWorkCenterIds(
+    startExecution.workOrder.data.workCenterId,
+    context.workCenterNextFreeAt,
+  );
+
+  if (targetWorkCenterIds.size === 0) {
+    return null;
+  }
+
+  // BFS finds the closest descendant that would move work onto a work center that
+  // is ready earlier than the candidate's current work center.
+  const queue: string[][] = [[startExecutionId]];
+  const visited = new Set([startExecutionId]);
+
+  while (queue.length > 0) {
+    const path = queue.shift() as string[];
+    const currentExecutionId = path.at(-1) as string;
+    const currentExecution = getRequiredExecution(
+      executionGraph.executionsById,
+      currentExecutionId,
+    );
+    const isTarget =
+      currentExecutionId !== startExecutionId &&
+      targetWorkCenterIds.has(currentExecution.workOrder.data.workCenterId);
+
+    if (isTarget && canSchedulePathBeforeDeadlines(path, executionGraph, context)) {
+      return {
+        path,
+        durationMinutes: path.reduce(
+          (total, executionId) =>
+            total + getRequiredExecution(executionGraph.executionsById, executionId).workOrder.data.durationMinutes,
+          0,
+        ),
+      };
+    }
+
+    const dependents = [...getRequiredArray(executionGraph.edges, currentExecutionId)].sort(
+      (left, right) => compareExecutionIdsByRank(left, right, originalOrderRank),
+    );
+
+    for (const dependentId of dependents) {
+      if (visited.has(dependentId)) {
+        continue;
+      }
+
+      const nextPath = [...path, dependentId];
+
+      if (!dependenciesAreReachableByPath(dependentId, nextPath, executionGraph, context)) {
+        continue;
+      }
+
+      visited.add(dependentId);
+      queue.push(nextPath);
+    }
+  }
+
+  return null;
+}
+
+function dependenciesAreReachableByPath(
+  executionId: string,
+  path: string[],
+  executionGraph: ExecutionGraph,
+  context: ScheduleExecutionContext,
+): boolean {
+  const pathSet = new Set(path);
+  const scheduledSet = new Set(Object.keys(context.scheduledWorkOrdersByExecutionId));
+
+  return getRequiredArray(executionGraph.incomingEdges, executionId).every(
+    (dependencyId) => scheduledSet.has(dependencyId) || pathSet.has(dependencyId),
+  );
+}
+
+function canSchedulePathBeforeDeadlines(
+  path: string[],
+  executionGraph: ExecutionGraph,
+  context: ScheduleExecutionContext,
+): boolean {
+  const scheduledWorkOrdersByExecutionId = { ...context.scheduledWorkOrdersByExecutionId };
+  const workCenterNextFreeAt = new Map(context.workCenterNextFreeAt);
+  const simulationContext: ScheduleExecutionContext = {
+    availabilityByWorkCenter: context.availabilityByWorkCenter,
+    horizon: context.horizon,
+    scheduledWorkOrdersByExecutionId,
+    workCenterNextFreeAt,
+  };
+
+  try {
+    for (const executionId of path) {
+      const execution = getRequiredExecution(executionGraph.executionsById, executionId);
+
+      if (
+        !execution.dependsOnExecutionIds.every(
+          (dependencyId) => scheduledWorkOrdersByExecutionId[dependencyId] !== undefined,
+        )
+      ) {
+        return false;
+      }
+
+      const scheduledWorkOrder = scheduleExecution(execution, simulationContext);
+      const manufacturingDueDate = parseUtcDateTime(
+        execution.workOrder.data.manufacturingOrder.dueDate,
+        `${execution.workOrder.data.manufacturingOrder.docId}.dueDate`,
+      );
+      const scheduledEndDate = parseUtcDateTime(
+        scheduledWorkOrder.scheduledEndDate,
+        `${executionId}.scheduledEndDate`,
+      );
+
+      if (scheduledEndDate.toMillis() > manufacturingDueDate.toMillis()) {
+        return false;
+      }
+
+      scheduledWorkOrdersByExecutionId[executionId] = scheduledWorkOrder;
+      workCenterNextFreeAt.set(execution.workOrder.data.workCenterId, scheduledEndDate);
+    }
+  } catch (error) {
+    if (error instanceof SchedulingError) {
+      return false;
+    }
+
+    throw error;
+  }
+
+  return true;
+}
+
+function scheduleExecution(
+  execution: WorkOrderExecution,
+  context: ScheduleExecutionContext,
+): ScheduledWorkOrder {
+  const dependencyReadyAt = getDependencyReadyAt(
+    execution,
+    context.scheduledWorkOrdersByExecutionId,
+    context.horizon.start,
+  );
+  const workCenterReadyAt =
+    context.workCenterNextFreeAt.get(execution.workOrder.data.workCenterId) ??
+    context.horizon.start;
+  const workOrderWindowStart = parseUtcDateTime(
+    execution.workOrder.data.startDate,
+    `${execution.workOrder.docId}.startDate`,
+  );
+  const workOrderWindowEnd = parseUtcDateTime(
+    execution.workOrder.data.endDate,
+    `${execution.workOrder.docId}.endDate`,
+  );
+  const earliestStart = maxDateTime(
+    maxDateTime(dependencyReadyAt, workCenterReadyAt),
+    workOrderWindowStart,
+  );
+
+  return placeWorkOrder(
+    execution,
+    context.availabilityByWorkCenter[execution.workOrder.data.workCenterId] ?? [],
+    earliestStart,
+    workOrderWindowEnd,
+    context.horizon,
+  );
+}
+
+function isWorkCenterAtEarliestReadyTime(
+  workCenterId: string,
+  workCenterNextFreeAt: Map<string, DateTime>,
+): boolean {
+  const workCenterReadyAt = workCenterNextFreeAt.get(workCenterId);
+
+  if (workCenterReadyAt === undefined) {
+    return false;
+  }
+
+  return workCenterReadyAt.toMillis() === getEarliestWorkCenterReadyAt(workCenterNextFreeAt);
+}
+
+function getEarlierReadyWorkCenterIds(
+  workCenterId: string,
+  workCenterNextFreeAt: Map<string, DateTime>,
+): Set<string> {
+  const workCenterReadyAt = workCenterNextFreeAt.get(workCenterId);
+
+  if (workCenterReadyAt === undefined) {
+    return new Set();
+  }
+
+  return new Set(
+    [...workCenterNextFreeAt.entries()]
+      .filter(([candidateWorkCenterId, readyAt]) =>
+        candidateWorkCenterId !== workCenterId &&
+        readyAt.toMillis() < workCenterReadyAt.toMillis()
+      )
+      .map(([candidateWorkCenterId]) => candidateWorkCenterId),
+  );
+}
+
+function getEarliestWorkCenterReadyAt(workCenterNextFreeAt: Map<string, DateTime>): number {
+  return Math.min(...[...workCenterNextFreeAt.values()].map((readyAt) => readyAt.toMillis()));
+}
+
+function compareExecutionIdsByRank(
+  leftId: string,
+  rightId: string,
+  originalOrderRank: Map<string, number>,
+): number {
+  return (
+    (originalOrderRank.get(leftId) ?? Number.MAX_SAFE_INTEGER) -
+      (originalOrderRank.get(rightId) ?? Number.MAX_SAFE_INTEGER) ||
+    leftId.localeCompare(rightId)
+  );
+}
+
+function buildWorkCenterQueues(
+  executionGraph: ExecutionGraph,
+  scheduleOrder: string[],
+): WorkCenterQueues {
   const queues: WorkCenterQueues = {};
 
-  for (const executionId of executionGraph.topologicalOrder) {
+  for (const executionId of scheduleOrder) {
     const execution = getRequiredExecution(executionGraph.executionsById, executionId);
     const workCenterId = execution.workOrder.data.workCenterId;
 
