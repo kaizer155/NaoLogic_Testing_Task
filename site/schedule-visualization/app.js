@@ -581,7 +581,6 @@ function splitSegmentsByWorkingMinutes(segments, baseWorkingMinutes) {
 
 function renderWorkSegment(scheduledWorkOrder, segment, options) {
   const workOrder = workOrderById.get(scheduledWorkOrder.workOrderId);
-  const canDelay = options.clickable && !isMaintenanceExecution(scheduledWorkOrder);
   const color =
     options.segmentKind === "delay"
       ? "delay-extension"
@@ -614,7 +613,7 @@ function renderWorkSegment(scheduledWorkOrder, segment, options) {
       aria-describedby="schedule-card-tooltip"
       aria-label="${escapeHtml(title)}"
       data-tooltip-id="${escapeHtml(tooltipId)}"
-      ${canDelay ? `data-delay-source="true" data-execution-id="${escapeHtml(scheduledWorkOrder.executionId)}"` : ""}
+      ${options.clickable ? `data-delay-source="true" data-execution-id="${escapeHtml(scheduledWorkOrder.executionId)}"` : ""}
     >
       <div class="bar-content">
         <strong>${escapeHtml(title)}</strong>
@@ -670,7 +669,7 @@ function renderWorkTooltip(scheduledWorkOrder, segment, workOrder, options) {
       ${renderTooltipItem("Manufacturing Order", `${scheduledWorkOrder.manufacturingOrderNumber} (${scheduledWorkOrder.manufacturingOrderId})`)}
       ${renderTooltipItem("Item", manufacturingOrder?.data.itemId ?? "Unknown")}
       ${renderTooltipItem("Work Center", `${workCenter?.data.name ?? scheduledWorkOrder.workCenterId} (${scheduledWorkOrder.workCenterId})`)}
-      ${renderTooltipItem("Maintenance Work Order", isMaintenanceExecution(scheduledWorkOrder) ? "Yes, fixed during reflow" : "No")}
+      ${renderTooltipItem("Maintenance Work Order", isMaintenanceExecution(scheduledWorkOrder) ? "Yes, dependency node" : "No")}
       ${renderTooltipItem("Unit", `${scheduledWorkOrder.unitNumber}/${scheduledWorkOrder.totalQuantity}`)}
       ${renderTooltipItem("Remaining Quantity", scheduledWorkOrder.remainingQuantityAfterExecution)}
       ${renderTooltipItem(segmentLabel, `${formatTimeRange(segment.startDate, segment.endDate)} (${segment.workingMinutes} min)`)}
@@ -1054,20 +1053,6 @@ function buildDelaySimulation(executionId) {
     };
   }
 
-  if (isMaintenanceExecution(selectedExecution)) {
-    return {
-      executionId,
-      workOrderNumber: selectedExecution.workOrderNumber,
-      originalDurationMinutes: selectedExecution.durationMinutes,
-      report: null,
-      scheduledWorkOrders: [],
-      scheduledLookup: new Map(),
-      error: {
-        message: `Maintenance execution ${executionId} is fixed and cannot be delayed or rescheduled.`,
-      },
-    };
-  }
-
   try {
     const scheduledWorkOrders = calculateDelayedSchedule(executionId);
     const report = buildReflowReport({
@@ -1293,11 +1278,6 @@ function calculateDelayedSchedule(executionId) {
         ? rescheduleDelayedSource(original, {
             availableByWorkCenter,
             extraDurationMinutes: CLICK_DELAY_MINUTES,
-            fixedBlockedIntervals: getFixedBlockedIntervals(
-              original.workCenterId,
-              occupancyByWorkCenter,
-              resultByExecutionId,
-            ),
           })
         : rescheduleAffectedExecution(original, {
             availableByWorkCenter,
@@ -1335,12 +1315,6 @@ function calculateDelayedSchedule(executionId) {
       if (
         dependencyReadyAt > new Date(dependent.scheduledStartDate)
       ) {
-        if (isMaintenanceExecution(dependent)) {
-          throw new Error(
-            `Maintenance execution ${dependent.executionId} is fixed and cannot move after dependency ${scheduled.workOrderNumber} was delayed.`,
-          );
-        }
-
         enqueueAffectedExecution(dependentExecutionId, {
           queue,
           queuedExecutionIds,
@@ -1374,12 +1348,6 @@ function enqueueAffectedExecution(
 
   if (scheduledWorkOrder === undefined) {
     return;
-  }
-
-  if (isMaintenanceExecution(scheduledWorkOrder)) {
-    throw new Error(
-      `Maintenance execution ${executionId} is fixed and cannot be rescheduled by the delay preview.`,
-    );
   }
 
   // Remove the affected execution from its old place immediately. The reflow
@@ -1466,16 +1434,6 @@ function removeOccupancy(executionId, occupancyByWorkCenter) {
   }
 }
 
-function getFixedBlockedIntervals(workCenterId, occupancyByWorkCenter, resultByExecutionId) {
-  return (occupancyByWorkCenter.get(workCenterId) ?? [])
-    .filter((interval) => {
-      const scheduledWorkOrder = resultByExecutionId.get(interval.executionId);
-
-      return scheduledWorkOrder !== undefined && isMaintenanceExecution(scheduledWorkOrder);
-    })
-    .map((interval) => ({ ...interval }));
-}
-
 function isMaintenanceExecution(scheduledWorkOrder) {
   return workOrderById.get(scheduledWorkOrder.workOrderId)?.data.isMaintenance === true;
 }
@@ -1503,16 +1461,10 @@ function findNextBlockingExecutionId({
   earliestStart,
   latestEnd,
   occupancyByWorkCenter,
-  resultByExecutionId,
 }) {
   const blocker = (occupancyByWorkCenter.get(workCenterId) ?? [])
     .filter((interval) => new Date(interval.endDate) > earliestStart)
     .filter((interval) => new Date(interval.startDate) < latestEnd)
-    .filter((interval) => {
-      const scheduledWorkOrder = resultByExecutionId.get(interval.executionId);
-
-      return scheduledWorkOrder === undefined || !isMaintenanceExecution(scheduledWorkOrder);
-    })
     .sort(
       (left, right) =>
         compareIntervals(left, right) ||
@@ -1533,7 +1485,7 @@ function getDependentExecutionIds(scheduledWorkOrder) {
 function rescheduleDelayedSource(original, context) {
   return placeExecution(original, {
     availableByWorkCenter: context.availableByWorkCenter,
-    blockedIntervals: context.fixedBlockedIntervals,
+    blockedIntervals: [],
     earliestStart: maxDate(
       new Date(original.scheduledStartDate),
       new Date(original.originalStartDate),
@@ -1568,7 +1520,6 @@ function rescheduleAffectedExecution(original, context) {
         earliestStart,
         latestEnd: new Date(original.originalEndDate),
         occupancyByWorkCenter: context.occupancyByWorkCenter,
-        resultByExecutionId: context.resultByExecutionId,
       });
 
       if (blockerExecutionId === null) {

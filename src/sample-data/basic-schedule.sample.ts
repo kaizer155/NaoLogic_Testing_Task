@@ -589,7 +589,7 @@ export const basicScheduleScenarioNotes = [
   "Twelve manufacturing orders cover chains, branches, joins, and single-node DAGs.",
   "Manufacturing quantities range from 1 to 5, expanding the graph into more than one hundred execution nodes.",
   "Work order start and end dates are wide placement windows with varied starts, deadlines, and durations.",
-  "Maintenance-type work orders are dependency nodes in the initial schedule and fixed executions during delay reflow.",
+  "Maintenance-type work orders are regular dependency nodes marked with isMaintenance: true, not fixed blocked intervals.",
   "Several work centers share downstream cutting and packaging pressure, which exercises the balancing heuristic.",
   "Maintenance windows split availability independently from maintenance-type work orders.",
   "Downstream work orders wait for their dependency finish times even across work centers.",
