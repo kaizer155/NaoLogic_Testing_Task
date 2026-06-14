@@ -37,11 +37,21 @@
         <div class="section-heading">
           <div>
             <h2 id="chart-title">Scheduled Distribution</h2>
-            <p>Bars show generated execution instances. Hatched blocks are maintenance windows.</p>
+            <p>Bars show generated execution instances. Click a work order to add a 20 minute delay.</p>
           </div>
           <div id="legend" class="legend" aria-label="Legend"></div>
         </div>
         <div id="schedule-chart" class="timeline-frame" aria-label="Schedule timeline"></div>
+      </section>
+
+      <section id="reflow-section" class="chart-section reflow-section" aria-labelledby="reflow-title" hidden>
+        <div class="section-heading">
+          <div>
+            <h2 id="reflow-title">Reflow After Delay</h2>
+            <p id="reflow-summary"></p>
+          </div>
+        </div>
+        <div id="reflow-chart" class="timeline-frame" aria-label="Reflowed schedule timeline"></div>
       </section>
 
       <section class="details">

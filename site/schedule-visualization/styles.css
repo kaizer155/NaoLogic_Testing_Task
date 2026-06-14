@@ -10,6 +10,8 @@
   --blue-soft: #dbeafe;
   --yellow: #b38600;
   --yellow-soft: #fff2bf;
+  --delay: #7c3aed;
+  --delay-soft: #ede9fe;
   --maintenance: #546179;
   --closed: #b91c1c;
   --closed-soft: #fee2e2;
@@ -234,6 +236,10 @@ h3 {
   overflow: hidden;
 }
 
+.reflow-section {
+  margin-top: 16px;
+}
+
 .section-heading {
   align-items: flex-start;
   margin-bottom: 14px;
@@ -279,6 +285,11 @@ h3 {
 .swatch.yellow {
   background: var(--yellow-soft);
   color: var(--yellow);
+}
+
+.swatch.delay {
+  background: var(--delay-soft);
+  color: var(--delay);
 }
 
 .swatch.closed {
@@ -399,6 +410,10 @@ h3 {
   box-shadow: 0 5px 12px rgb(23 32 51 / 0.08);
 }
 
+.bar[data-delay-source] {
+  cursor: pointer;
+}
+
 .bar:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 2px;
@@ -449,6 +464,17 @@ h3 {
 .bar.yellow {
   background: var(--yellow-soft);
   color: var(--yellow);
+}
+
+.bar.delay-extension {
+  background: var(--delay-soft);
+  color: var(--delay);
+}
+
+.bar.selected-source {
+  box-shadow:
+    0 0 0 3px rgb(124 58 237 / 0.22),
+    0 5px 12px rgb(23 32 51 / 0.08);
 }
 
 .bar.maintenance {

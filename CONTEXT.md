@@ -28,6 +28,14 @@ _Avoid_: Parent-child when direction is unclear
 An invalid set of dependencies where work orders form a loop and no work order in that loop can be scheduled first.
 _Avoid_: Circular chain
 
+**Delay**:
+A disruption where a scheduled work order execution requires extra working time beyond its planned duration, which can push later dependent work.
+_Avoid_: Maintenance window, closed time
+
+**Reflowed Schedule**:
+A regenerated schedule produced after a disruption is applied to the baseline schedule while still respecting dependencies, work-center availability, and work-center conflicts.
+_Avoid_: Original schedule, source data
+
 **Available Interval**:
 A continuous period when a work center can perform work, after applying its shift schedule and blocked maintenance time.
 _Avoid_: Slot, free time when boundaries are unclear

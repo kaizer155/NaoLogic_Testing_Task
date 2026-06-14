@@ -1,5 +1,6 @@
 const PIXELS_PER_HOUR = 28;
 const LANE_LABEL_WIDTH = 190;
+const CLICK_DELAY_MINUTES = 20;
 const WORK_ORDER_COLORS = {
   "mo-green-pipe": "green",
   "mo-blue-pipe": "blue",
@@ -15,10 +16,12 @@ let manufacturingOrderColorById = new Map();
 let workOrderById = new Map();
 let scheduledWorkOrderByWorkOrderAndUnit = new Map();
 let chartBounds = null;
+let activeDelaySimulation = null;
 
 const tooltipById = new Map();
 
 installScheduleTooltips();
+installDelayInteractions();
 await initializeApp();
 
 async function initializeApp() {
@@ -41,6 +44,7 @@ async function loadScenario(scenarioId) {
 
   data = await fetchJson(scenarioSummary.dataPath);
   rebuildScenarioState();
+  activeDelaySimulation = null;
   renderPage();
   updateScenarioUrl(data.scenario.id);
 }
@@ -86,7 +90,9 @@ function renderPage() {
   renderHorizon();
   renderSummary();
   renderLegend();
+  tooltipById.clear();
   renderChart();
+  renderReflowSection();
   renderTopologicalOrder();
   renderQueues();
   renderSourceTables();
@@ -199,6 +205,7 @@ function renderLegend() {
     <span><i class="swatch green"></i>Product color A</span>
     <span><i class="swatch blue"></i>Product color B</span>
     <span><i class="swatch yellow"></i>Product color C</span>
+    <span><i class="swatch delay"></i>20 min delay</span>
     <span><i class="swatch closed"></i>Closed</span>
     <span><i class="swatch maintenance"></i>Maintenance</span>
   `;
@@ -216,15 +223,57 @@ function renderChart() {
     return;
   }
 
+  renderScheduleChart(document.querySelector("#schedule-chart"), data.scheduledWorkOrders, {
+    clickable: true,
+    isReflow: false,
+    scheduledLookup: scheduledWorkOrderByWorkOrderAndUnit,
+  });
+}
+
+function renderReflowSection() {
+  const section = document.querySelector("#reflow-section");
+  const chart = document.querySelector("#reflow-chart");
+  const summary = document.querySelector("#reflow-summary");
+
+  if (activeDelaySimulation === null || data.status !== "scheduled") {
+    section.hidden = true;
+    chart.innerHTML = "";
+    summary.textContent = "";
+    return;
+  }
+
+  section.hidden = false;
+  summary.textContent =
+    `${activeDelaySimulation.workOrderNumber} ${activeDelaySimulation.executionId} was extended by ${CLICK_DELAY_MINUTES} working minutes. Later executions were placed linearly after their dependencies and work-center availability.`;
+
+  if (activeDelaySimulation.error !== null) {
+    chart.innerHTML = `
+      <div class="empty-chart">
+        <strong>Reflow failed.</strong>
+        <span>${escapeHtml(activeDelaySimulation.error.message)}</span>
+      </div>
+    `;
+    return;
+  }
+
+  renderScheduleChart(chart, activeDelaySimulation.scheduledWorkOrders, {
+    clickable: false,
+    isReflow: true,
+    selectedExecutionId: activeDelaySimulation.executionId,
+    selectedOriginalDurationMinutes: activeDelaySimulation.originalDurationMinutes,
+    scheduledLookup: activeDelaySimulation.scheduledLookup,
+  });
+}
+
+function renderScheduleChart(container, scheduledWorkOrders, options) {
   const timelineHours = hoursBetween(chartBounds.start, chartBounds.end);
   const timelineWidth = Math.ceil(timelineHours * PIXELS_PER_HOUR);
   const ticks = buildTicks(chartBounds.start, chartBounds.end);
-  tooltipById.clear();
   const rows = data.workCenters
-    .map((workCenter) => renderWorkCenterLane(workCenter, timelineWidth))
+    .map((workCenter) => renderWorkCenterLane(workCenter, timelineWidth, scheduledWorkOrders, options))
     .join("");
 
-  document.querySelector("#schedule-chart").innerHTML = `
+  container.innerHTML = `
     <div class="timeline-content" style="width: ${LANE_LABEL_WIDTH + timelineWidth}px">
       <div class="timeline-header">
         <div class="lane-label"></div>
@@ -245,14 +294,16 @@ function renderChart() {
   `;
 }
 
-function renderWorkCenterLane(workCenter, timelineWidth) {
+function renderWorkCenterLane(workCenter, timelineWidth, scheduledWorkOrders, options) {
   // Closed bands are computed from the shift schedule and painted behind work bars.
   // Maintenance is separate: it is a blocked interval inside otherwise operating time.
   const closedBars = getClosedIntervals(workCenter).map(renderClosedWindow).join("");
-  const scheduledBars = data.scheduledWorkOrders
+  const scheduledBars = scheduledWorkOrders
     .filter((workOrder) => workOrder.workCenterId === workCenter.docId)
     .flatMap((workOrder) =>
-      workOrder.segments.map((segment) => renderWorkSegment(workOrder, segment)),
+      getDisplaySegments(workOrder, options).map(({ segment, segmentKind }) =>
+        renderWorkSegment(workOrder, segment, { ...options, segmentKind }),
+      ),
     )
     .join("");
   const maintenanceBars = workCenter.data.maintenanceWindows
@@ -286,22 +337,90 @@ function renderClosedWindow(interval) {
   `;
 }
 
-function renderWorkSegment(scheduledWorkOrder, segment) {
+function getDisplaySegments(scheduledWorkOrder, options) {
+  if (!options.isReflow || scheduledWorkOrder.executionId !== options.selectedExecutionId) {
+    return scheduledWorkOrder.segments.map((segment) => ({
+      segment,
+      segmentKind: "normal",
+    }));
+  }
+
+  return splitSegmentsByWorkingMinutes(
+    scheduledWorkOrder.segments,
+    options.selectedOriginalDurationMinutes,
+  );
+}
+
+function splitSegmentsByWorkingMinutes(segments, baseWorkingMinutes) {
+  const result = [];
+  let remainingBaseMinutes = baseWorkingMinutes;
+
+  for (const segment of segments) {
+    if (remainingBaseMinutes <= 0) {
+      result.push({ segment, segmentKind: "delay" });
+      continue;
+    }
+
+    if (segment.workingMinutes <= remainingBaseMinutes) {
+      result.push({ segment, segmentKind: "normal" });
+      remainingBaseMinutes -= segment.workingMinutes;
+      continue;
+    }
+
+    const normalSegment = {
+      ...segment,
+      endDate: addMinutesIso(segment.startDate, remainingBaseMinutes),
+      workingMinutes: remainingBaseMinutes,
+    };
+    const delaySegment = {
+      ...segment,
+      startDate: normalSegment.endDate,
+      workingMinutes: segment.workingMinutes - remainingBaseMinutes,
+    };
+
+    result.push({ segment: normalSegment, segmentKind: "normal" });
+    result.push({ segment: delaySegment, segmentKind: "delay" });
+    remainingBaseMinutes = 0;
+  }
+
+  return result;
+}
+
+function renderWorkSegment(scheduledWorkOrder, segment, options) {
   const workOrder = workOrderById.get(scheduledWorkOrder.workOrderId);
-  const color = getManufacturingOrderColor(scheduledWorkOrder.manufacturingOrderId);
+  const color =
+    options.segmentKind === "delay"
+      ? "delay-extension"
+      : getManufacturingOrderColor(scheduledWorkOrder.manufacturingOrderId);
   const position = positionInterval(segment.startDate, segment.endDate);
-  const title = `${scheduledWorkOrder.workOrderNumber} #${scheduledWorkOrder.unitNumber}`;
-  const tooltipId = toTooltipId("work", scheduledWorkOrder.executionId, segment.startDate);
-  tooltipById.set(tooltipId, renderWorkTooltip(scheduledWorkOrder, segment, workOrder));
+  const isSelectedSource =
+    options.clickable && activeDelaySimulation?.executionId === scheduledWorkOrder.executionId;
+  const title =
+    options.segmentKind === "delay"
+      ? `${scheduledWorkOrder.workOrderNumber} #${scheduledWorkOrder.unitNumber} +20`
+      : `${scheduledWorkOrder.workOrderNumber} #${scheduledWorkOrder.unitNumber}`;
+  const tooltipId = toTooltipId(
+    options.isReflow ? "reflow-work" : "work",
+    scheduledWorkOrder.executionId,
+    segment.startDate,
+  );
+  tooltipById.set(
+    tooltipId,
+    renderWorkTooltip(scheduledWorkOrder, segment, workOrder, {
+      segmentKind: options.segmentKind,
+      scheduledLookup: options.scheduledLookup,
+    }),
+  );
 
   return `
     <div
-      class="bar ${color}"
+      class="bar ${color} ${isSelectedSource ? "selected-source" : ""}"
       style="left: ${position.left}px; width: ${position.width}px"
       tabindex="0"
       aria-describedby="schedule-card-tooltip"
       aria-label="${escapeHtml(title)}"
       data-tooltip-id="${escapeHtml(tooltipId)}"
+      ${options.clickable ? `data-delay-source="true" data-execution-id="${escapeHtml(scheduledWorkOrder.executionId)}"` : ""}
     >
       <div class="bar-content">
         <strong>${escapeHtml(title)}</strong>
@@ -335,17 +454,18 @@ function renderMaintenanceWindow(workCenter, window) {
   `;
 }
 
-function renderWorkTooltip(scheduledWorkOrder, segment, workOrder) {
+function renderWorkTooltip(scheduledWorkOrder, segment, workOrder, options) {
   const manufacturingOrder = manufacturingOrderById.get(scheduledWorkOrder.manufacturingOrderId);
   const workCenter = workCenterById.get(scheduledWorkOrder.workCenterId);
   const workOrderStartDate = workOrder?.data.startDate ?? scheduledWorkOrder.originalStartDate;
   const workOrderEndDate = workOrder?.data.endDate ?? scheduledWorkOrder.originalEndDate;
   const dependsOnRows = scheduledWorkOrder.dependsOnWorkOrderIds.map((dependencyId) =>
-    getDependencyRow(dependencyId, scheduledWorkOrder),
+    getDependencyRow(dependencyId, scheduledWorkOrder, options.scheduledLookup),
   );
   const dependentRows = getDependentWorkOrders(scheduledWorkOrder.workOrderId).map((dependentWorkOrder) =>
-    getDependentRow(scheduledWorkOrder, dependentWorkOrder),
+    getDependentRow(scheduledWorkOrder, dependentWorkOrder, options.scheduledLookup),
   );
+  const segmentLabel = options.segmentKind === "delay" ? "Delay Extension" : "Segment";
 
   return `
     <div class="tooltip-header">
@@ -358,7 +478,7 @@ function renderWorkTooltip(scheduledWorkOrder, segment, workOrder) {
       ${renderTooltipItem("Work Center", `${workCenter?.data.name ?? scheduledWorkOrder.workCenterId} (${scheduledWorkOrder.workCenterId})`)}
       ${renderTooltipItem("Unit", `${scheduledWorkOrder.unitNumber}/${scheduledWorkOrder.totalQuantity}`)}
       ${renderTooltipItem("Remaining Quantity", scheduledWorkOrder.remainingQuantityAfterExecution)}
-      ${renderTooltipItem("Segment", `${formatTimeRange(segment.startDate, segment.endDate)} (${segment.workingMinutes} min)`)}
+      ${renderTooltipItem(segmentLabel, `${formatTimeRange(segment.startDate, segment.endDate)} (${segment.workingMinutes} min)`)}
       ${renderTooltipItem("Scheduled Execution", `${formatDateTime(scheduledWorkOrder.scheduledStartDate)}-${formatDateTime(scheduledWorkOrder.scheduledEndDate)}`)}
       ${renderTooltipItem("Work Order Start", formatDateTime(workOrderStartDate))}
       ${renderTooltipItem("Work Order End", formatDateTime(workOrderEndDate))}
@@ -415,8 +535,12 @@ function renderDependencyList(title, rows, emptyText) {
   `;
 }
 
-function getDependencyRow(dependencyId, scheduledWorkOrder) {
-  const dependencyExecution = getScheduledExecution(dependencyId, scheduledWorkOrder.unitNumber);
+function getDependencyRow(dependencyId, scheduledWorkOrder, scheduledLookup) {
+  const dependencyExecution = getScheduledExecution(
+    dependencyId,
+    scheduledWorkOrder.unitNumber,
+    scheduledLookup,
+  );
   const dependencyLabel = formatWorkOrderReference(dependencyId);
 
   return {
@@ -427,8 +551,12 @@ function getDependencyRow(dependencyId, scheduledWorkOrder) {
   };
 }
 
-function getDependentRow(scheduledWorkOrder, dependentWorkOrder) {
-  const dependentExecution = getScheduledExecution(dependentWorkOrder.docId, scheduledWorkOrder.unitNumber);
+function getDependentRow(scheduledWorkOrder, dependentWorkOrder, scheduledLookup) {
+  const dependentExecution = getScheduledExecution(
+    dependentWorkOrder.docId,
+    scheduledWorkOrder.unitNumber,
+    scheduledLookup,
+  );
   const dependentLabel = formatWorkOrderReference(dependentWorkOrder.docId);
 
   return {
@@ -443,8 +571,8 @@ function getDependentWorkOrders(workOrderId) {
   return data.workOrders.filter((candidate) => candidate.data.dependsOnWorkOrderIds.includes(workOrderId));
 }
 
-function getScheduledExecution(workOrderId, unitNumber) {
-  return scheduledWorkOrderByWorkOrderAndUnit.get(executionLookupKey(workOrderId, unitNumber)) ?? null;
+function getScheduledExecution(workOrderId, unitNumber, scheduledLookup = scheduledWorkOrderByWorkOrderAndUnit) {
+  return scheduledLookup.get(executionLookupKey(workOrderId, unitNumber)) ?? null;
 }
 
 function formatWorkOrderReference(workOrderId) {
@@ -543,6 +671,58 @@ function installScheduleTooltips() {
   });
 }
 
+function installDelayInteractions() {
+  const chart = document.querySelector("#schedule-chart");
+
+  chart.addEventListener("click", (event) => {
+    const card = getDelaySourceCard(event.target);
+
+    if (!card) {
+      return;
+    }
+
+    applyDelaySimulation(card.dataset.executionId);
+  });
+
+  chart.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+
+    const card = getDelaySourceCard(event.target);
+
+    if (!card) {
+      return;
+    }
+
+    event.preventDefault();
+    applyDelaySimulation(card.dataset.executionId);
+  });
+}
+
+function getDelaySourceCard(target) {
+  if (!(target instanceof Element)) {
+    return null;
+  }
+
+  return target.closest("[data-delay-source][data-execution-id]");
+}
+
+function applyDelaySimulation(executionId) {
+  if (!executionId || data.status !== "scheduled") {
+    return;
+  }
+
+  activeDelaySimulation = buildDelaySimulation(executionId);
+  tooltipById.clear();
+  renderChart();
+  renderReflowSection();
+  document.querySelector("#reflow-section").scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+}
+
 function getTooltipCard(target) {
   if (!(target instanceof Element)) {
     return null;
@@ -624,10 +804,10 @@ function getClosedIntervals(workCenter) {
   return closedIntervals;
 }
 
-function getOperatingIntervals(workCenter) {
+function getOperatingIntervals(workCenter, bounds = chartBounds) {
   const intervals = [];
-  const cursor = startOfUtcDay(chartBounds.start);
-  const finalDay = startOfUtcDay(chartBounds.end);
+  const cursor = startOfUtcDay(bounds.start);
+  const finalDay = startOfUtcDay(bounds.end);
 
   while (cursor <= finalDay) {
     const dayOfWeek = cursor.getUTCDay();
@@ -647,7 +827,7 @@ function getOperatingIntervals(workCenter) {
         shiftEnd.setUTCDate(shiftEnd.getUTCDate() + 1);
       }
 
-      const clipped = clipInterval(shiftStart, shiftEnd, chartBounds.start, chartBounds.end);
+      const clipped = clipInterval(shiftStart, shiftEnd, bounds.start, bounds.end);
 
       if (clipped !== null) {
         intervals.push(clipped);
@@ -658,6 +838,318 @@ function getOperatingIntervals(workCenter) {
   }
 
   return mergeIntervals(intervals);
+}
+
+function buildDelaySimulation(executionId) {
+  const selectedExecution = data.scheduledWorkOrders.find(
+    (scheduledWorkOrder) => scheduledWorkOrder.executionId === executionId,
+  );
+
+  if (selectedExecution === undefined) {
+    return {
+      executionId,
+      workOrderNumber: executionId,
+      originalDurationMinutes: 0,
+      scheduledWorkOrders: [],
+      scheduledLookup: new Map(),
+      error: {
+        message: `Execution ${executionId} was not found in the current scenario.`,
+      },
+    };
+  }
+
+  try {
+    const scheduledWorkOrders = calculateDelayedSchedule(executionId);
+
+    return {
+      executionId,
+      workOrderNumber: selectedExecution.workOrderNumber,
+      originalDurationMinutes: selectedExecution.durationMinutes,
+      scheduledWorkOrders,
+      scheduledLookup: buildScheduledLookup(scheduledWorkOrders),
+      error: null,
+    };
+  } catch (error) {
+    return {
+      executionId,
+      workOrderNumber: selectedExecution.workOrderNumber,
+      originalDurationMinutes: selectedExecution.durationMinutes,
+      scheduledWorkOrders: [],
+      scheduledLookup: new Map(),
+      error: {
+        message: error instanceof Error ? error.message : String(error),
+      },
+    };
+  }
+}
+
+function calculateDelayedSchedule(executionId) {
+  const selectedIndex = data.scheduledWorkOrders.findIndex(
+    (scheduledWorkOrder) => scheduledWorkOrder.executionId === executionId,
+  );
+
+  if (selectedIndex === -1) {
+    throw new Error(`Execution ${executionId} was not found in the current scenario.`);
+  }
+
+  const availableByWorkCenter = buildAvailableIntervalsByWorkCenter();
+  const workCenterNextFreeAt = initializeReflowWorkCenterReadiness(availableByWorkCenter);
+  const scheduledByKey = new Map();
+  const result = [];
+
+  for (let index = 0; index < data.scheduledWorkOrders.length; index += 1) {
+    const original = data.scheduledWorkOrders[index];
+    const scheduled =
+      index < selectedIndex
+        ? cloneScheduledWorkOrder(original)
+        : rescheduleExecutionLinearly(original, {
+            availableByWorkCenter,
+            scheduledByKey,
+            workCenterNextFreeAt,
+            extraDurationMinutes: original.executionId === executionId ? CLICK_DELAY_MINUTES : 0,
+          });
+
+    result.push(scheduled);
+    scheduledByKey.set(executionLookupKey(scheduled.workOrderId, scheduled.unitNumber), scheduled);
+    moveWorkCenterReadiness(
+      workCenterNextFreeAt,
+      scheduled.workCenterId,
+      new Date(scheduled.scheduledEndDate),
+    );
+  }
+
+  return result;
+}
+
+function rescheduleExecutionLinearly(original, context) {
+  const workOrderWindowStart = new Date(original.originalStartDate);
+  const workOrderWindowEnd = new Date(original.originalEndDate);
+  const baselineStart = new Date(original.scheduledStartDate);
+  const dependencyReadyAt = getReflowDependencyReadyAt(original, context.scheduledByKey);
+  const workCenterReadyAt =
+    context.workCenterNextFreeAt.get(original.workCenterId) ??
+    getFirstAvailableStart(context.availableByWorkCenter[original.workCenterId]) ??
+    new Date(data.config.horizonStartDate);
+  const earliestStart = maxDate(
+    dependencyReadyAt,
+    workCenterReadyAt,
+    workOrderWindowStart,
+    baselineStart,
+  );
+  const durationMinutes = original.durationMinutes + context.extraDurationMinutes;
+  const segments = placeDurationInAvailability({
+    availabilityIntervals: context.availableByWorkCenter[original.workCenterId] ?? [],
+    durationMinutes,
+    earliestStart,
+    latestEnd: workOrderWindowEnd,
+    executionId: original.executionId,
+  });
+  const firstSegment = segments[0];
+  const lastSegment = segments.at(-1);
+
+  if (firstSegment === undefined || lastSegment === undefined) {
+    throw new Error(`Execution ${original.executionId} did not produce any reflowed segments.`);
+  }
+
+  return {
+    ...original,
+    durationMinutes,
+    scheduledStartDate: firstSegment.startDate,
+    scheduledEndDate: lastSegment.endDate,
+    segments,
+  };
+}
+
+function getReflowDependencyReadyAt(scheduledWorkOrder, scheduledByKey) {
+  const dependencyEndDates = scheduledWorkOrder.dependsOnWorkOrderIds.map((dependencyId) => {
+    const dependency = scheduledByKey.get(
+      executionLookupKey(dependencyId, scheduledWorkOrder.unitNumber),
+    );
+
+    if (dependency === undefined) {
+      throw new Error(
+        `Execution ${scheduledWorkOrder.executionId} cannot be reflowed before dependency ${dependencyId}#${scheduledWorkOrder.unitNumber}.`,
+      );
+    }
+
+    return new Date(dependency.scheduledEndDate);
+  });
+
+  return maxDate(new Date(data.config.horizonStartDate), ...dependencyEndDates);
+}
+
+function placeDurationInAvailability({
+  availabilityIntervals,
+  durationMinutes,
+  earliestStart,
+  latestEnd,
+  executionId,
+}) {
+  let remainingMinutes = durationMinutes;
+  const segments = [];
+
+  for (const interval of availabilityIntervals) {
+    const intervalStart = new Date(interval.startDate);
+    const intervalEnd = new Date(interval.endDate);
+
+    if (intervalEnd <= earliestStart) {
+      continue;
+    }
+
+    if (intervalStart >= latestEnd) {
+      break;
+    }
+
+    const segmentStart = maxDate(intervalStart, earliestStart);
+    const segmentBoundary = minDate(intervalEnd, latestEnd);
+    const availableMinutes = minutesBetweenDates(segmentStart, segmentBoundary);
+
+    if (availableMinutes <= 0) {
+      continue;
+    }
+
+    const workingMinutes = Math.min(availableMinutes, remainingMinutes);
+    const segmentEnd = addMinutes(segmentStart, workingMinutes);
+
+    segments.push({
+      workCenterId: interval.workCenterId,
+      startDate: segmentStart.toISOString(),
+      endDate: segmentEnd.toISOString(),
+      workingMinutes,
+    });
+
+    remainingMinutes -= workingMinutes;
+
+    if (remainingMinutes === 0) {
+      return segments;
+    }
+  }
+
+  throw new Error(
+    `Execution ${executionId} cannot fit after the delay before its work order window closes at ${latestEnd.toISOString()}. Remaining minutes: ${remainingMinutes}.`,
+  );
+}
+
+function buildAvailableIntervalsByWorkCenter() {
+  const horizon = {
+    start: new Date(data.config.horizonStartDate),
+    end: new Date(data.config.horizonEndDate),
+  };
+  const result = {};
+
+  for (const workCenter of data.workCenters) {
+    const operatingIntervals = getOperatingIntervals(workCenter, horizon).map((interval) => ({
+      ...interval,
+      workCenterId: workCenter.docId,
+    }));
+    const maintenanceIntervals = workCenter.data.maintenanceWindows
+      .map((window) =>
+        clipInterval(new Date(window.startDate), new Date(window.endDate), horizon.start, horizon.end),
+      )
+      .filter((interval) => interval !== null);
+
+    result[workCenter.docId] = subtractBlockedIntervals(
+      operatingIntervals,
+      maintenanceIntervals,
+    ).map((interval) => ({
+      ...interval,
+      workCenterId: workCenter.docId,
+    }));
+  }
+
+  return result;
+}
+
+function subtractBlockedIntervals(availableIntervals, blockedIntervals) {
+  let result = mergeIntervals(availableIntervals);
+
+  for (const blockedInterval of mergeIntervals(blockedIntervals)) {
+    result = result.flatMap((availableInterval) =>
+      subtractSingleBlockedInterval(availableInterval, blockedInterval),
+    );
+  }
+
+  return mergeIntervals(result);
+}
+
+function subtractSingleBlockedInterval(availableInterval, blockedInterval) {
+  const overlap = intersectInterval(availableInterval, blockedInterval);
+
+  if (overlap === null) {
+    return [availableInterval];
+  }
+
+  const result = [];
+
+  if (new Date(availableInterval.startDate) < new Date(overlap.startDate)) {
+    result.push({
+      ...availableInterval,
+      endDate: overlap.startDate,
+    });
+  }
+
+  if (new Date(overlap.endDate) < new Date(availableInterval.endDate)) {
+    result.push({
+      ...availableInterval,
+      startDate: overlap.endDate,
+    });
+  }
+
+  return result;
+}
+
+function intersectInterval(left, right) {
+  const start = maxDate(new Date(left.startDate), new Date(right.startDate));
+  const end = minDate(new Date(left.endDate), new Date(right.endDate));
+
+  if (start >= end) {
+    return null;
+  }
+
+  return {
+    startDate: start.toISOString(),
+    endDate: end.toISOString(),
+  };
+}
+
+function initializeReflowWorkCenterReadiness(availableByWorkCenter) {
+  return new Map(
+    data.workCenters.map((workCenter) => [
+      workCenter.docId,
+      getFirstAvailableStart(availableByWorkCenter[workCenter.docId]) ??
+        new Date(data.config.horizonStartDate),
+    ]),
+  );
+}
+
+function moveWorkCenterReadiness(workCenterNextFreeAt, workCenterId, candidateReadyAt) {
+  const currentReadyAt = workCenterNextFreeAt.get(workCenterId);
+  workCenterNextFreeAt.set(
+    workCenterId,
+    currentReadyAt === undefined ? candidateReadyAt : maxDate(currentReadyAt, candidateReadyAt),
+  );
+}
+
+function getFirstAvailableStart(availabilityIntervals = []) {
+  const firstInterval = availabilityIntervals[0];
+
+  return firstInterval === undefined ? null : new Date(firstInterval.startDate);
+}
+
+function cloneScheduledWorkOrder(scheduledWorkOrder) {
+  return {
+    ...scheduledWorkOrder,
+    segments: scheduledWorkOrder.segments.map((segment) => ({ ...segment })),
+  };
+}
+
+function buildScheduledLookup(scheduledWorkOrders) {
+  return new Map(
+    scheduledWorkOrders.map((scheduledWorkOrder) => [
+      executionLookupKey(scheduledWorkOrder.workOrderId, scheduledWorkOrder.unitNumber),
+      scheduledWorkOrder,
+    ]),
+  );
 }
 
 function clipInterval(start, end, min, max) {
@@ -982,6 +1474,26 @@ function positionInterval(startDate, endDate, options = {}) {
 
 function hoursBetween(start, end) {
   return (end.getTime() - start.getTime()) / 3_600_000;
+}
+
+function minutesBetweenDates(start, end) {
+  return Math.floor((end.getTime() - start.getTime()) / 60_000);
+}
+
+function addMinutes(date, minutes) {
+  return new Date(date.getTime() + minutes * 60_000);
+}
+
+function addMinutesIso(value, minutes) {
+  return addMinutes(new Date(value), minutes).toISOString();
+}
+
+function maxDate(...dates) {
+  return new Date(Math.max(...dates.map((date) => date.getTime())));
+}
+
+function minDate(...dates) {
+  return new Date(Math.min(...dates.map((date) => date.getTime())));
 }
 
 function compareDates(left, right) {
