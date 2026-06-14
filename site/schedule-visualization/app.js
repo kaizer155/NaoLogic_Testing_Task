@@ -600,7 +600,7 @@ function installScheduleTooltips() {
   tooltip.setAttribute("role", "tooltip");
   document.body.append(tooltip);
 
-  const chart = document.querySelector("#schedule-chart");
+  const tooltipRoot = document.querySelector(".page");
   let activeCard = null;
 
   // The fixed overlay avoids clipping inside the horizontally scrollable timeline.
@@ -626,14 +626,14 @@ function installScheduleTooltips() {
     hideScheduleTooltip(tooltip);
   };
 
-  chart.addEventListener("pointerover", activateFromEvent);
-  chart.addEventListener("mouseover", activateFromEvent);
-  chart.addEventListener("mousemove", activateFromEvent);
+  tooltipRoot.addEventListener("pointerover", activateFromEvent);
+  tooltipRoot.addEventListener("mouseover", activateFromEvent);
+  tooltipRoot.addEventListener("mousemove", activateFromEvent);
 
-  chart.addEventListener("pointerout", deactivateFromEvent);
-  chart.addEventListener("mouseout", deactivateFromEvent);
+  tooltipRoot.addEventListener("pointerout", deactivateFromEvent);
+  tooltipRoot.addEventListener("mouseout", deactivateFromEvent);
 
-  chart.addEventListener("focusin", (event) => {
+  tooltipRoot.addEventListener("focusin", (event) => {
     const card = getTooltipCard(event.target);
 
     if (!card) {
@@ -644,7 +644,7 @@ function installScheduleTooltips() {
     showScheduleTooltip(tooltip, activeCard);
   });
 
-  chart.addEventListener("focusout", (event) => {
+  tooltipRoot.addEventListener("focusout", (event) => {
     const card = getTooltipCard(event.target);
 
     if (!card || card.contains(event.relatedTarget)) {
