@@ -322,6 +322,7 @@ function renderScheduleChart(container, scheduledWorkOrders, options) {
 
 function renderUtilizationPanel(title, scheduledWorkOrders) {
   const rows = buildWorkCenterUtilization(scheduledWorkOrders);
+  const weeklyRows = buildWeeklyEfficiency(scheduledWorkOrders);
   const totalWorkingMinutes = rows.reduce((total, row) => total + row.workingMinutes, 0);
   const totalAvailableMinutes = rows.reduce((total, row) => total + row.availableMinutes, 0);
   const totalIdleMinutes = rows.reduce((total, row) => total + row.idleMinutes, 0);
@@ -342,10 +343,47 @@ function renderUtilizationPanel(title, scheduledWorkOrders) {
           ${renderUtilizationFact("Idle", formatDurationMinutes(totalIdleMinutes))}
         </dl>
       </div>
+      ${renderWeeklyEfficiency(weeklyRows)}
       <div class="utilization-list">
         ${rows.map(renderUtilizationRow).join("")}
       </div>
     </section>
+  `;
+}
+
+function renderWeeklyEfficiency(weeklyRows) {
+  return `
+    <section class="weekly-efficiency" aria-label="Weekly efficiency">
+      <div class="weekly-efficiency-heading">
+        <strong>Weekly Efficiency</strong>
+        <span>Working minutes across all work centers divided by available shift minutes for that week.</span>
+      </div>
+      <div class="weekly-efficiency-list">
+        ${weeklyRows.map(renderWeeklyEfficiencyRow).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderWeeklyEfficiencyRow(row) {
+  const fillWidth = Math.min(100, Math.max(0, row.efficiencyPercent));
+
+  return `
+    <article class="weekly-efficiency-row">
+      <div>
+        <strong>${escapeHtml(row.label)}</strong>
+        <span>${formatDate(row.startDate)}-${formatDate(row.endDate)}</span>
+      </div>
+      <div class="weekly-meter" aria-label="${escapeHtml(row.label)} efficiency ${formatPercent(row.efficiencyPercent)}">
+        <span style="width: ${fillWidth}%"></span>
+      </div>
+      <dl>
+        ${renderUtilizationFact("Efficiency", formatPercent(row.efficiencyPercent))}
+        ${renderUtilizationFact("Working", formatDurationMinutes(row.workingMinutes))}
+        ${renderUtilizationFact("Available", formatDurationMinutes(row.availableMinutes))}
+        ${renderUtilizationFact("Idle", formatDurationMinutes(row.idleMinutes))}
+      </dl>
+    </article>
   `;
 }
 
@@ -384,6 +422,66 @@ function renderUtilizationFact(label, value) {
       <dd>${escapeHtml(value)}</dd>
     </div>
   `;
+}
+
+function buildWeeklyEfficiency(scheduledWorkOrders) {
+  return buildWeekBuckets().map((bucket, index) => {
+    const workingMinutes = scheduledWorkOrders.reduce(
+      (total, scheduledWorkOrder) =>
+        total + scheduledWorkOrder.segments.reduce(
+          (segmentTotal, segment) =>
+            segmentTotal + clippedIntervalMinutes(segment, bucket.startDate, bucket.endDate),
+          0,
+        ),
+      0,
+    );
+    const availableMinutes = Object.values(availabilityByWorkCenter).reduce(
+      (total, intervals) =>
+        total + intervals.reduce(
+          (intervalTotal, interval) =>
+            intervalTotal + clippedIntervalMinutes(interval, bucket.startDate, bucket.endDate),
+          0,
+        ),
+      0,
+    );
+    const idleMinutes = Math.max(0, availableMinutes - workingMinutes);
+
+    return {
+      label: `Week ${index + 1}`,
+      startDate: bucket.startDate.toISOString(),
+      endDate: bucket.endDate.toISOString(),
+      workingMinutes,
+      availableMinutes,
+      idleMinutes,
+      efficiencyPercent: availableMinutes === 0 ? 0 : (workingMinutes / availableMinutes) * 100,
+    };
+  });
+}
+
+function buildWeekBuckets() {
+  const buckets = [];
+  let cursor = new Date(data.config.horizonStartDate);
+  const horizonEnd = new Date(data.config.horizonEndDate);
+
+  while (cursor < horizonEnd) {
+    const bucketStart = new Date(cursor);
+    const bucketEnd = minDate(addMinutes(bucketStart, 7 * 24 * 60), horizonEnd);
+
+    buckets.push({
+      startDate: bucketStart,
+      endDate: bucketEnd,
+    });
+
+    cursor = bucketEnd;
+  }
+
+  return buckets;
+}
+
+function clippedIntervalMinutes(interval, start, end) {
+  const clipped = clipInterval(new Date(interval.startDate), new Date(interval.endDate), start, end);
+
+  return clipped === null ? 0 : intervalMinutes(clipped);
 }
 
 function buildWorkCenterUtilization(scheduledWorkOrders) {
