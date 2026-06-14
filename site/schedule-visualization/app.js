@@ -5,6 +5,7 @@ const WORK_ORDER_COLORS = {
   "mo-blue-pipe": "blue",
   "mo-yellow-pipe": "yellow",
 };
+const PRODUCT_COLOR_SEQUENCE = ["green", "blue", "yellow"];
 
 const data = await fetch("./schedule-data.json").then((response) => {
   if (!response.ok) {
@@ -17,6 +18,12 @@ const data = await fetch("./schedule-data.json").then((response) => {
 const workCenterById = new Map(data.workCenters.map((workCenter) => [workCenter.docId, workCenter]));
 const manufacturingOrderById = new Map(
   data.manufacturingOrders.map((manufacturingOrder) => [manufacturingOrder.docId, manufacturingOrder]),
+);
+const manufacturingOrderColorById = new Map(
+  data.manufacturingOrders.map((manufacturingOrder, index) => [
+    manufacturingOrder.docId,
+    WORK_ORDER_COLORS[manufacturingOrder.docId] ?? PRODUCT_COLOR_SEQUENCE[index % PRODUCT_COLOR_SEQUENCE.length],
+  ]),
 );
 const workOrderById = new Map(data.workOrders.map((workOrder) => [workOrder.docId, workOrder]));
 const scheduledWorkOrderByWorkOrderAndUnit = new Map(
@@ -69,9 +76,9 @@ function renderSummary() {
 
 function renderLegend() {
   document.querySelector("#legend").innerHTML = `
-    <span><i class="swatch green"></i>Green pipe</span>
-    <span><i class="swatch blue"></i>Blue pipe</span>
-    <span><i class="swatch yellow"></i>Yellow pipe</span>
+    <span><i class="swatch green"></i>Product color A</span>
+    <span><i class="swatch blue"></i>Product color B</span>
+    <span><i class="swatch yellow"></i>Product color C</span>
     <span><i class="swatch closed"></i>Closed</span>
     <span><i class="swatch maintenance"></i>Maintenance</span>
   `;
@@ -150,7 +157,7 @@ function renderClosedWindow(interval) {
 
 function renderWorkSegment(scheduledWorkOrder, segment) {
   const workOrder = workOrderById.get(scheduledWorkOrder.workOrderId);
-  const color = WORK_ORDER_COLORS[scheduledWorkOrder.manufacturingOrderId] ?? "blue";
+  const color = getManufacturingOrderColor(scheduledWorkOrder.manufacturingOrderId);
   const position = positionInterval(segment.startDate, segment.endDate);
   const title = `${scheduledWorkOrder.workOrderNumber} #${scheduledWorkOrder.unitNumber}`;
   const tooltipId = toTooltipId("work", scheduledWorkOrder.executionId, segment.startDate);
@@ -593,7 +600,7 @@ function renderSourceTables() {
 }
 
 function renderManufacturingOrderGroup(manufacturingOrder) {
-  const color = WORK_ORDER_COLORS[manufacturingOrder.docId] ?? "blue";
+  const color = getManufacturingOrderColor(manufacturingOrder.docId);
   const workOrders = getManufacturingOrderWorkOrders(manufacturingOrder.docId);
 
   return `
@@ -892,6 +899,10 @@ function code(value) {
 
 function dot(color) {
   return `<span class="dot ${escapeHtml(color)}"></span>`;
+}
+
+function getManufacturingOrderColor(manufacturingOrderId) {
+  return manufacturingOrderColorById.get(manufacturingOrderId) ?? "blue";
 }
 
 function escapeHtml(value) {

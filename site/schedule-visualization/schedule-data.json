@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-14T15:20:50.013Z",
+  "generatedAt": "2026-06-14T15:35:52.849Z",
   "config": {
     "horizonStartDate": "2026-01-01T00:00:00.000Z",
     "horizonEndDate": "2026-02-01T00:00:00.000Z"
@@ -44,9 +44,19 @@
             "reason": "New year calibration"
           },
           {
-            "startDate": "2026-01-02T10:00:00.000Z",
-            "endDate": "2026-01-02T11:00:00.000Z",
-            "reason": "Extruder temperature check"
+            "startDate": "2026-01-06T10:00:00.000Z",
+            "endDate": "2026-01-06T11:00:00.000Z",
+            "reason": "Temperature profile audit"
+          },
+          {
+            "startDate": "2026-01-15T13:00:00.000Z",
+            "endDate": "2026-01-15T15:00:00.000Z",
+            "reason": "Screw inspection"
+          },
+          {
+            "startDate": "2026-01-22T11:00:00.000Z",
+            "endDate": "2026-01-22T12:00:00.000Z",
+            "reason": "Drive belt service"
           }
         ]
       }
@@ -85,9 +95,19 @@
         ],
         "maintenanceWindows": [
           {
-            "startDate": "2026-01-01T11:00:00.000Z",
-            "endDate": "2026-01-01T12:00:00.000Z",
+            "startDate": "2026-01-02T11:00:00.000Z",
+            "endDate": "2026-01-02T12:00:00.000Z",
             "reason": "Die head inspection"
+          },
+          {
+            "startDate": "2026-01-08T09:00:00.000Z",
+            "endDate": "2026-01-08T11:00:00.000Z",
+            "reason": "Mandrel alignment"
+          },
+          {
+            "startDate": "2026-01-20T13:00:00.000Z",
+            "endDate": "2026-01-20T14:00:00.000Z",
+            "reason": "Oil level service"
           }
         ]
       }
@@ -129,6 +149,21 @@
             "startDate": "2026-01-02T10:00:00.000Z",
             "endDate": "2026-01-02T11:00:00.000Z",
             "reason": "Blade replacement"
+          },
+          {
+            "startDate": "2026-01-09T13:00:00.000Z",
+            "endDate": "2026-01-09T15:00:00.000Z",
+            "reason": "Guide rail service"
+          },
+          {
+            "startDate": "2026-01-16T09:00:00.000Z",
+            "endDate": "2026-01-16T10:00:00.000Z",
+            "reason": "Vacuum line check"
+          },
+          {
+            "startDate": "2026-01-23T14:00:00.000Z",
+            "endDate": "2026-01-23T16:00:00.000Z",
+            "reason": "Saw motor inspection"
           }
         ]
       }
@@ -170,6 +205,21 @@
             "startDate": "2026-01-02T12:00:00.000Z",
             "endDate": "2026-01-02T13:00:00.000Z",
             "reason": "Label printer service"
+          },
+          {
+            "startDate": "2026-01-07T15:00:00.000Z",
+            "endDate": "2026-01-07T16:00:00.000Z",
+            "reason": "Sealer temperature check"
+          },
+          {
+            "startDate": "2026-01-14T10:00:00.000Z",
+            "endDate": "2026-01-14T12:00:00.000Z",
+            "reason": "Conveyor tune-up"
+          },
+          {
+            "startDate": "2026-01-21T13:00:00.000Z",
+            "endDate": "2026-01-21T14:00:00.000Z",
+            "reason": "Scanner calibration"
           }
         ]
       }
@@ -182,8 +232,8 @@
       "data": {
         "manufacturingOrderNumber": "MO-1001",
         "itemId": "GREEN-PIPE-50MM",
-        "quantity": 2,
-        "dueDate": "2026-01-15T17:00:00.000Z"
+        "quantity": 3,
+        "dueDate": "2026-01-24T17:00:00.000Z"
       }
     },
     {
@@ -192,8 +242,8 @@
       "data": {
         "manufacturingOrderNumber": "MO-1002",
         "itemId": "BLUE-PIPE-75MM",
-        "quantity": 3,
-        "dueDate": "2026-01-18T17:00:00.000Z"
+        "quantity": 4,
+        "dueDate": "2026-01-26T17:00:00.000Z"
       }
     },
     {
@@ -203,7 +253,97 @@
         "manufacturingOrderNumber": "MO-1003",
         "itemId": "YELLOW-PIPE-100MM",
         "quantity": 2,
+        "dueDate": "2026-01-27T17:00:00.000Z"
+      }
+    },
+    {
+      "docId": "mo-purple-valve",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-1004",
+        "itemId": "PURPLE-VALVE-20MM",
+        "quantity": 2,
         "dueDate": "2026-01-22T17:00:00.000Z"
+      }
+    },
+    {
+      "docId": "mo-orange-elbow",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-1005",
+        "itemId": "ORANGE-ELBOW-45D",
+        "quantity": 1,
+        "dueDate": "2026-01-17T17:00:00.000Z"
+      }
+    },
+    {
+      "docId": "mo-silver-bracket",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-1006",
+        "itemId": "SILVER-BRACKET-L",
+        "quantity": 3,
+        "dueDate": "2026-01-29T17:00:00.000Z"
+      }
+    },
+    {
+      "docId": "mo-red-gasket",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-1007",
+        "itemId": "RED-GASKET-SET",
+        "quantity": 5,
+        "dueDate": "2026-01-21T17:00:00.000Z"
+      }
+    },
+    {
+      "docId": "mo-teal-hose",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-1008",
+        "itemId": "TEAL-HOSE-1M",
+        "quantity": 2,
+        "dueDate": "2026-01-25T17:00:00.000Z"
+      }
+    },
+    {
+      "docId": "mo-amber-kit",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-1009",
+        "itemId": "AMBER-REPAIR-KIT",
+        "quantity": 2,
+        "dueDate": "2026-01-30T17:00:00.000Z"
+      }
+    },
+    {
+      "docId": "mo-gray-cap",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-1010",
+        "itemId": "GRAY-END-CAP",
+        "quantity": 4,
+        "dueDate": "2026-01-18T17:00:00.000Z"
+      }
+    },
+    {
+      "docId": "mo-white-adapter",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-1011",
+        "itemId": "WHITE-ADAPTER-M12",
+        "quantity": 2,
+        "dueDate": "2026-01-28T17:00:00.000Z"
+      }
+    },
+    {
+      "docId": "mo-black-coupler",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-1012",
+        "itemId": "BLACK-COUPLER-32MM",
+        "quantity": 3,
+        "dueDate": "2026-01-23T17:00:00.000Z"
       }
     }
   ],
@@ -214,10 +354,10 @@
       "data": {
         "workOrderNumber": "WO-1001-EX",
         "manufacturingOrderId": "mo-green-pipe",
-        "workCenterId": "wc-extrusion-b",
-        "startDate": "2026-01-01T07:00:00.000Z",
-        "endDate": "2026-01-06T15:00:00.000Z",
-        "durationMinutes": 180,
+        "workCenterId": "wc-extrusion-a",
+        "startDate": "2026-01-01T08:00:00.000Z",
+        "endDate": "2026-01-12T16:00:00.000Z",
+        "durationMinutes": 240,
         "isMaintenance": false,
         "dependsOnWorkOrderIds": []
       }
@@ -228,28 +368,14 @@
       "data": {
         "workOrderNumber": "WO-1001-MNT",
         "manufacturingOrderId": "mo-green-pipe",
-        "workCenterId": "wc-extrusion-b",
-        "startDate": "2026-01-01T07:00:00.000Z",
-        "endDate": "2026-01-07T15:00:00.000Z",
-        "durationMinutes": 60,
+        "workCenterId": "wc-extrusion-a",
+        "startDate": "2026-01-02T08:00:00.000Z",
+        "endDate": "2026-01-13T16:00:00.000Z",
+        "durationMinutes": 45,
         "isMaintenance": true,
         "dependsOnWorkOrderIds": [
           "wo-green-extrude"
         ]
-      }
-    },
-    {
-      "docId": "wo-blue-extrude",
-      "docType": "workOrder",
-      "data": {
-        "workOrderNumber": "WO-1002-EX",
-        "manufacturingOrderId": "mo-blue-pipe",
-        "workCenterId": "wc-extrusion-a",
-        "startDate": "2026-01-01T08:00:00.000Z",
-        "endDate": "2026-01-08T16:00:00.000Z",
-        "durationMinutes": 360,
-        "isMaintenance": false,
-        "dependsOnWorkOrderIds": []
       }
     },
     {
@@ -259,9 +385,9 @@
         "workOrderNumber": "WO-1001-CUT",
         "manufacturingOrderId": "mo-green-pipe",
         "workCenterId": "wc-cutting",
-        "startDate": "2026-01-01T09:00:00.000Z",
-        "endDate": "2026-01-10T17:00:00.000Z",
-        "durationMinutes": 240,
+        "startDate": "2026-01-03T09:00:00.000Z",
+        "endDate": "2026-01-16T17:00:00.000Z",
+        "durationMinutes": 180,
         "isMaintenance": false,
         "dependsOnWorkOrderIds": [
           "wo-green-clean"
@@ -269,32 +395,18 @@
       }
     },
     {
-      "docId": "wo-yellow-extrude",
+      "docId": "wo-green-pressure",
       "docType": "workOrder",
       "data": {
-        "workOrderNumber": "WO-1003-EX",
-        "manufacturingOrderId": "mo-yellow-pipe",
-        "workCenterId": "wc-extrusion-a",
-        "startDate": "2026-01-01T08:00:00.000Z",
-        "endDate": "2026-01-09T16:00:00.000Z",
-        "durationMinutes": 300,
+        "workOrderNumber": "WO-1001-QA",
+        "manufacturingOrderId": "mo-green-pipe",
+        "workCenterId": "wc-cutting",
+        "startDate": "2026-01-04T09:00:00.000Z",
+        "endDate": "2026-01-17T17:00:00.000Z",
+        "durationMinutes": 120,
         "isMaintenance": false,
-        "dependsOnWorkOrderIds": []
-      }
-    },
-    {
-      "docId": "wo-yellow-line-check",
-      "docType": "workOrder",
-      "data": {
-        "workOrderNumber": "WO-1003-MNT",
-        "manufacturingOrderId": "mo-yellow-pipe",
-        "workCenterId": "wc-packaging",
-        "startDate": "2026-01-02T10:00:00.000Z",
-        "endDate": "2026-01-13T18:00:00.000Z",
-        "durationMinutes": 60,
-        "isMaintenance": true,
         "dependsOnWorkOrderIds": [
-          "wo-yellow-extrude"
+          "wo-green-cut"
         ]
       }
     },
@@ -305,25 +417,39 @@
         "workOrderNumber": "WO-1001-PACK",
         "manufacturingOrderId": "mo-green-pipe",
         "workCenterId": "wc-packaging",
-        "startDate": "2026-01-02T10:00:00.000Z",
-        "endDate": "2026-01-12T18:00:00.000Z",
+        "startDate": "2026-01-05T10:00:00.000Z",
+        "endDate": "2026-01-20T18:00:00.000Z",
         "durationMinutes": 120,
         "isMaintenance": false,
         "dependsOnWorkOrderIds": [
-          "wo-green-cut"
+          "wo-green-pressure"
         ]
       }
     },
     {
-      "docId": "wo-blue-cut",
+      "docId": "wo-blue-extrude",
       "docType": "workOrder",
       "data": {
-        "workOrderNumber": "WO-1002-CUT",
+        "workOrderNumber": "WO-1002-EX",
+        "manufacturingOrderId": "mo-blue-pipe",
+        "workCenterId": "wc-extrusion-b",
+        "startDate": "2026-01-01T07:00:00.000Z",
+        "endDate": "2026-01-14T15:00:00.000Z",
+        "durationMinutes": 360,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-blue-trim",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1002-TRIM",
         "manufacturingOrderId": "mo-blue-pipe",
         "workCenterId": "wc-cutting",
-        "startDate": "2026-01-01T09:00:00.000Z",
-        "endDate": "2026-01-13T17:00:00.000Z",
-        "durationMinutes": 180,
+        "startDate": "2026-01-02T09:00:00.000Z",
+        "endDate": "2026-01-18T17:00:00.000Z",
+        "durationMinutes": 210,
         "isMaintenance": false,
         "dependsOnWorkOrderIds": [
           "wo-blue-extrude"
@@ -331,18 +457,18 @@
       }
     },
     {
-      "docId": "wo-blue-pack-setup",
+      "docId": "wo-blue-label-setup",
       "docType": "workOrder",
       "data": {
         "workOrderNumber": "WO-1002-MNT",
         "manufacturingOrderId": "mo-blue-pipe",
         "workCenterId": "wc-packaging",
-        "startDate": "2026-01-02T10:00:00.000Z",
-        "endDate": "2026-01-14T18:00:00.000Z",
-        "durationMinutes": 45,
+        "startDate": "2026-01-03T10:00:00.000Z",
+        "endDate": "2026-01-18T18:00:00.000Z",
+        "durationMinutes": 60,
         "isMaintenance": true,
         "dependsOnWorkOrderIds": [
-          "wo-blue-cut"
+          "wo-blue-extrude"
         ]
       }
     },
@@ -353,12 +479,59 @@
         "workOrderNumber": "WO-1002-PACK",
         "manufacturingOrderId": "mo-blue-pipe",
         "workCenterId": "wc-packaging",
-        "startDate": "2026-01-02T10:00:00.000Z",
-        "endDate": "2026-01-15T18:00:00.000Z",
-        "durationMinutes": 120,
+        "startDate": "2026-01-04T10:00:00.000Z",
+        "endDate": "2026-01-22T18:00:00.000Z",
+        "durationMinutes": 150,
         "isMaintenance": false,
         "dependsOnWorkOrderIds": [
-          "wo-blue-pack-setup"
+          "wo-blue-trim",
+          "wo-blue-label-setup"
+        ]
+      }
+    },
+    {
+      "docId": "wo-blue-audit",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1002-AUD",
+        "manufacturingOrderId": "mo-blue-pipe",
+        "workCenterId": "wc-packaging",
+        "startDate": "2026-01-06T10:00:00.000Z",
+        "endDate": "2026-01-23T18:00:00.000Z",
+        "durationMinutes": 45,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-blue-pack"
+        ]
+      }
+    },
+    {
+      "docId": "wo-yellow-extrude",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1003-EX",
+        "manufacturingOrderId": "mo-yellow-pipe",
+        "workCenterId": "wc-extrusion-a",
+        "startDate": "2026-01-04T08:00:00.000Z",
+        "endDate": "2026-01-16T16:00:00.000Z",
+        "durationMinutes": 300,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-yellow-polish",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1003-POL",
+        "manufacturingOrderId": "mo-yellow-pipe",
+        "workCenterId": "wc-cutting",
+        "startDate": "2026-01-05T09:00:00.000Z",
+        "endDate": "2026-01-20T17:00:00.000Z",
+        "durationMinutes": 240,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-yellow-extrude"
         ]
       }
     },
@@ -369,106 +542,608 @@
         "workOrderNumber": "WO-1003-PACK",
         "manufacturingOrderId": "mo-yellow-pipe",
         "workCenterId": "wc-packaging",
-        "startDate": "2026-01-02T10:00:00.000Z",
-        "endDate": "2026-01-16T18:00:00.000Z",
+        "startDate": "2026-01-08T10:00:00.000Z",
+        "endDate": "2026-01-24T18:00:00.000Z",
         "durationMinutes": 180,
         "isMaintenance": false,
         "dependsOnWorkOrderIds": [
-          "wo-yellow-line-check"
+          "wo-yellow-polish"
+        ]
+      }
+    },
+    {
+      "docId": "wo-purple-machine",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1004-MACH",
+        "manufacturingOrderId": "mo-purple-valve",
+        "workCenterId": "wc-extrusion-b",
+        "startDate": "2026-01-02T07:00:00.000Z",
+        "endDate": "2026-01-13T15:00:00.000Z",
+        "durationMinutes": 300,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-purple-calibrate",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1004-MNT",
+        "manufacturingOrderId": "mo-purple-valve",
+        "workCenterId": "wc-extrusion-b",
+        "startDate": "2026-01-03T07:00:00.000Z",
+        "endDate": "2026-01-15T15:00:00.000Z",
+        "durationMinutes": 90,
+        "isMaintenance": true,
+        "dependsOnWorkOrderIds": [
+          "wo-purple-machine"
+        ]
+      }
+    },
+    {
+      "docId": "wo-purple-cut",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1004-CUT",
+        "manufacturingOrderId": "mo-purple-valve",
+        "workCenterId": "wc-cutting",
+        "startDate": "2026-01-04T09:00:00.000Z",
+        "endDate": "2026-01-17T17:00:00.000Z",
+        "durationMinutes": 150,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-purple-calibrate"
+        ]
+      }
+    },
+    {
+      "docId": "wo-purple-pack",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1004-PACK",
+        "manufacturingOrderId": "mo-purple-valve",
+        "workCenterId": "wc-packaging",
+        "startDate": "2026-01-06T10:00:00.000Z",
+        "endDate": "2026-01-20T18:00:00.000Z",
+        "durationMinutes": 90,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-purple-cut"
+        ]
+      }
+    },
+    {
+      "docId": "wo-orange-bend",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1005-BEND",
+        "manufacturingOrderId": "mo-orange-elbow",
+        "workCenterId": "wc-extrusion-b",
+        "startDate": "2026-01-01T07:00:00.000Z",
+        "endDate": "2026-01-16T15:00:00.000Z",
+        "durationMinutes": 210,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-silver-plate",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1006-PLATE",
+        "manufacturingOrderId": "mo-silver-bracket",
+        "workCenterId": "wc-extrusion-a",
+        "startDate": "2026-01-05T08:00:00.000Z",
+        "endDate": "2026-01-20T16:00:00.000Z",
+        "durationMinutes": 240,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-silver-drill",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1006-DRILL",
+        "manufacturingOrderId": "mo-silver-bracket",
+        "workCenterId": "wc-cutting",
+        "startDate": "2026-01-05T09:00:00.000Z",
+        "endDate": "2026-01-22T17:00:00.000Z",
+        "durationMinutes": 240,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-silver-deburr",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1006-MNT",
+        "manufacturingOrderId": "mo-silver-bracket",
+        "workCenterId": "wc-cutting",
+        "startDate": "2026-01-08T09:00:00.000Z",
+        "endDate": "2026-01-23T17:00:00.000Z",
+        "durationMinutes": 60,
+        "isMaintenance": true,
+        "dependsOnWorkOrderIds": [
+          "wo-silver-drill"
+        ]
+      }
+    },
+    {
+      "docId": "wo-silver-pack",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1006-PACK",
+        "manufacturingOrderId": "mo-silver-bracket",
+        "workCenterId": "wc-packaging",
+        "startDate": "2026-01-10T10:00:00.000Z",
+        "endDate": "2026-01-27T18:00:00.000Z",
+        "durationMinutes": 120,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-silver-plate",
+          "wo-silver-deburr"
+        ]
+      }
+    },
+    {
+      "docId": "wo-red-stamp",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1007-STAMP",
+        "manufacturingOrderId": "mo-red-gasket",
+        "workCenterId": "wc-cutting",
+        "startDate": "2026-01-03T09:00:00.000Z",
+        "endDate": "2026-01-19T17:00:00.000Z",
+        "durationMinutes": 75,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-teal-extrude",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1008-EX",
+        "manufacturingOrderId": "mo-teal-hose",
+        "workCenterId": "wc-extrusion-b",
+        "startDate": "2026-01-06T07:00:00.000Z",
+        "endDate": "2026-01-18T15:00:00.000Z",
+        "durationMinutes": 240,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-teal-sanitize",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1008-MNT",
+        "manufacturingOrderId": "mo-teal-hose",
+        "workCenterId": "wc-extrusion-b",
+        "startDate": "2026-01-07T07:00:00.000Z",
+        "endDate": "2026-01-20T15:00:00.000Z",
+        "durationMinutes": 45,
+        "isMaintenance": true,
+        "dependsOnWorkOrderIds": [
+          "wo-teal-extrude"
+        ]
+      }
+    },
+    {
+      "docId": "wo-teal-pack",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1008-PACK",
+        "manufacturingOrderId": "mo-teal-hose",
+        "workCenterId": "wc-packaging",
+        "startDate": "2026-01-09T10:00:00.000Z",
+        "endDate": "2026-01-24T18:00:00.000Z",
+        "durationMinutes": 120,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-teal-sanitize"
+        ]
+      }
+    },
+    {
+      "docId": "wo-amber-shell",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1009-SHELL",
+        "manufacturingOrderId": "mo-amber-kit",
+        "workCenterId": "wc-extrusion-a",
+        "startDate": "2026-01-07T08:00:00.000Z",
+        "endDate": "2026-01-22T16:00:00.000Z",
+        "durationMinutes": 180,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-amber-insert",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1009-INSERT",
+        "manufacturingOrderId": "mo-amber-kit",
+        "workCenterId": "wc-cutting",
+        "startDate": "2026-01-07T09:00:00.000Z",
+        "endDate": "2026-01-23T17:00:00.000Z",
+        "durationMinutes": 210,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-amber-setup",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1009-MNT",
+        "manufacturingOrderId": "mo-amber-kit",
+        "workCenterId": "wc-packaging",
+        "startDate": "2026-01-08T10:00:00.000Z",
+        "endDate": "2026-01-24T18:00:00.000Z",
+        "durationMinutes": 60,
+        "isMaintenance": true,
+        "dependsOnWorkOrderIds": [
+          "wo-amber-shell",
+          "wo-amber-insert"
+        ]
+      }
+    },
+    {
+      "docId": "wo-amber-pack",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1009-PACK",
+        "manufacturingOrderId": "mo-amber-kit",
+        "workCenterId": "wc-packaging",
+        "startDate": "2026-01-10T10:00:00.000Z",
+        "endDate": "2026-01-28T18:00:00.000Z",
+        "durationMinutes": 240,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-amber-setup"
+        ]
+      }
+    },
+    {
+      "docId": "wo-amber-audit",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1009-AUD",
+        "manufacturingOrderId": "mo-amber-kit",
+        "workCenterId": "wc-packaging",
+        "startDate": "2026-01-12T10:00:00.000Z",
+        "endDate": "2026-01-29T18:00:00.000Z",
+        "durationMinutes": 90,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-amber-pack"
+        ]
+      }
+    },
+    {
+      "docId": "wo-gray-cap-mold",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1010-MOLD",
+        "manufacturingOrderId": "mo-gray-cap",
+        "workCenterId": "wc-extrusion-a",
+        "startDate": "2026-01-02T08:00:00.000Z",
+        "endDate": "2026-01-17T16:00:00.000Z",
+        "durationMinutes": 60,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-white-extrude",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1011-EX",
+        "manufacturingOrderId": "mo-white-adapter",
+        "workCenterId": "wc-extrusion-b",
+        "startDate": "2026-01-09T07:00:00.000Z",
+        "endDate": "2026-01-24T15:00:00.000Z",
+        "durationMinutes": 300,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-white-bore",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1011-BORE",
+        "manufacturingOrderId": "mo-white-adapter",
+        "workCenterId": "wc-cutting",
+        "startDate": "2026-01-10T09:00:00.000Z",
+        "endDate": "2026-01-25T17:00:00.000Z",
+        "durationMinutes": 180,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-white-extrude"
+        ]
+      }
+    },
+    {
+      "docId": "wo-white-clean",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1011-MNT",
+        "manufacturingOrderId": "mo-white-adapter",
+        "workCenterId": "wc-cutting",
+        "startDate": "2026-01-11T09:00:00.000Z",
+        "endDate": "2026-01-26T17:00:00.000Z",
+        "durationMinutes": 60,
+        "isMaintenance": true,
+        "dependsOnWorkOrderIds": [
+          "wo-white-bore"
+        ]
+      }
+    },
+    {
+      "docId": "wo-white-pack",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1011-PACK",
+        "manufacturingOrderId": "mo-white-adapter",
+        "workCenterId": "wc-packaging",
+        "startDate": "2026-01-12T10:00:00.000Z",
+        "endDate": "2026-01-28T18:00:00.000Z",
+        "durationMinutes": 120,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-white-clean"
+        ]
+      }
+    },
+    {
+      "docId": "wo-black-mold",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1012-MOLD",
+        "manufacturingOrderId": "mo-black-coupler",
+        "workCenterId": "wc-extrusion-a",
+        "startDate": "2026-01-04T08:00:00.000Z",
+        "endDate": "2026-01-18T16:00:00.000Z",
+        "durationMinutes": 210,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-black-cut",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1012-CUT",
+        "manufacturingOrderId": "mo-black-coupler",
+        "workCenterId": "wc-cutting",
+        "startDate": "2026-01-06T09:00:00.000Z",
+        "endDate": "2026-01-20T17:00:00.000Z",
+        "durationMinutes": 120,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-black-mold"
+        ]
+      }
+    },
+    {
+      "docId": "wo-black-pack",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-1012-PACK",
+        "manufacturingOrderId": "mo-black-coupler",
+        "workCenterId": "wc-packaging",
+        "startDate": "2026-01-08T10:00:00.000Z",
+        "endDate": "2026-01-23T18:00:00.000Z",
+        "durationMinutes": 90,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-black-cut"
         ]
       }
     }
   ],
   "topologicalOrder": [
-    "wo-green-extrude",
-    "wo-green-clean",
     "wo-blue-extrude",
-    "wo-yellow-extrude",
+    "wo-orange-bend",
+    "wo-green-extrude",
+    "wo-purple-machine",
+    "wo-green-clean",
+    "wo-gray-cap-mold",
+    "wo-blue-trim",
+    "wo-purple-calibrate",
     "wo-green-cut",
-    "wo-blue-cut",
-    "wo-green-pack",
-    "wo-yellow-line-check",
-    "wo-blue-pack-setup",
+    "wo-red-stamp",
+    "wo-blue-label-setup",
+    "wo-yellow-extrude",
+    "wo-black-mold",
+    "wo-purple-cut",
+    "wo-green-pressure",
     "wo-blue-pack",
-    "wo-yellow-pack"
+    "wo-silver-plate",
+    "wo-yellow-polish",
+    "wo-silver-drill",
+    "wo-green-pack",
+    "wo-teal-extrude",
+    "wo-black-cut",
+    "wo-purple-pack",
+    "wo-blue-audit",
+    "wo-teal-sanitize",
+    "wo-amber-shell",
+    "wo-amber-insert",
+    "wo-silver-deburr",
+    "wo-black-pack",
+    "wo-yellow-pack",
+    "wo-amber-setup",
+    "wo-white-extrude",
+    "wo-teal-pack",
+    "wo-white-bore",
+    "wo-silver-pack",
+    "wo-amber-pack",
+    "wo-white-clean",
+    "wo-white-pack",
+    "wo-amber-audit"
   ],
   "workCenterQueues": {
     "wc-extrusion-b": [
-      "wo-green-extrude#1",
-      "wo-green-extrude#2",
-      "wo-green-clean#1",
-      "wo-green-clean#2"
-    ],
-    "wc-extrusion-a": [
       "wo-blue-extrude#1",
       "wo-blue-extrude#2",
-      "wo-yellow-extrude#1",
       "wo-blue-extrude#3",
-      "wo-yellow-extrude#2"
+      "wo-blue-extrude#4",
+      "wo-orange-bend#1",
+      "wo-purple-machine#1",
+      "wo-purple-machine#2",
+      "wo-purple-calibrate#1",
+      "wo-purple-calibrate#2",
+      "wo-teal-extrude#1",
+      "wo-teal-sanitize#1",
+      "wo-teal-extrude#2",
+      "wo-teal-sanitize#2",
+      "wo-white-extrude#1",
+      "wo-white-extrude#2"
+    ],
+    "wc-extrusion-a": [
+      "wo-green-extrude#1",
+      "wo-green-extrude#2",
+      "wo-green-extrude#3",
+      "wo-green-clean#1",
+      "wo-green-clean#2",
+      "wo-green-clean#3",
+      "wo-gray-cap-mold#1",
+      "wo-gray-cap-mold#2",
+      "wo-gray-cap-mold#3",
+      "wo-gray-cap-mold#4",
+      "wo-yellow-extrude#1",
+      "wo-yellow-extrude#2",
+      "wo-black-mold#1",
+      "wo-black-mold#2",
+      "wo-black-mold#3",
+      "wo-silver-plate#1",
+      "wo-silver-plate#2",
+      "wo-silver-plate#3",
+      "wo-amber-shell#1",
+      "wo-amber-shell#2"
     ],
     "wc-cutting": [
-      "wo-blue-cut#1",
-      "wo-blue-cut#3",
-      "wo-blue-cut#2",
+      "wo-blue-trim#1",
+      "wo-blue-trim#2",
+      "wo-blue-trim#3",
+      "wo-blue-trim#4",
       "wo-green-cut#1",
-      "wo-green-cut#2"
+      "wo-green-cut#2",
+      "wo-green-cut#3",
+      "wo-red-stamp#1",
+      "wo-red-stamp#2",
+      "wo-red-stamp#3",
+      "wo-black-cut#1",
+      "wo-red-stamp#4",
+      "wo-red-stamp#5",
+      "wo-purple-cut#1",
+      "wo-purple-cut#2",
+      "wo-green-pressure#1",
+      "wo-green-pressure#2",
+      "wo-green-pressure#3",
+      "wo-yellow-polish#1",
+      "wo-black-cut#2",
+      "wo-yellow-polish#2",
+      "wo-black-cut#3",
+      "wo-silver-drill#1",
+      "wo-silver-deburr#1",
+      "wo-silver-drill#2",
+      "wo-silver-deburr#2",
+      "wo-silver-drill#3",
+      "wo-silver-deburr#3",
+      "wo-amber-insert#1",
+      "wo-amber-insert#2",
+      "wo-white-bore#1",
+      "wo-white-clean#1",
+      "wo-white-bore#2",
+      "wo-white-clean#2"
     ],
     "wc-packaging": [
-      "wo-blue-pack-setup#1",
-      "wo-yellow-line-check#1",
-      "wo-blue-pack-setup#2",
-      "wo-green-pack#2",
-      "wo-green-pack#1",
-      "wo-yellow-line-check#2",
-      "wo-blue-pack-setup#3",
+      "wo-blue-label-setup#1",
+      "wo-blue-label-setup#2",
+      "wo-blue-label-setup#3",
+      "wo-blue-label-setup#4",
       "wo-blue-pack#1",
       "wo-blue-pack#2",
       "wo-blue-pack#3",
+      "wo-blue-pack#4",
+      "wo-blue-audit#1",
+      "wo-blue-audit#2",
+      "wo-blue-audit#3",
+      "wo-blue-audit#4",
+      "wo-black-pack#1",
+      "wo-teal-pack#1",
+      "wo-green-pack#1",
+      "wo-green-pack#2",
+      "wo-green-pack#3",
+      "wo-black-pack#2",
+      "wo-black-pack#3",
+      "wo-silver-pack#1",
+      "wo-silver-pack#2",
+      "wo-silver-pack#3",
+      "wo-purple-pack#1",
+      "wo-purple-pack#2",
+      "wo-white-pack#1",
       "wo-yellow-pack#1",
-      "wo-yellow-pack#2"
+      "wo-yellow-pack#2",
+      "wo-amber-setup#1",
+      "wo-amber-setup#2",
+      "wo-teal-pack#2",
+      "wo-amber-pack#1",
+      "wo-amber-pack#2",
+      "wo-white-pack#2",
+      "wo-amber-audit#1",
+      "wo-amber-audit#2"
     ]
   },
   "scheduledWorkOrders": [
-    {
-      "executionId": "wo-green-extrude#1",
-      "workOrderId": "wo-green-extrude",
-      "workOrderNumber": "WO-1001-EX",
-      "manufacturingOrderId": "mo-green-pipe",
-      "manufacturingOrderNumber": "MO-1001",
-      "workCenterId": "wc-extrusion-b",
-      "unitNumber": 1,
-      "totalQuantity": 2,
-      "remainingQuantityAfterExecution": 1,
-      "originalStartDate": "2026-01-01T07:00:00.000Z",
-      "originalEndDate": "2026-01-06T15:00:00.000Z",
-      "scheduledStartDate": "2026-01-01T07:00:00.000Z",
-      "scheduledEndDate": "2026-01-01T10:00:00.000Z",
-      "durationMinutes": 180,
-      "dependsOnWorkOrderIds": [],
-      "segments": [
-        {
-          "workCenterId": "wc-extrusion-b",
-          "startDate": "2026-01-01T07:00:00.000Z",
-          "endDate": "2026-01-01T10:00:00.000Z",
-          "workingMinutes": 180
-        }
-      ]
-    },
     {
       "executionId": "wo-blue-extrude#1",
       "workOrderId": "wo-blue-extrude",
       "workOrderNumber": "WO-1002-EX",
       "manufacturingOrderId": "mo-blue-pipe",
       "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 1,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 3,
+      "originalStartDate": "2026-01-01T07:00:00.000Z",
+      "originalEndDate": "2026-01-14T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-01T07:00:00.000Z",
+      "scheduledEndDate": "2026-01-01T13:00:00.000Z",
+      "durationMinutes": 360,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-01T07:00:00.000Z",
+          "endDate": "2026-01-01T13:00:00.000Z",
+          "workingMinutes": 360
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-extrude#1",
+      "workOrderId": "wo-green-extrude",
+      "workOrderNumber": "WO-1001-EX",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
       "workCenterId": "wc-extrusion-a",
       "unitNumber": 1,
       "totalQuantity": 3,
       "remainingQuantityAfterExecution": 2,
       "originalStartDate": "2026-01-01T08:00:00.000Z",
-      "originalEndDate": "2026-01-08T16:00:00.000Z",
+      "originalEndDate": "2026-01-12T16:00:00.000Z",
       "scheduledStartDate": "2026-01-01T08:00:00.000Z",
-      "scheduledEndDate": "2026-01-01T16:00:00.000Z",
-      "durationMinutes": 360,
+      "scheduledEndDate": "2026-01-01T12:00:00.000Z",
+      "durationMinutes": 240,
       "dependsOnWorkOrderIds": [],
       "segments": [
         {
@@ -476,40 +1151,28 @@
           "startDate": "2026-01-01T08:00:00.000Z",
           "endDate": "2026-01-01T12:00:00.000Z",
           "workingMinutes": 240
-        },
-        {
-          "workCenterId": "wc-extrusion-a",
-          "startDate": "2026-01-01T14:00:00.000Z",
-          "endDate": "2026-01-01T16:00:00.000Z",
-          "workingMinutes": 120
         }
       ]
     },
     {
-      "executionId": "wo-blue-cut#1",
-      "workOrderId": "wo-blue-cut",
-      "workOrderNumber": "WO-1002-CUT",
+      "executionId": "wo-blue-trim#1",
+      "workOrderId": "wo-blue-trim",
+      "workOrderNumber": "WO-1002-TRIM",
       "manufacturingOrderId": "mo-blue-pipe",
       "manufacturingOrderNumber": "MO-1002",
       "workCenterId": "wc-cutting",
       "unitNumber": 1,
-      "totalQuantity": 3,
-      "remainingQuantityAfterExecution": 2,
-      "originalStartDate": "2026-01-01T09:00:00.000Z",
-      "originalEndDate": "2026-01-13T17:00:00.000Z",
-      "scheduledStartDate": "2026-01-01T16:00:00.000Z",
-      "scheduledEndDate": "2026-01-02T12:00:00.000Z",
-      "durationMinutes": 180,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 3,
+      "originalStartDate": "2026-01-02T09:00:00.000Z",
+      "originalEndDate": "2026-01-18T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-02T09:00:00.000Z",
+      "scheduledEndDate": "2026-01-02T13:30:00.000Z",
+      "durationMinutes": 210,
       "dependsOnWorkOrderIds": [
         "wo-blue-extrude"
       ],
       "segments": [
-        {
-          "workCenterId": "wc-cutting",
-          "startDate": "2026-01-01T16:00:00.000Z",
-          "endDate": "2026-01-01T17:00:00.000Z",
-          "workingMinutes": 60
-        },
         {
           "workCenterId": "wc-cutting",
           "startDate": "2026-01-02T09:00:00.000Z",
@@ -519,7 +1182,34 @@
         {
           "workCenterId": "wc-cutting",
           "startDate": "2026-01-02T11:00:00.000Z",
-          "endDate": "2026-01-02T12:00:00.000Z",
+          "endDate": "2026-01-02T13:30:00.000Z",
+          "workingMinutes": 150
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-label-setup#1",
+      "workOrderId": "wo-blue-label-setup",
+      "workOrderNumber": "WO-1002-MNT",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 1,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 3,
+      "originalStartDate": "2026-01-03T10:00:00.000Z",
+      "originalEndDate": "2026-01-18T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T10:00:00.000Z",
+      "scheduledEndDate": "2026-01-05T11:00:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [
+        "wo-blue-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-05T10:00:00.000Z",
+          "endDate": "2026-01-05T11:00:00.000Z",
           "workingMinutes": 60
         }
       ]
@@ -530,109 +1220,28 @@
       "workOrderNumber": "WO-1001-EX",
       "manufacturingOrderId": "mo-green-pipe",
       "manufacturingOrderNumber": "MO-1001",
-      "workCenterId": "wc-extrusion-b",
+      "workCenterId": "wc-extrusion-a",
       "unitNumber": 2,
-      "totalQuantity": 2,
-      "remainingQuantityAfterExecution": 0,
-      "originalStartDate": "2026-01-01T07:00:00.000Z",
-      "originalEndDate": "2026-01-06T15:00:00.000Z",
-      "scheduledStartDate": "2026-01-01T10:00:00.000Z",
-      "scheduledEndDate": "2026-01-01T14:00:00.000Z",
-      "durationMinutes": 180,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-01T08:00:00.000Z",
+      "originalEndDate": "2026-01-12T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-01T14:00:00.000Z",
+      "scheduledEndDate": "2026-01-02T10:00:00.000Z",
+      "durationMinutes": 240,
       "dependsOnWorkOrderIds": [],
       "segments": [
         {
-          "workCenterId": "wc-extrusion-b",
-          "startDate": "2026-01-01T10:00:00.000Z",
-          "endDate": "2026-01-01T11:00:00.000Z",
-          "workingMinutes": 60
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-01T14:00:00.000Z",
+          "endDate": "2026-01-01T16:00:00.000Z",
+          "workingMinutes": 120
         },
         {
-          "workCenterId": "wc-extrusion-b",
-          "startDate": "2026-01-01T12:00:00.000Z",
-          "endDate": "2026-01-01T14:00:00.000Z",
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-02T08:00:00.000Z",
+          "endDate": "2026-01-02T10:00:00.000Z",
           "workingMinutes": 120
-        }
-      ]
-    },
-    {
-      "executionId": "wo-blue-pack-setup#1",
-      "workOrderId": "wo-blue-pack-setup",
-      "workOrderNumber": "WO-1002-MNT",
-      "manufacturingOrderId": "mo-blue-pipe",
-      "manufacturingOrderNumber": "MO-1002",
-      "workCenterId": "wc-packaging",
-      "unitNumber": 1,
-      "totalQuantity": 3,
-      "remainingQuantityAfterExecution": 2,
-      "originalStartDate": "2026-01-02T10:00:00.000Z",
-      "originalEndDate": "2026-01-14T18:00:00.000Z",
-      "scheduledStartDate": "2026-01-02T13:00:00.000Z",
-      "scheduledEndDate": "2026-01-02T13:45:00.000Z",
-      "durationMinutes": 45,
-      "dependsOnWorkOrderIds": [
-        "wo-blue-cut"
-      ],
-      "segments": [
-        {
-          "workCenterId": "wc-packaging",
-          "startDate": "2026-01-02T13:00:00.000Z",
-          "endDate": "2026-01-02T13:45:00.000Z",
-          "workingMinutes": 45
-        }
-      ]
-    },
-    {
-      "executionId": "wo-green-clean#1",
-      "workOrderId": "wo-green-clean",
-      "workOrderNumber": "WO-1001-MNT",
-      "manufacturingOrderId": "mo-green-pipe",
-      "manufacturingOrderNumber": "MO-1001",
-      "workCenterId": "wc-extrusion-b",
-      "unitNumber": 1,
-      "totalQuantity": 2,
-      "remainingQuantityAfterExecution": 1,
-      "originalStartDate": "2026-01-01T07:00:00.000Z",
-      "originalEndDate": "2026-01-07T15:00:00.000Z",
-      "scheduledStartDate": "2026-01-01T14:00:00.000Z",
-      "scheduledEndDate": "2026-01-01T15:00:00.000Z",
-      "durationMinutes": 60,
-      "dependsOnWorkOrderIds": [
-        "wo-green-extrude"
-      ],
-      "segments": [
-        {
-          "workCenterId": "wc-extrusion-b",
-          "startDate": "2026-01-01T14:00:00.000Z",
-          "endDate": "2026-01-01T15:00:00.000Z",
-          "workingMinutes": 60
-        }
-      ]
-    },
-    {
-      "executionId": "wo-green-clean#2",
-      "workOrderId": "wo-green-clean",
-      "workOrderNumber": "WO-1001-MNT",
-      "manufacturingOrderId": "mo-green-pipe",
-      "manufacturingOrderNumber": "MO-1001",
-      "workCenterId": "wc-extrusion-b",
-      "unitNumber": 2,
-      "totalQuantity": 2,
-      "remainingQuantityAfterExecution": 0,
-      "originalStartDate": "2026-01-01T07:00:00.000Z",
-      "originalEndDate": "2026-01-07T15:00:00.000Z",
-      "scheduledStartDate": "2026-01-02T07:00:00.000Z",
-      "scheduledEndDate": "2026-01-02T08:00:00.000Z",
-      "durationMinutes": 60,
-      "dependsOnWorkOrderIds": [
-        "wo-green-extrude"
-      ],
-      "segments": [
-        {
-          "workCenterId": "wc-extrusion-b",
-          "startDate": "2026-01-02T07:00:00.000Z",
-          "endDate": "2026-01-02T08:00:00.000Z",
-          "workingMinutes": 60
         }
       ]
     },
@@ -642,28 +1251,410 @@
       "workOrderNumber": "WO-1002-EX",
       "manufacturingOrderId": "mo-blue-pipe",
       "manufacturingOrderNumber": "MO-1002",
-      "workCenterId": "wc-extrusion-a",
+      "workCenterId": "wc-extrusion-b",
       "unitNumber": 2,
-      "totalQuantity": 3,
-      "remainingQuantityAfterExecution": 1,
-      "originalStartDate": "2026-01-01T08:00:00.000Z",
-      "originalEndDate": "2026-01-08T16:00:00.000Z",
-      "scheduledStartDate": "2026-01-02T08:00:00.000Z",
-      "scheduledEndDate": "2026-01-02T15:00:00.000Z",
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-01T07:00:00.000Z",
+      "originalEndDate": "2026-01-14T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-01T13:00:00.000Z",
+      "scheduledEndDate": "2026-01-02T11:00:00.000Z",
       "durationMinutes": 360,
       "dependsOnWorkOrderIds": [],
       "segments": [
         {
-          "workCenterId": "wc-extrusion-a",
-          "startDate": "2026-01-02T08:00:00.000Z",
-          "endDate": "2026-01-02T10:00:00.000Z",
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-01T13:00:00.000Z",
+          "endDate": "2026-01-01T15:00:00.000Z",
           "workingMinutes": 120
         },
         {
-          "workCenterId": "wc-extrusion-a",
-          "startDate": "2026-01-02T11:00:00.000Z",
-          "endDate": "2026-01-02T15:00:00.000Z",
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-02T07:00:00.000Z",
+          "endDate": "2026-01-02T11:00:00.000Z",
           "workingMinutes": 240
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-extrude#3",
+      "workOrderId": "wo-green-extrude",
+      "workOrderNumber": "WO-1001-EX",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 3,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-01T08:00:00.000Z",
+      "originalEndDate": "2026-01-12T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-02T10:00:00.000Z",
+      "scheduledEndDate": "2026-01-02T14:00:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-02T10:00:00.000Z",
+          "endDate": "2026-01-02T14:00:00.000Z",
+          "workingMinutes": 240
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-extrude#3",
+      "workOrderId": "wo-blue-extrude",
+      "workOrderNumber": "WO-1002-EX",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 3,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-01T07:00:00.000Z",
+      "originalEndDate": "2026-01-14T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-02T12:00:00.000Z",
+      "scheduledEndDate": "2026-01-05T10:00:00.000Z",
+      "durationMinutes": 360,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-02T12:00:00.000Z",
+          "endDate": "2026-01-02T15:00:00.000Z",
+          "workingMinutes": 180
+        },
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-05T07:00:00.000Z",
+          "endDate": "2026-01-05T10:00:00.000Z",
+          "workingMinutes": 180
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-trim#2",
+      "workOrderId": "wo-blue-trim",
+      "workOrderNumber": "WO-1002-TRIM",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 2,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-02T09:00:00.000Z",
+      "originalEndDate": "2026-01-18T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-02T13:30:00.000Z",
+      "scheduledEndDate": "2026-01-02T17:00:00.000Z",
+      "durationMinutes": 210,
+      "dependsOnWorkOrderIds": [
+        "wo-blue-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-02T13:30:00.000Z",
+          "endDate": "2026-01-02T17:00:00.000Z",
+          "workingMinutes": 210
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-clean#1",
+      "workOrderId": "wo-green-clean",
+      "workOrderNumber": "WO-1001-MNT",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 1,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-02T08:00:00.000Z",
+      "originalEndDate": "2026-01-13T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-02T14:00:00.000Z",
+      "scheduledEndDate": "2026-01-02T14:45:00.000Z",
+      "durationMinutes": 45,
+      "dependsOnWorkOrderIds": [
+        "wo-green-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-02T14:00:00.000Z",
+          "endDate": "2026-01-02T14:45:00.000Z",
+          "workingMinutes": 45
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-clean#2",
+      "workOrderId": "wo-green-clean",
+      "workOrderNumber": "WO-1001-MNT",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 2,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-02T08:00:00.000Z",
+      "originalEndDate": "2026-01-13T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-02T14:45:00.000Z",
+      "scheduledEndDate": "2026-01-02T15:30:00.000Z",
+      "durationMinutes": 45,
+      "dependsOnWorkOrderIds": [
+        "wo-green-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-02T14:45:00.000Z",
+          "endDate": "2026-01-02T15:30:00.000Z",
+          "workingMinutes": 45
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-clean#3",
+      "workOrderId": "wo-green-clean",
+      "workOrderNumber": "WO-1001-MNT",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 3,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-02T08:00:00.000Z",
+      "originalEndDate": "2026-01-13T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-02T15:30:00.000Z",
+      "scheduledEndDate": "2026-01-05T08:15:00.000Z",
+      "durationMinutes": 45,
+      "dependsOnWorkOrderIds": [
+        "wo-green-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-02T15:30:00.000Z",
+          "endDate": "2026-01-02T16:00:00.000Z",
+          "workingMinutes": 30
+        },
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-05T08:00:00.000Z",
+          "endDate": "2026-01-05T08:15:00.000Z",
+          "workingMinutes": 15
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-trim#3",
+      "workOrderId": "wo-blue-trim",
+      "workOrderNumber": "WO-1002-TRIM",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 3,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-02T09:00:00.000Z",
+      "originalEndDate": "2026-01-18T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T10:00:00.000Z",
+      "scheduledEndDate": "2026-01-05T13:30:00.000Z",
+      "durationMinutes": 210,
+      "dependsOnWorkOrderIds": [
+        "wo-blue-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-05T10:00:00.000Z",
+          "endDate": "2026-01-05T13:30:00.000Z",
+          "workingMinutes": 210
+        }
+      ]
+    },
+    {
+      "executionId": "wo-gray-cap-mold#1",
+      "workOrderId": "wo-gray-cap-mold",
+      "workOrderNumber": "WO-1010-MOLD",
+      "manufacturingOrderId": "mo-gray-cap",
+      "manufacturingOrderNumber": "MO-1010",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 1,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 3,
+      "originalStartDate": "2026-01-02T08:00:00.000Z",
+      "originalEndDate": "2026-01-17T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T08:15:00.000Z",
+      "scheduledEndDate": "2026-01-05T09:15:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-05T08:15:00.000Z",
+          "endDate": "2026-01-05T09:15:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-gray-cap-mold#2",
+      "workOrderId": "wo-gray-cap-mold",
+      "workOrderNumber": "WO-1010-MOLD",
+      "manufacturingOrderId": "mo-gray-cap",
+      "manufacturingOrderNumber": "MO-1010",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 2,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-02T08:00:00.000Z",
+      "originalEndDate": "2026-01-17T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T09:15:00.000Z",
+      "scheduledEndDate": "2026-01-05T10:15:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-05T09:15:00.000Z",
+          "endDate": "2026-01-05T10:15:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-extrude#4",
+      "workOrderId": "wo-blue-extrude",
+      "workOrderNumber": "WO-1002-EX",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 4,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-01T07:00:00.000Z",
+      "originalEndDate": "2026-01-14T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T10:00:00.000Z",
+      "scheduledEndDate": "2026-01-06T08:00:00.000Z",
+      "durationMinutes": 360,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-05T10:00:00.000Z",
+          "endDate": "2026-01-05T15:00:00.000Z",
+          "workingMinutes": 300
+        },
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-06T07:00:00.000Z",
+          "endDate": "2026-01-06T08:00:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-gray-cap-mold#3",
+      "workOrderId": "wo-gray-cap-mold",
+      "workOrderNumber": "WO-1010-MOLD",
+      "manufacturingOrderId": "mo-gray-cap",
+      "manufacturingOrderNumber": "MO-1010",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 3,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-02T08:00:00.000Z",
+      "originalEndDate": "2026-01-17T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T10:15:00.000Z",
+      "scheduledEndDate": "2026-01-05T11:15:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-05T10:15:00.000Z",
+          "endDate": "2026-01-05T11:15:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-label-setup#2",
+      "workOrderId": "wo-blue-label-setup",
+      "workOrderNumber": "WO-1002-MNT",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 2,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-03T10:00:00.000Z",
+      "originalEndDate": "2026-01-18T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T11:00:00.000Z",
+      "scheduledEndDate": "2026-01-05T12:00:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [
+        "wo-blue-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-05T11:00:00.000Z",
+          "endDate": "2026-01-05T12:00:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-gray-cap-mold#4",
+      "workOrderId": "wo-gray-cap-mold",
+      "workOrderNumber": "WO-1010-MOLD",
+      "manufacturingOrderId": "mo-gray-cap",
+      "manufacturingOrderNumber": "MO-1010",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 4,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-02T08:00:00.000Z",
+      "originalEndDate": "2026-01-17T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T11:15:00.000Z",
+      "scheduledEndDate": "2026-01-05T12:15:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-05T11:15:00.000Z",
+          "endDate": "2026-01-05T12:15:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-label-setup#3",
+      "workOrderId": "wo-blue-label-setup",
+      "workOrderNumber": "WO-1002-MNT",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 3,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-03T10:00:00.000Z",
+      "originalEndDate": "2026-01-18T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T12:00:00.000Z",
+      "scheduledEndDate": "2026-01-05T13:00:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [
+        "wo-blue-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-05T12:00:00.000Z",
+          "endDate": "2026-01-05T13:00:00.000Z",
+          "workingMinutes": 60
         }
       ]
     },
@@ -677,163 +1668,103 @@
       "unitNumber": 1,
       "totalQuantity": 2,
       "remainingQuantityAfterExecution": 1,
-      "originalStartDate": "2026-01-01T08:00:00.000Z",
-      "originalEndDate": "2026-01-09T16:00:00.000Z",
-      "scheduledStartDate": "2026-01-02T15:00:00.000Z",
-      "scheduledEndDate": "2026-01-05T12:00:00.000Z",
+      "originalStartDate": "2026-01-04T08:00:00.000Z",
+      "originalEndDate": "2026-01-16T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T12:15:00.000Z",
+      "scheduledEndDate": "2026-01-06T09:15:00.000Z",
       "durationMinutes": 300,
       "dependsOnWorkOrderIds": [],
       "segments": [
         {
           "workCenterId": "wc-extrusion-a",
-          "startDate": "2026-01-02T15:00:00.000Z",
-          "endDate": "2026-01-02T16:00:00.000Z",
-          "workingMinutes": 60
-        },
-        {
-          "workCenterId": "wc-extrusion-a",
-          "startDate": "2026-01-05T08:00:00.000Z",
-          "endDate": "2026-01-05T12:00:00.000Z",
-          "workingMinutes": 240
-        }
-      ]
-    },
-    {
-      "executionId": "wo-yellow-line-check#1",
-      "workOrderId": "wo-yellow-line-check",
-      "workOrderNumber": "WO-1003-MNT",
-      "manufacturingOrderId": "mo-yellow-pipe",
-      "manufacturingOrderNumber": "MO-1003",
-      "workCenterId": "wc-packaging",
-      "unitNumber": 1,
-      "totalQuantity": 2,
-      "remainingQuantityAfterExecution": 1,
-      "originalStartDate": "2026-01-02T10:00:00.000Z",
-      "originalEndDate": "2026-01-13T18:00:00.000Z",
-      "scheduledStartDate": "2026-01-05T12:00:00.000Z",
-      "scheduledEndDate": "2026-01-05T13:00:00.000Z",
-      "durationMinutes": 60,
-      "dependsOnWorkOrderIds": [
-        "wo-yellow-extrude"
-      ],
-      "segments": [
-        {
-          "workCenterId": "wc-packaging",
-          "startDate": "2026-01-05T12:00:00.000Z",
-          "endDate": "2026-01-05T13:00:00.000Z",
-          "workingMinutes": 60
-        }
-      ]
-    },
-    {
-      "executionId": "wo-blue-extrude#3",
-      "workOrderId": "wo-blue-extrude",
-      "workOrderNumber": "WO-1002-EX",
-      "manufacturingOrderId": "mo-blue-pipe",
-      "manufacturingOrderNumber": "MO-1002",
-      "workCenterId": "wc-extrusion-a",
-      "unitNumber": 3,
-      "totalQuantity": 3,
-      "remainingQuantityAfterExecution": 0,
-      "originalStartDate": "2026-01-01T08:00:00.000Z",
-      "originalEndDate": "2026-01-08T16:00:00.000Z",
-      "scheduledStartDate": "2026-01-05T12:00:00.000Z",
-      "scheduledEndDate": "2026-01-06T10:00:00.000Z",
-      "durationMinutes": 360,
-      "dependsOnWorkOrderIds": [],
-      "segments": [
-        {
-          "workCenterId": "wc-extrusion-a",
-          "startDate": "2026-01-05T12:00:00.000Z",
+          "startDate": "2026-01-05T12:15:00.000Z",
           "endDate": "2026-01-05T16:00:00.000Z",
-          "workingMinutes": 240
+          "workingMinutes": 225
         },
         {
           "workCenterId": "wc-extrusion-a",
           "startDate": "2026-01-06T08:00:00.000Z",
-          "endDate": "2026-01-06T10:00:00.000Z",
-          "workingMinutes": 120
+          "endDate": "2026-01-06T09:15:00.000Z",
+          "workingMinutes": 75
         }
       ]
     },
     {
-      "executionId": "wo-blue-cut#3",
-      "workOrderId": "wo-blue-cut",
-      "workOrderNumber": "WO-1002-CUT",
-      "manufacturingOrderId": "mo-blue-pipe",
-      "manufacturingOrderNumber": "MO-1002",
-      "workCenterId": "wc-cutting",
-      "unitNumber": 3,
-      "totalQuantity": 3,
-      "remainingQuantityAfterExecution": 0,
-      "originalStartDate": "2026-01-01T09:00:00.000Z",
-      "originalEndDate": "2026-01-13T17:00:00.000Z",
-      "scheduledStartDate": "2026-01-06T10:00:00.000Z",
-      "scheduledEndDate": "2026-01-06T13:00:00.000Z",
-      "durationMinutes": 180,
-      "dependsOnWorkOrderIds": [
-        "wo-blue-extrude"
-      ],
-      "segments": [
-        {
-          "workCenterId": "wc-cutting",
-          "startDate": "2026-01-06T10:00:00.000Z",
-          "endDate": "2026-01-06T13:00:00.000Z",
-          "workingMinutes": 180
-        }
-      ]
-    },
-    {
-      "executionId": "wo-blue-cut#2",
-      "workOrderId": "wo-blue-cut",
-      "workOrderNumber": "WO-1002-CUT",
-      "manufacturingOrderId": "mo-blue-pipe",
-      "manufacturingOrderNumber": "MO-1002",
-      "workCenterId": "wc-cutting",
-      "unitNumber": 2,
-      "totalQuantity": 3,
-      "remainingQuantityAfterExecution": 1,
-      "originalStartDate": "2026-01-01T09:00:00.000Z",
-      "originalEndDate": "2026-01-13T17:00:00.000Z",
-      "scheduledStartDate": "2026-01-06T13:00:00.000Z",
-      "scheduledEndDate": "2026-01-06T16:00:00.000Z",
-      "durationMinutes": 180,
-      "dependsOnWorkOrderIds": [
-        "wo-blue-extrude"
-      ],
-      "segments": [
-        {
-          "workCenterId": "wc-cutting",
-          "startDate": "2026-01-06T13:00:00.000Z",
-          "endDate": "2026-01-06T16:00:00.000Z",
-          "workingMinutes": 180
-        }
-      ]
-    },
-    {
-      "executionId": "wo-blue-pack-setup#2",
-      "workOrderId": "wo-blue-pack-setup",
+      "executionId": "wo-blue-label-setup#4",
+      "workOrderId": "wo-blue-label-setup",
       "workOrderNumber": "WO-1002-MNT",
       "manufacturingOrderId": "mo-blue-pipe",
       "manufacturingOrderNumber": "MO-1002",
       "workCenterId": "wc-packaging",
-      "unitNumber": 2,
-      "totalQuantity": 3,
-      "remainingQuantityAfterExecution": 1,
-      "originalStartDate": "2026-01-02T10:00:00.000Z",
-      "originalEndDate": "2026-01-14T18:00:00.000Z",
-      "scheduledStartDate": "2026-01-06T16:00:00.000Z",
-      "scheduledEndDate": "2026-01-06T16:45:00.000Z",
-      "durationMinutes": 45,
+      "unitNumber": 4,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-03T10:00:00.000Z",
+      "originalEndDate": "2026-01-18T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T10:00:00.000Z",
+      "scheduledEndDate": "2026-01-06T11:00:00.000Z",
+      "durationMinutes": 60,
       "dependsOnWorkOrderIds": [
-        "wo-blue-cut"
+        "wo-blue-extrude"
       ],
       "segments": [
         {
           "workCenterId": "wc-packaging",
-          "startDate": "2026-01-06T16:00:00.000Z",
-          "endDate": "2026-01-06T16:45:00.000Z",
-          "workingMinutes": 45
+          "startDate": "2026-01-06T10:00:00.000Z",
+          "endDate": "2026-01-06T11:00:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-trim#4",
+      "workOrderId": "wo-blue-trim",
+      "workOrderNumber": "WO-1002-TRIM",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 4,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-02T09:00:00.000Z",
+      "originalEndDate": "2026-01-18T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T09:00:00.000Z",
+      "scheduledEndDate": "2026-01-06T12:30:00.000Z",
+      "durationMinutes": 210,
+      "dependsOnWorkOrderIds": [
+        "wo-blue-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-06T09:00:00.000Z",
+          "endDate": "2026-01-06T12:30:00.000Z",
+          "workingMinutes": 210
+        }
+      ]
+    },
+    {
+      "executionId": "wo-orange-bend#1",
+      "workOrderId": "wo-orange-bend",
+      "workOrderNumber": "WO-1005-BEND",
+      "manufacturingOrderId": "mo-orange-elbow",
+      "manufacturingOrderNumber": "MO-1005",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 1,
+      "totalQuantity": 1,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-01T07:00:00.000Z",
+      "originalEndDate": "2026-01-16T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T08:00:00.000Z",
+      "scheduledEndDate": "2026-01-06T11:30:00.000Z",
+      "durationMinutes": 210,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-06T08:00:00.000Z",
+          "endDate": "2026-01-06T11:30:00.000Z",
+          "workingMinutes": 210
         }
       ]
     },
@@ -847,186 +1778,24 @@
       "unitNumber": 2,
       "totalQuantity": 2,
       "remainingQuantityAfterExecution": 0,
-      "originalStartDate": "2026-01-01T08:00:00.000Z",
-      "originalEndDate": "2026-01-09T16:00:00.000Z",
-      "scheduledStartDate": "2026-01-06T10:00:00.000Z",
-      "scheduledEndDate": "2026-01-06T15:00:00.000Z",
+      "originalStartDate": "2026-01-04T08:00:00.000Z",
+      "originalEndDate": "2026-01-16T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T09:15:00.000Z",
+      "scheduledEndDate": "2026-01-06T15:15:00.000Z",
       "durationMinutes": 300,
       "dependsOnWorkOrderIds": [],
       "segments": [
         {
           "workCenterId": "wc-extrusion-a",
-          "startDate": "2026-01-06T10:00:00.000Z",
-          "endDate": "2026-01-06T15:00:00.000Z",
-          "workingMinutes": 300
-        }
-      ]
-    },
-    {
-      "executionId": "wo-green-cut#1",
-      "workOrderId": "wo-green-cut",
-      "workOrderNumber": "WO-1001-CUT",
-      "manufacturingOrderId": "mo-green-pipe",
-      "manufacturingOrderNumber": "MO-1001",
-      "workCenterId": "wc-cutting",
-      "unitNumber": 1,
-      "totalQuantity": 2,
-      "remainingQuantityAfterExecution": 1,
-      "originalStartDate": "2026-01-01T09:00:00.000Z",
-      "originalEndDate": "2026-01-10T17:00:00.000Z",
-      "scheduledStartDate": "2026-01-06T16:00:00.000Z",
-      "scheduledEndDate": "2026-01-07T12:00:00.000Z",
-      "durationMinutes": 240,
-      "dependsOnWorkOrderIds": [
-        "wo-green-clean"
-      ],
-      "segments": [
-        {
-          "workCenterId": "wc-cutting",
-          "startDate": "2026-01-06T16:00:00.000Z",
-          "endDate": "2026-01-06T17:00:00.000Z",
-          "workingMinutes": 60
+          "startDate": "2026-01-06T09:15:00.000Z",
+          "endDate": "2026-01-06T10:00:00.000Z",
+          "workingMinutes": 45
         },
         {
-          "workCenterId": "wc-cutting",
-          "startDate": "2026-01-07T09:00:00.000Z",
-          "endDate": "2026-01-07T12:00:00.000Z",
-          "workingMinutes": 180
-        }
-      ]
-    },
-    {
-      "executionId": "wo-green-cut#2",
-      "workOrderId": "wo-green-cut",
-      "workOrderNumber": "WO-1001-CUT",
-      "manufacturingOrderId": "mo-green-pipe",
-      "manufacturingOrderNumber": "MO-1001",
-      "workCenterId": "wc-cutting",
-      "unitNumber": 2,
-      "totalQuantity": 2,
-      "remainingQuantityAfterExecution": 0,
-      "originalStartDate": "2026-01-01T09:00:00.000Z",
-      "originalEndDate": "2026-01-10T17:00:00.000Z",
-      "scheduledStartDate": "2026-01-07T12:00:00.000Z",
-      "scheduledEndDate": "2026-01-07T16:00:00.000Z",
-      "durationMinutes": 240,
-      "dependsOnWorkOrderIds": [
-        "wo-green-clean"
-      ],
-      "segments": [
-        {
-          "workCenterId": "wc-cutting",
-          "startDate": "2026-01-07T12:00:00.000Z",
-          "endDate": "2026-01-07T16:00:00.000Z",
-          "workingMinutes": 240
-        }
-      ]
-    },
-    {
-      "executionId": "wo-green-pack#2",
-      "workOrderId": "wo-green-pack",
-      "workOrderNumber": "WO-1001-PACK",
-      "manufacturingOrderId": "mo-green-pipe",
-      "manufacturingOrderNumber": "MO-1001",
-      "workCenterId": "wc-packaging",
-      "unitNumber": 2,
-      "totalQuantity": 2,
-      "remainingQuantityAfterExecution": 0,
-      "originalStartDate": "2026-01-02T10:00:00.000Z",
-      "originalEndDate": "2026-01-12T18:00:00.000Z",
-      "scheduledStartDate": "2026-01-07T16:00:00.000Z",
-      "scheduledEndDate": "2026-01-07T18:00:00.000Z",
-      "durationMinutes": 120,
-      "dependsOnWorkOrderIds": [
-        "wo-green-cut"
-      ],
-      "segments": [
-        {
-          "workCenterId": "wc-packaging",
-          "startDate": "2026-01-07T16:00:00.000Z",
-          "endDate": "2026-01-07T18:00:00.000Z",
-          "workingMinutes": 120
-        }
-      ]
-    },
-    {
-      "executionId": "wo-green-pack#1",
-      "workOrderId": "wo-green-pack",
-      "workOrderNumber": "WO-1001-PACK",
-      "manufacturingOrderId": "mo-green-pipe",
-      "manufacturingOrderNumber": "MO-1001",
-      "workCenterId": "wc-packaging",
-      "unitNumber": 1,
-      "totalQuantity": 2,
-      "remainingQuantityAfterExecution": 1,
-      "originalStartDate": "2026-01-02T10:00:00.000Z",
-      "originalEndDate": "2026-01-12T18:00:00.000Z",
-      "scheduledStartDate": "2026-01-08T10:00:00.000Z",
-      "scheduledEndDate": "2026-01-08T12:00:00.000Z",
-      "durationMinutes": 120,
-      "dependsOnWorkOrderIds": [
-        "wo-green-cut"
-      ],
-      "segments": [
-        {
-          "workCenterId": "wc-packaging",
-          "startDate": "2026-01-08T10:00:00.000Z",
-          "endDate": "2026-01-08T12:00:00.000Z",
-          "workingMinutes": 120
-        }
-      ]
-    },
-    {
-      "executionId": "wo-yellow-line-check#2",
-      "workOrderId": "wo-yellow-line-check",
-      "workOrderNumber": "WO-1003-MNT",
-      "manufacturingOrderId": "mo-yellow-pipe",
-      "manufacturingOrderNumber": "MO-1003",
-      "workCenterId": "wc-packaging",
-      "unitNumber": 2,
-      "totalQuantity": 2,
-      "remainingQuantityAfterExecution": 0,
-      "originalStartDate": "2026-01-02T10:00:00.000Z",
-      "originalEndDate": "2026-01-13T18:00:00.000Z",
-      "scheduledStartDate": "2026-01-08T12:00:00.000Z",
-      "scheduledEndDate": "2026-01-08T13:00:00.000Z",
-      "durationMinutes": 60,
-      "dependsOnWorkOrderIds": [
-        "wo-yellow-extrude"
-      ],
-      "segments": [
-        {
-          "workCenterId": "wc-packaging",
-          "startDate": "2026-01-08T12:00:00.000Z",
-          "endDate": "2026-01-08T13:00:00.000Z",
-          "workingMinutes": 60
-        }
-      ]
-    },
-    {
-      "executionId": "wo-blue-pack-setup#3",
-      "workOrderId": "wo-blue-pack-setup",
-      "workOrderNumber": "WO-1002-MNT",
-      "manufacturingOrderId": "mo-blue-pipe",
-      "manufacturingOrderNumber": "MO-1002",
-      "workCenterId": "wc-packaging",
-      "unitNumber": 3,
-      "totalQuantity": 3,
-      "remainingQuantityAfterExecution": 0,
-      "originalStartDate": "2026-01-02T10:00:00.000Z",
-      "originalEndDate": "2026-01-14T18:00:00.000Z",
-      "scheduledStartDate": "2026-01-08T13:00:00.000Z",
-      "scheduledEndDate": "2026-01-08T13:45:00.000Z",
-      "durationMinutes": 45,
-      "dependsOnWorkOrderIds": [
-        "wo-blue-cut"
-      ],
-      "segments": [
-        {
-          "workCenterId": "wc-packaging",
-          "startDate": "2026-01-08T13:00:00.000Z",
-          "endDate": "2026-01-08T13:45:00.000Z",
-          "workingMinutes": 45
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-06T11:00:00.000Z",
+          "endDate": "2026-01-06T15:15:00.000Z",
+          "workingMinutes": 255
         }
       ]
     },
@@ -1038,22 +1807,81 @@
       "manufacturingOrderNumber": "MO-1002",
       "workCenterId": "wc-packaging",
       "unitNumber": 1,
-      "totalQuantity": 3,
-      "remainingQuantityAfterExecution": 2,
-      "originalStartDate": "2026-01-02T10:00:00.000Z",
-      "originalEndDate": "2026-01-15T18:00:00.000Z",
-      "scheduledStartDate": "2026-01-08T13:45:00.000Z",
-      "scheduledEndDate": "2026-01-08T15:45:00.000Z",
-      "durationMinutes": 120,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 3,
+      "originalStartDate": "2026-01-04T10:00:00.000Z",
+      "originalEndDate": "2026-01-22T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T11:00:00.000Z",
+      "scheduledEndDate": "2026-01-06T13:30:00.000Z",
+      "durationMinutes": 150,
       "dependsOnWorkOrderIds": [
-        "wo-blue-pack-setup"
+        "wo-blue-trim",
+        "wo-blue-label-setup"
       ],
       "segments": [
         {
           "workCenterId": "wc-packaging",
-          "startDate": "2026-01-08T13:45:00.000Z",
-          "endDate": "2026-01-08T15:45:00.000Z",
-          "workingMinutes": 120
+          "startDate": "2026-01-06T11:00:00.000Z",
+          "endDate": "2026-01-06T13:30:00.000Z",
+          "workingMinutes": 150
+        }
+      ]
+    },
+    {
+      "executionId": "wo-purple-machine#1",
+      "workOrderId": "wo-purple-machine",
+      "workOrderNumber": "WO-1004-MACH",
+      "manufacturingOrderId": "mo-purple-valve",
+      "manufacturingOrderNumber": "MO-1004",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-02T07:00:00.000Z",
+      "originalEndDate": "2026-01-13T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T11:30:00.000Z",
+      "scheduledEndDate": "2026-01-07T08:30:00.000Z",
+      "durationMinutes": 300,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-06T11:30:00.000Z",
+          "endDate": "2026-01-06T15:00:00.000Z",
+          "workingMinutes": 210
+        },
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-07T07:00:00.000Z",
+          "endDate": "2026-01-07T08:30:00.000Z",
+          "workingMinutes": 90
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-cut#1",
+      "workOrderId": "wo-green-cut",
+      "workOrderNumber": "WO-1001-CUT",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 1,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-03T09:00:00.000Z",
+      "originalEndDate": "2026-01-16T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T12:30:00.000Z",
+      "scheduledEndDate": "2026-01-06T15:30:00.000Z",
+      "durationMinutes": 180,
+      "dependsOnWorkOrderIds": [
+        "wo-green-clean"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-06T12:30:00.000Z",
+          "endDate": "2026-01-06T15:30:00.000Z",
+          "workingMinutes": 180
         }
       ]
     },
@@ -1065,22 +1893,87 @@
       "manufacturingOrderNumber": "MO-1002",
       "workCenterId": "wc-packaging",
       "unitNumber": 2,
-      "totalQuantity": 3,
-      "remainingQuantityAfterExecution": 1,
-      "originalStartDate": "2026-01-02T10:00:00.000Z",
-      "originalEndDate": "2026-01-15T18:00:00.000Z",
-      "scheduledStartDate": "2026-01-08T15:45:00.000Z",
-      "scheduledEndDate": "2026-01-08T17:45:00.000Z",
-      "durationMinutes": 120,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-04T10:00:00.000Z",
+      "originalEndDate": "2026-01-22T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T13:30:00.000Z",
+      "scheduledEndDate": "2026-01-06T16:00:00.000Z",
+      "durationMinutes": 150,
       "dependsOnWorkOrderIds": [
-        "wo-blue-pack-setup"
+        "wo-blue-trim",
+        "wo-blue-label-setup"
       ],
       "segments": [
         {
           "workCenterId": "wc-packaging",
-          "startDate": "2026-01-08T15:45:00.000Z",
-          "endDate": "2026-01-08T17:45:00.000Z",
-          "workingMinutes": 120
+          "startDate": "2026-01-06T13:30:00.000Z",
+          "endDate": "2026-01-06T16:00:00.000Z",
+          "workingMinutes": 150
+        }
+      ]
+    },
+    {
+      "executionId": "wo-black-mold#1",
+      "workOrderId": "wo-black-mold",
+      "workOrderNumber": "WO-1012-MOLD",
+      "manufacturingOrderId": "mo-black-coupler",
+      "manufacturingOrderNumber": "MO-1012",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 1,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-04T08:00:00.000Z",
+      "originalEndDate": "2026-01-18T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T15:15:00.000Z",
+      "scheduledEndDate": "2026-01-07T10:45:00.000Z",
+      "durationMinutes": 210,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-06T15:15:00.000Z",
+          "endDate": "2026-01-06T16:00:00.000Z",
+          "workingMinutes": 45
+        },
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-07T08:00:00.000Z",
+          "endDate": "2026-01-07T10:45:00.000Z",
+          "workingMinutes": 165
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-cut#2",
+      "workOrderId": "wo-green-cut",
+      "workOrderNumber": "WO-1001-CUT",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 2,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-03T09:00:00.000Z",
+      "originalEndDate": "2026-01-16T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T15:30:00.000Z",
+      "scheduledEndDate": "2026-01-07T10:30:00.000Z",
+      "durationMinutes": 180,
+      "dependsOnWorkOrderIds": [
+        "wo-green-clean"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-06T15:30:00.000Z",
+          "endDate": "2026-01-06T17:00:00.000Z",
+          "workingMinutes": 90
+        },
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-07T09:00:00.000Z",
+          "endDate": "2026-01-07T10:30:00.000Z",
+          "workingMinutes": 90
         }
       ]
     },
@@ -1092,28 +1985,1729 @@
       "manufacturingOrderNumber": "MO-1002",
       "workCenterId": "wc-packaging",
       "unitNumber": 3,
-      "totalQuantity": 3,
-      "remainingQuantityAfterExecution": 0,
-      "originalStartDate": "2026-01-02T10:00:00.000Z",
-      "originalEndDate": "2026-01-15T18:00:00.000Z",
-      "scheduledStartDate": "2026-01-08T17:45:00.000Z",
-      "scheduledEndDate": "2026-01-09T11:45:00.000Z",
-      "durationMinutes": 120,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-04T10:00:00.000Z",
+      "originalEndDate": "2026-01-22T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T16:00:00.000Z",
+      "scheduledEndDate": "2026-01-07T10:30:00.000Z",
+      "durationMinutes": 150,
       "dependsOnWorkOrderIds": [
-        "wo-blue-pack-setup"
+        "wo-blue-trim",
+        "wo-blue-label-setup"
       ],
       "segments": [
         {
           "workCenterId": "wc-packaging",
-          "startDate": "2026-01-08T17:45:00.000Z",
-          "endDate": "2026-01-08T18:00:00.000Z",
-          "workingMinutes": 15
+          "startDate": "2026-01-06T16:00:00.000Z",
+          "endDate": "2026-01-06T18:00:00.000Z",
+          "workingMinutes": 120
         },
         {
           "workCenterId": "wc-packaging",
-          "startDate": "2026-01-09T10:00:00.000Z",
-          "endDate": "2026-01-09T11:45:00.000Z",
+          "startDate": "2026-01-07T10:00:00.000Z",
+          "endDate": "2026-01-07T10:30:00.000Z",
+          "workingMinutes": 30
+        }
+      ]
+    },
+    {
+      "executionId": "wo-purple-machine#2",
+      "workOrderId": "wo-purple-machine",
+      "workOrderNumber": "WO-1004-MACH",
+      "manufacturingOrderId": "mo-purple-valve",
+      "manufacturingOrderNumber": "MO-1004",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-02T07:00:00.000Z",
+      "originalEndDate": "2026-01-13T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T08:30:00.000Z",
+      "scheduledEndDate": "2026-01-07T13:30:00.000Z",
+      "durationMinutes": 300,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-07T08:30:00.000Z",
+          "endDate": "2026-01-07T13:30:00.000Z",
+          "workingMinutes": 300
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-cut#3",
+      "workOrderId": "wo-green-cut",
+      "workOrderNumber": "WO-1001-CUT",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 3,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-03T09:00:00.000Z",
+      "originalEndDate": "2026-01-16T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T10:30:00.000Z",
+      "scheduledEndDate": "2026-01-07T13:30:00.000Z",
+      "durationMinutes": 180,
+      "dependsOnWorkOrderIds": [
+        "wo-green-clean"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-07T10:30:00.000Z",
+          "endDate": "2026-01-07T13:30:00.000Z",
+          "workingMinutes": 180
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-pack#4",
+      "workOrderId": "wo-blue-pack",
+      "workOrderNumber": "WO-1002-PACK",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 4,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-04T10:00:00.000Z",
+      "originalEndDate": "2026-01-22T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T10:30:00.000Z",
+      "scheduledEndDate": "2026-01-07T13:00:00.000Z",
+      "durationMinutes": 150,
+      "dependsOnWorkOrderIds": [
+        "wo-blue-trim",
+        "wo-blue-label-setup"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-07T10:30:00.000Z",
+          "endDate": "2026-01-07T13:00:00.000Z",
+          "workingMinutes": 150
+        }
+      ]
+    },
+    {
+      "executionId": "wo-black-mold#2",
+      "workOrderId": "wo-black-mold",
+      "workOrderNumber": "WO-1012-MOLD",
+      "manufacturingOrderId": "mo-black-coupler",
+      "manufacturingOrderNumber": "MO-1012",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 2,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-04T08:00:00.000Z",
+      "originalEndDate": "2026-01-18T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T10:45:00.000Z",
+      "scheduledEndDate": "2026-01-07T14:15:00.000Z",
+      "durationMinutes": 210,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-07T10:45:00.000Z",
+          "endDate": "2026-01-07T14:15:00.000Z",
+          "workingMinutes": 210
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-audit#1",
+      "workOrderId": "wo-blue-audit",
+      "workOrderNumber": "WO-1002-AUD",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 1,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 3,
+      "originalStartDate": "2026-01-06T10:00:00.000Z",
+      "originalEndDate": "2026-01-23T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T13:00:00.000Z",
+      "scheduledEndDate": "2026-01-07T13:45:00.000Z",
+      "durationMinutes": 45,
+      "dependsOnWorkOrderIds": [
+        "wo-blue-pack"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-07T13:00:00.000Z",
+          "endDate": "2026-01-07T13:45:00.000Z",
+          "workingMinutes": 45
+        }
+      ]
+    },
+    {
+      "executionId": "wo-purple-calibrate#1",
+      "workOrderId": "wo-purple-calibrate",
+      "workOrderNumber": "WO-1004-MNT",
+      "manufacturingOrderId": "mo-purple-valve",
+      "manufacturingOrderNumber": "MO-1004",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-03T07:00:00.000Z",
+      "originalEndDate": "2026-01-15T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T13:30:00.000Z",
+      "scheduledEndDate": "2026-01-07T15:00:00.000Z",
+      "durationMinutes": 90,
+      "dependsOnWorkOrderIds": [
+        "wo-purple-machine"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-07T13:30:00.000Z",
+          "endDate": "2026-01-07T15:00:00.000Z",
+          "workingMinutes": 90
+        }
+      ]
+    },
+    {
+      "executionId": "wo-red-stamp#1",
+      "workOrderId": "wo-red-stamp",
+      "workOrderNumber": "WO-1007-STAMP",
+      "manufacturingOrderId": "mo-red-gasket",
+      "manufacturingOrderNumber": "MO-1007",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 1,
+      "totalQuantity": 5,
+      "remainingQuantityAfterExecution": 4,
+      "originalStartDate": "2026-01-03T09:00:00.000Z",
+      "originalEndDate": "2026-01-19T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T13:30:00.000Z",
+      "scheduledEndDate": "2026-01-07T14:45:00.000Z",
+      "durationMinutes": 75,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-07T13:30:00.000Z",
+          "endDate": "2026-01-07T14:45:00.000Z",
+          "workingMinutes": 75
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-audit#2",
+      "workOrderId": "wo-blue-audit",
+      "workOrderNumber": "WO-1002-AUD",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 2,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-06T10:00:00.000Z",
+      "originalEndDate": "2026-01-23T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T13:45:00.000Z",
+      "scheduledEndDate": "2026-01-07T14:30:00.000Z",
+      "durationMinutes": 45,
+      "dependsOnWorkOrderIds": [
+        "wo-blue-pack"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-07T13:45:00.000Z",
+          "endDate": "2026-01-07T14:30:00.000Z",
+          "workingMinutes": 45
+        }
+      ]
+    },
+    {
+      "executionId": "wo-black-mold#3",
+      "workOrderId": "wo-black-mold",
+      "workOrderNumber": "WO-1012-MOLD",
+      "manufacturingOrderId": "mo-black-coupler",
+      "manufacturingOrderNumber": "MO-1012",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 3,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-04T08:00:00.000Z",
+      "originalEndDate": "2026-01-18T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T14:15:00.000Z",
+      "scheduledEndDate": "2026-01-08T09:45:00.000Z",
+      "durationMinutes": 210,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-07T14:15:00.000Z",
+          "endDate": "2026-01-07T16:00:00.000Z",
           "workingMinutes": 105
+        },
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-08T08:00:00.000Z",
+          "endDate": "2026-01-08T09:45:00.000Z",
+          "workingMinutes": 105
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-audit#3",
+      "workOrderId": "wo-blue-audit",
+      "workOrderNumber": "WO-1002-AUD",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 3,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-06T10:00:00.000Z",
+      "originalEndDate": "2026-01-23T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T14:30:00.000Z",
+      "scheduledEndDate": "2026-01-07T16:15:00.000Z",
+      "durationMinutes": 45,
+      "dependsOnWorkOrderIds": [
+        "wo-blue-pack"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-07T14:30:00.000Z",
+          "endDate": "2026-01-07T15:00:00.000Z",
+          "workingMinutes": 30
+        },
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-07T16:00:00.000Z",
+          "endDate": "2026-01-07T16:15:00.000Z",
+          "workingMinutes": 15
+        }
+      ]
+    },
+    {
+      "executionId": "wo-red-stamp#2",
+      "workOrderId": "wo-red-stamp",
+      "workOrderNumber": "WO-1007-STAMP",
+      "manufacturingOrderId": "mo-red-gasket",
+      "manufacturingOrderNumber": "MO-1007",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 2,
+      "totalQuantity": 5,
+      "remainingQuantityAfterExecution": 3,
+      "originalStartDate": "2026-01-03T09:00:00.000Z",
+      "originalEndDate": "2026-01-19T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T14:45:00.000Z",
+      "scheduledEndDate": "2026-01-07T16:00:00.000Z",
+      "durationMinutes": 75,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-07T14:45:00.000Z",
+          "endDate": "2026-01-07T16:00:00.000Z",
+          "workingMinutes": 75
+        }
+      ]
+    },
+    {
+      "executionId": "wo-purple-calibrate#2",
+      "workOrderId": "wo-purple-calibrate",
+      "workOrderNumber": "WO-1004-MNT",
+      "manufacturingOrderId": "mo-purple-valve",
+      "manufacturingOrderNumber": "MO-1004",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-03T07:00:00.000Z",
+      "originalEndDate": "2026-01-15T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-08T07:00:00.000Z",
+      "scheduledEndDate": "2026-01-08T08:30:00.000Z",
+      "durationMinutes": 90,
+      "dependsOnWorkOrderIds": [
+        "wo-purple-machine"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-08T07:00:00.000Z",
+          "endDate": "2026-01-08T08:30:00.000Z",
+          "workingMinutes": 90
+        }
+      ]
+    },
+    {
+      "executionId": "wo-red-stamp#3",
+      "workOrderId": "wo-red-stamp",
+      "workOrderNumber": "WO-1007-STAMP",
+      "manufacturingOrderId": "mo-red-gasket",
+      "manufacturingOrderNumber": "MO-1007",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 3,
+      "totalQuantity": 5,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-03T09:00:00.000Z",
+      "originalEndDate": "2026-01-19T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T16:00:00.000Z",
+      "scheduledEndDate": "2026-01-08T09:15:00.000Z",
+      "durationMinutes": 75,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-07T16:00:00.000Z",
+          "endDate": "2026-01-07T17:00:00.000Z",
+          "workingMinutes": 60
+        },
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-08T09:00:00.000Z",
+          "endDate": "2026-01-08T09:15:00.000Z",
+          "workingMinutes": 15
+        }
+      ]
+    },
+    {
+      "executionId": "wo-blue-audit#4",
+      "workOrderId": "wo-blue-audit",
+      "workOrderNumber": "WO-1002-AUD",
+      "manufacturingOrderId": "mo-blue-pipe",
+      "manufacturingOrderNumber": "MO-1002",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 4,
+      "totalQuantity": 4,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-06T10:00:00.000Z",
+      "originalEndDate": "2026-01-23T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-07T16:15:00.000Z",
+      "scheduledEndDate": "2026-01-07T17:00:00.000Z",
+      "durationMinutes": 45,
+      "dependsOnWorkOrderIds": [
+        "wo-blue-pack"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-07T16:15:00.000Z",
+          "endDate": "2026-01-07T17:00:00.000Z",
+          "workingMinutes": 45
+        }
+      ]
+    },
+    {
+      "executionId": "wo-black-cut#1",
+      "workOrderId": "wo-black-cut",
+      "workOrderNumber": "WO-1012-CUT",
+      "manufacturingOrderId": "mo-black-coupler",
+      "manufacturingOrderNumber": "MO-1012",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 1,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-06T09:00:00.000Z",
+      "originalEndDate": "2026-01-20T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-08T09:15:00.000Z",
+      "scheduledEndDate": "2026-01-08T11:15:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-black-mold"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-08T09:15:00.000Z",
+          "endDate": "2026-01-08T11:15:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-black-pack#1",
+      "workOrderId": "wo-black-pack",
+      "workOrderNumber": "WO-1012-PACK",
+      "manufacturingOrderId": "mo-black-coupler",
+      "manufacturingOrderNumber": "MO-1012",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 1,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-08T10:00:00.000Z",
+      "originalEndDate": "2026-01-23T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-08T11:15:00.000Z",
+      "scheduledEndDate": "2026-01-08T12:45:00.000Z",
+      "durationMinutes": 90,
+      "dependsOnWorkOrderIds": [
+        "wo-black-cut"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-08T11:15:00.000Z",
+          "endDate": "2026-01-08T12:45:00.000Z",
+          "workingMinutes": 90
+        }
+      ]
+    },
+    {
+      "executionId": "wo-teal-extrude#1",
+      "workOrderId": "wo-teal-extrude",
+      "workOrderNumber": "WO-1008-EX",
+      "manufacturingOrderId": "mo-teal-hose",
+      "manufacturingOrderNumber": "MO-1008",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-06T07:00:00.000Z",
+      "originalEndDate": "2026-01-18T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-08T08:30:00.000Z",
+      "scheduledEndDate": "2026-01-08T14:30:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-08T08:30:00.000Z",
+          "endDate": "2026-01-08T09:00:00.000Z",
+          "workingMinutes": 30
+        },
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-08T11:00:00.000Z",
+          "endDate": "2026-01-08T14:30:00.000Z",
+          "workingMinutes": 210
+        }
+      ]
+    },
+    {
+      "executionId": "wo-silver-plate#1",
+      "workOrderId": "wo-silver-plate",
+      "workOrderNumber": "WO-1006-PLATE",
+      "manufacturingOrderId": "mo-silver-bracket",
+      "manufacturingOrderNumber": "MO-1006",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 1,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-05T08:00:00.000Z",
+      "originalEndDate": "2026-01-20T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-08T09:45:00.000Z",
+      "scheduledEndDate": "2026-01-08T13:45:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-08T09:45:00.000Z",
+          "endDate": "2026-01-08T13:45:00.000Z",
+          "workingMinutes": 240
+        }
+      ]
+    },
+    {
+      "executionId": "wo-red-stamp#4",
+      "workOrderId": "wo-red-stamp",
+      "workOrderNumber": "WO-1007-STAMP",
+      "manufacturingOrderId": "mo-red-gasket",
+      "manufacturingOrderNumber": "MO-1007",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 4,
+      "totalQuantity": 5,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-03T09:00:00.000Z",
+      "originalEndDate": "2026-01-19T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-08T11:15:00.000Z",
+      "scheduledEndDate": "2026-01-08T12:30:00.000Z",
+      "durationMinutes": 75,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-08T11:15:00.000Z",
+          "endDate": "2026-01-08T12:30:00.000Z",
+          "workingMinutes": 75
+        }
+      ]
+    },
+    {
+      "executionId": "wo-red-stamp#5",
+      "workOrderId": "wo-red-stamp",
+      "workOrderNumber": "WO-1007-STAMP",
+      "manufacturingOrderId": "mo-red-gasket",
+      "manufacturingOrderNumber": "MO-1007",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 5,
+      "totalQuantity": 5,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-03T09:00:00.000Z",
+      "originalEndDate": "2026-01-19T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-08T12:30:00.000Z",
+      "scheduledEndDate": "2026-01-08T13:45:00.000Z",
+      "durationMinutes": 75,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-08T12:30:00.000Z",
+          "endDate": "2026-01-08T13:45:00.000Z",
+          "workingMinutes": 75
+        }
+      ]
+    },
+    {
+      "executionId": "wo-teal-sanitize#1",
+      "workOrderId": "wo-teal-sanitize",
+      "workOrderNumber": "WO-1008-MNT",
+      "manufacturingOrderId": "mo-teal-hose",
+      "manufacturingOrderNumber": "MO-1008",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-07T07:00:00.000Z",
+      "originalEndDate": "2026-01-20T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-08T14:30:00.000Z",
+      "scheduledEndDate": "2026-01-09T07:15:00.000Z",
+      "durationMinutes": 45,
+      "dependsOnWorkOrderIds": [
+        "wo-teal-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-08T14:30:00.000Z",
+          "endDate": "2026-01-08T15:00:00.000Z",
+          "workingMinutes": 30
+        },
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-09T07:00:00.000Z",
+          "endDate": "2026-01-09T07:15:00.000Z",
+          "workingMinutes": 15
+        }
+      ]
+    },
+    {
+      "executionId": "wo-teal-pack#1",
+      "workOrderId": "wo-teal-pack",
+      "workOrderNumber": "WO-1008-PACK",
+      "manufacturingOrderId": "mo-teal-hose",
+      "manufacturingOrderNumber": "MO-1008",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-09T10:00:00.000Z",
+      "originalEndDate": "2026-01-24T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-09T10:00:00.000Z",
+      "scheduledEndDate": "2026-01-09T12:00:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-teal-sanitize"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-09T10:00:00.000Z",
+          "endDate": "2026-01-09T12:00:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-purple-cut#1",
+      "workOrderId": "wo-purple-cut",
+      "workOrderNumber": "WO-1004-CUT",
+      "manufacturingOrderId": "mo-purple-valve",
+      "manufacturingOrderNumber": "MO-1004",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-04T09:00:00.000Z",
+      "originalEndDate": "2026-01-17T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-08T13:45:00.000Z",
+      "scheduledEndDate": "2026-01-08T16:15:00.000Z",
+      "durationMinutes": 150,
+      "dependsOnWorkOrderIds": [
+        "wo-purple-calibrate"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-08T13:45:00.000Z",
+          "endDate": "2026-01-08T16:15:00.000Z",
+          "workingMinutes": 150
+        }
+      ]
+    },
+    {
+      "executionId": "wo-silver-plate#2",
+      "workOrderId": "wo-silver-plate",
+      "workOrderNumber": "WO-1006-PLATE",
+      "manufacturingOrderId": "mo-silver-bracket",
+      "manufacturingOrderNumber": "MO-1006",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 2,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-05T08:00:00.000Z",
+      "originalEndDate": "2026-01-20T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-08T13:45:00.000Z",
+      "scheduledEndDate": "2026-01-09T09:45:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-08T13:45:00.000Z",
+          "endDate": "2026-01-08T16:00:00.000Z",
+          "workingMinutes": 135
+        },
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-09T08:00:00.000Z",
+          "endDate": "2026-01-09T09:45:00.000Z",
+          "workingMinutes": 105
+        }
+      ]
+    },
+    {
+      "executionId": "wo-purple-cut#2",
+      "workOrderId": "wo-purple-cut",
+      "workOrderNumber": "WO-1004-CUT",
+      "manufacturingOrderId": "mo-purple-valve",
+      "manufacturingOrderNumber": "MO-1004",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-04T09:00:00.000Z",
+      "originalEndDate": "2026-01-17T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-08T16:15:00.000Z",
+      "scheduledEndDate": "2026-01-09T10:45:00.000Z",
+      "durationMinutes": 150,
+      "dependsOnWorkOrderIds": [
+        "wo-purple-calibrate"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-08T16:15:00.000Z",
+          "endDate": "2026-01-08T17:00:00.000Z",
+          "workingMinutes": 45
+        },
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-09T09:00:00.000Z",
+          "endDate": "2026-01-09T10:45:00.000Z",
+          "workingMinutes": 105
+        }
+      ]
+    },
+    {
+      "executionId": "wo-teal-extrude#2",
+      "workOrderId": "wo-teal-extrude",
+      "workOrderNumber": "WO-1008-EX",
+      "manufacturingOrderId": "mo-teal-hose",
+      "manufacturingOrderNumber": "MO-1008",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-06T07:00:00.000Z",
+      "originalEndDate": "2026-01-18T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-09T07:15:00.000Z",
+      "scheduledEndDate": "2026-01-09T11:15:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-09T07:15:00.000Z",
+          "endDate": "2026-01-09T11:15:00.000Z",
+          "workingMinutes": 240
+        }
+      ]
+    },
+    {
+      "executionId": "wo-silver-plate#3",
+      "workOrderId": "wo-silver-plate",
+      "workOrderNumber": "WO-1006-PLATE",
+      "manufacturingOrderId": "mo-silver-bracket",
+      "manufacturingOrderNumber": "MO-1006",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 3,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-05T08:00:00.000Z",
+      "originalEndDate": "2026-01-20T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-09T09:45:00.000Z",
+      "scheduledEndDate": "2026-01-09T13:45:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-09T09:45:00.000Z",
+          "endDate": "2026-01-09T13:45:00.000Z",
+          "workingMinutes": 240
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-pressure#1",
+      "workOrderId": "wo-green-pressure",
+      "workOrderNumber": "WO-1001-QA",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 1,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-04T09:00:00.000Z",
+      "originalEndDate": "2026-01-17T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-09T10:45:00.000Z",
+      "scheduledEndDate": "2026-01-09T12:45:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-green-cut"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-09T10:45:00.000Z",
+          "endDate": "2026-01-09T12:45:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-teal-sanitize#2",
+      "workOrderId": "wo-teal-sanitize",
+      "workOrderNumber": "WO-1008-MNT",
+      "manufacturingOrderId": "mo-teal-hose",
+      "manufacturingOrderNumber": "MO-1008",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-07T07:00:00.000Z",
+      "originalEndDate": "2026-01-20T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-09T11:15:00.000Z",
+      "scheduledEndDate": "2026-01-09T12:00:00.000Z",
+      "durationMinutes": 45,
+      "dependsOnWorkOrderIds": [
+        "wo-teal-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-09T11:15:00.000Z",
+          "endDate": "2026-01-09T12:00:00.000Z",
+          "workingMinutes": 45
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-pack#1",
+      "workOrderId": "wo-green-pack",
+      "workOrderNumber": "WO-1001-PACK",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 1,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-05T10:00:00.000Z",
+      "originalEndDate": "2026-01-20T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-09T12:45:00.000Z",
+      "scheduledEndDate": "2026-01-09T14:45:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-green-pressure"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-09T12:45:00.000Z",
+          "endDate": "2026-01-09T14:45:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-white-extrude#1",
+      "workOrderId": "wo-white-extrude",
+      "workOrderNumber": "WO-1011-EX",
+      "manufacturingOrderId": "mo-white-adapter",
+      "manufacturingOrderNumber": "MO-1011",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-09T07:00:00.000Z",
+      "originalEndDate": "2026-01-24T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-09T12:00:00.000Z",
+      "scheduledEndDate": "2026-01-12T09:00:00.000Z",
+      "durationMinutes": 300,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-09T12:00:00.000Z",
+          "endDate": "2026-01-09T15:00:00.000Z",
+          "workingMinutes": 180
+        },
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-12T07:00:00.000Z",
+          "endDate": "2026-01-12T09:00:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-pressure#2",
+      "workOrderId": "wo-green-pressure",
+      "workOrderNumber": "WO-1001-QA",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 2,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-04T09:00:00.000Z",
+      "originalEndDate": "2026-01-17T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-09T12:45:00.000Z",
+      "scheduledEndDate": "2026-01-09T16:45:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-green-cut"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-09T12:45:00.000Z",
+          "endDate": "2026-01-09T13:00:00.000Z",
+          "workingMinutes": 15
+        },
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-09T15:00:00.000Z",
+          "endDate": "2026-01-09T16:45:00.000Z",
+          "workingMinutes": 105
+        }
+      ]
+    },
+    {
+      "executionId": "wo-amber-shell#1",
+      "workOrderId": "wo-amber-shell",
+      "workOrderNumber": "WO-1009-SHELL",
+      "manufacturingOrderId": "mo-amber-kit",
+      "manufacturingOrderNumber": "MO-1009",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-07T08:00:00.000Z",
+      "originalEndDate": "2026-01-22T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-09T13:45:00.000Z",
+      "scheduledEndDate": "2026-01-12T08:45:00.000Z",
+      "durationMinutes": 180,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-09T13:45:00.000Z",
+          "endDate": "2026-01-09T16:00:00.000Z",
+          "workingMinutes": 135
+        },
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-12T08:00:00.000Z",
+          "endDate": "2026-01-12T08:45:00.000Z",
+          "workingMinutes": 45
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-pack#2",
+      "workOrderId": "wo-green-pack",
+      "workOrderNumber": "WO-1001-PACK",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 2,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-05T10:00:00.000Z",
+      "originalEndDate": "2026-01-20T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-09T16:45:00.000Z",
+      "scheduledEndDate": "2026-01-12T10:45:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-green-pressure"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-09T16:45:00.000Z",
+          "endDate": "2026-01-09T18:00:00.000Z",
+          "workingMinutes": 75
+        },
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-12T10:00:00.000Z",
+          "endDate": "2026-01-12T10:45:00.000Z",
+          "workingMinutes": 45
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-pressure#3",
+      "workOrderId": "wo-green-pressure",
+      "workOrderNumber": "WO-1001-QA",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 3,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-04T09:00:00.000Z",
+      "originalEndDate": "2026-01-17T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-09T16:45:00.000Z",
+      "scheduledEndDate": "2026-01-12T10:45:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-green-cut"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-09T16:45:00.000Z",
+          "endDate": "2026-01-09T17:00:00.000Z",
+          "workingMinutes": 15
+        },
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-12T09:00:00.000Z",
+          "endDate": "2026-01-12T10:45:00.000Z",
+          "workingMinutes": 105
+        }
+      ]
+    },
+    {
+      "executionId": "wo-amber-shell#2",
+      "workOrderId": "wo-amber-shell",
+      "workOrderNumber": "WO-1009-SHELL",
+      "manufacturingOrderId": "mo-amber-kit",
+      "manufacturingOrderNumber": "MO-1009",
+      "workCenterId": "wc-extrusion-a",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-07T08:00:00.000Z",
+      "originalEndDate": "2026-01-22T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-12T08:45:00.000Z",
+      "scheduledEndDate": "2026-01-12T11:45:00.000Z",
+      "durationMinutes": 180,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-a",
+          "startDate": "2026-01-12T08:45:00.000Z",
+          "endDate": "2026-01-12T11:45:00.000Z",
+          "workingMinutes": 180
+        }
+      ]
+    },
+    {
+      "executionId": "wo-white-extrude#2",
+      "workOrderId": "wo-white-extrude",
+      "workOrderNumber": "WO-1011-EX",
+      "manufacturingOrderId": "mo-white-adapter",
+      "manufacturingOrderNumber": "MO-1011",
+      "workCenterId": "wc-extrusion-b",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-09T07:00:00.000Z",
+      "originalEndDate": "2026-01-24T15:00:00.000Z",
+      "scheduledStartDate": "2026-01-12T09:00:00.000Z",
+      "scheduledEndDate": "2026-01-12T14:00:00.000Z",
+      "durationMinutes": 300,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-extrusion-b",
+          "startDate": "2026-01-12T09:00:00.000Z",
+          "endDate": "2026-01-12T14:00:00.000Z",
+          "workingMinutes": 300
+        }
+      ]
+    },
+    {
+      "executionId": "wo-yellow-polish#1",
+      "workOrderId": "wo-yellow-polish",
+      "workOrderNumber": "WO-1003-POL",
+      "manufacturingOrderId": "mo-yellow-pipe",
+      "manufacturingOrderNumber": "MO-1003",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-05T09:00:00.000Z",
+      "originalEndDate": "2026-01-20T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-12T10:45:00.000Z",
+      "scheduledEndDate": "2026-01-12T14:45:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [
+        "wo-yellow-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-12T10:45:00.000Z",
+          "endDate": "2026-01-12T14:45:00.000Z",
+          "workingMinutes": 240
+        }
+      ]
+    },
+    {
+      "executionId": "wo-green-pack#3",
+      "workOrderId": "wo-green-pack",
+      "workOrderNumber": "WO-1001-PACK",
+      "manufacturingOrderId": "mo-green-pipe",
+      "manufacturingOrderNumber": "MO-1001",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 3,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-05T10:00:00.000Z",
+      "originalEndDate": "2026-01-20T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-12T10:45:00.000Z",
+      "scheduledEndDate": "2026-01-12T12:45:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-green-pressure"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-12T10:45:00.000Z",
+          "endDate": "2026-01-12T12:45:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-black-cut#2",
+      "workOrderId": "wo-black-cut",
+      "workOrderNumber": "WO-1012-CUT",
+      "manufacturingOrderId": "mo-black-coupler",
+      "manufacturingOrderNumber": "MO-1012",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 2,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-06T09:00:00.000Z",
+      "originalEndDate": "2026-01-20T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-12T14:45:00.000Z",
+      "scheduledEndDate": "2026-01-12T16:45:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-black-mold"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-12T14:45:00.000Z",
+          "endDate": "2026-01-12T16:45:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-black-pack#2",
+      "workOrderId": "wo-black-pack",
+      "workOrderNumber": "WO-1012-PACK",
+      "manufacturingOrderId": "mo-black-coupler",
+      "manufacturingOrderNumber": "MO-1012",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 2,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-08T10:00:00.000Z",
+      "originalEndDate": "2026-01-23T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-12T16:45:00.000Z",
+      "scheduledEndDate": "2026-01-13T10:15:00.000Z",
+      "durationMinutes": 90,
+      "dependsOnWorkOrderIds": [
+        "wo-black-cut"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-12T16:45:00.000Z",
+          "endDate": "2026-01-12T18:00:00.000Z",
+          "workingMinutes": 75
+        },
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-13T10:00:00.000Z",
+          "endDate": "2026-01-13T10:15:00.000Z",
+          "workingMinutes": 15
+        }
+      ]
+    },
+    {
+      "executionId": "wo-yellow-polish#2",
+      "workOrderId": "wo-yellow-polish",
+      "workOrderNumber": "WO-1003-POL",
+      "manufacturingOrderId": "mo-yellow-pipe",
+      "manufacturingOrderNumber": "MO-1003",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-05T09:00:00.000Z",
+      "originalEndDate": "2026-01-20T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-12T16:45:00.000Z",
+      "scheduledEndDate": "2026-01-13T12:45:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [
+        "wo-yellow-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-12T16:45:00.000Z",
+          "endDate": "2026-01-12T17:00:00.000Z",
+          "workingMinutes": 15
+        },
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-13T09:00:00.000Z",
+          "endDate": "2026-01-13T12:45:00.000Z",
+          "workingMinutes": 225
+        }
+      ]
+    },
+    {
+      "executionId": "wo-black-cut#3",
+      "workOrderId": "wo-black-cut",
+      "workOrderNumber": "WO-1012-CUT",
+      "manufacturingOrderId": "mo-black-coupler",
+      "manufacturingOrderNumber": "MO-1012",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 3,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-06T09:00:00.000Z",
+      "originalEndDate": "2026-01-20T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-13T12:45:00.000Z",
+      "scheduledEndDate": "2026-01-13T14:45:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-black-mold"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-13T12:45:00.000Z",
+          "endDate": "2026-01-13T14:45:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-black-pack#3",
+      "workOrderId": "wo-black-pack",
+      "workOrderNumber": "WO-1012-PACK",
+      "manufacturingOrderId": "mo-black-coupler",
+      "manufacturingOrderNumber": "MO-1012",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 3,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-08T10:00:00.000Z",
+      "originalEndDate": "2026-01-23T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-13T14:45:00.000Z",
+      "scheduledEndDate": "2026-01-13T16:15:00.000Z",
+      "durationMinutes": 90,
+      "dependsOnWorkOrderIds": [
+        "wo-black-cut"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-13T14:45:00.000Z",
+          "endDate": "2026-01-13T16:15:00.000Z",
+          "workingMinutes": 90
+        }
+      ]
+    },
+    {
+      "executionId": "wo-silver-drill#1",
+      "workOrderId": "wo-silver-drill",
+      "workOrderNumber": "WO-1006-DRILL",
+      "manufacturingOrderId": "mo-silver-bracket",
+      "manufacturingOrderNumber": "MO-1006",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 1,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-05T09:00:00.000Z",
+      "originalEndDate": "2026-01-22T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-13T14:45:00.000Z",
+      "scheduledEndDate": "2026-01-14T10:45:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-13T14:45:00.000Z",
+          "endDate": "2026-01-13T17:00:00.000Z",
+          "workingMinutes": 135
+        },
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-14T09:00:00.000Z",
+          "endDate": "2026-01-14T10:45:00.000Z",
+          "workingMinutes": 105
+        }
+      ]
+    },
+    {
+      "executionId": "wo-silver-deburr#1",
+      "workOrderId": "wo-silver-deburr",
+      "workOrderNumber": "WO-1006-MNT",
+      "manufacturingOrderId": "mo-silver-bracket",
+      "manufacturingOrderNumber": "MO-1006",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 1,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-08T09:00:00.000Z",
+      "originalEndDate": "2026-01-23T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-14T10:45:00.000Z",
+      "scheduledEndDate": "2026-01-14T11:45:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [
+        "wo-silver-drill"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-14T10:45:00.000Z",
+          "endDate": "2026-01-14T11:45:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-silver-pack#1",
+      "workOrderId": "wo-silver-pack",
+      "workOrderNumber": "WO-1006-PACK",
+      "manufacturingOrderId": "mo-silver-bracket",
+      "manufacturingOrderNumber": "MO-1006",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 1,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 2,
+      "originalStartDate": "2026-01-10T10:00:00.000Z",
+      "originalEndDate": "2026-01-27T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-14T12:00:00.000Z",
+      "scheduledEndDate": "2026-01-14T14:00:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-silver-plate",
+        "wo-silver-deburr"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-14T12:00:00.000Z",
+          "endDate": "2026-01-14T14:00:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-silver-drill#2",
+      "workOrderId": "wo-silver-drill",
+      "workOrderNumber": "WO-1006-DRILL",
+      "manufacturingOrderId": "mo-silver-bracket",
+      "manufacturingOrderNumber": "MO-1006",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 2,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-05T09:00:00.000Z",
+      "originalEndDate": "2026-01-22T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-14T11:45:00.000Z",
+      "scheduledEndDate": "2026-01-14T15:45:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-14T11:45:00.000Z",
+          "endDate": "2026-01-14T15:45:00.000Z",
+          "workingMinutes": 240
+        }
+      ]
+    },
+    {
+      "executionId": "wo-silver-deburr#2",
+      "workOrderId": "wo-silver-deburr",
+      "workOrderNumber": "WO-1006-MNT",
+      "manufacturingOrderId": "mo-silver-bracket",
+      "manufacturingOrderNumber": "MO-1006",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 2,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-08T09:00:00.000Z",
+      "originalEndDate": "2026-01-23T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-14T15:45:00.000Z",
+      "scheduledEndDate": "2026-01-14T16:45:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [
+        "wo-silver-drill"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-14T15:45:00.000Z",
+          "endDate": "2026-01-14T16:45:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-silver-pack#2",
+      "workOrderId": "wo-silver-pack",
+      "workOrderNumber": "WO-1006-PACK",
+      "manufacturingOrderId": "mo-silver-bracket",
+      "manufacturingOrderNumber": "MO-1006",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 2,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-10T10:00:00.000Z",
+      "originalEndDate": "2026-01-27T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-14T16:45:00.000Z",
+      "scheduledEndDate": "2026-01-15T10:45:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-silver-plate",
+        "wo-silver-deburr"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-14T16:45:00.000Z",
+          "endDate": "2026-01-14T18:00:00.000Z",
+          "workingMinutes": 75
+        },
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-15T10:00:00.000Z",
+          "endDate": "2026-01-15T10:45:00.000Z",
+          "workingMinutes": 45
+        }
+      ]
+    },
+    {
+      "executionId": "wo-silver-drill#3",
+      "workOrderId": "wo-silver-drill",
+      "workOrderNumber": "WO-1006-DRILL",
+      "manufacturingOrderId": "mo-silver-bracket",
+      "manufacturingOrderNumber": "MO-1006",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 3,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-05T09:00:00.000Z",
+      "originalEndDate": "2026-01-22T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-14T16:45:00.000Z",
+      "scheduledEndDate": "2026-01-15T12:45:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-14T16:45:00.000Z",
+          "endDate": "2026-01-14T17:00:00.000Z",
+          "workingMinutes": 15
+        },
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-15T09:00:00.000Z",
+          "endDate": "2026-01-15T12:45:00.000Z",
+          "workingMinutes": 225
+        }
+      ]
+    },
+    {
+      "executionId": "wo-silver-deburr#3",
+      "workOrderId": "wo-silver-deburr",
+      "workOrderNumber": "WO-1006-MNT",
+      "manufacturingOrderId": "mo-silver-bracket",
+      "manufacturingOrderNumber": "MO-1006",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 3,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-08T09:00:00.000Z",
+      "originalEndDate": "2026-01-23T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-15T12:45:00.000Z",
+      "scheduledEndDate": "2026-01-15T13:45:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [
+        "wo-silver-drill"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-15T12:45:00.000Z",
+          "endDate": "2026-01-15T13:45:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-silver-pack#3",
+      "workOrderId": "wo-silver-pack",
+      "workOrderNumber": "WO-1006-PACK",
+      "manufacturingOrderId": "mo-silver-bracket",
+      "manufacturingOrderNumber": "MO-1006",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 3,
+      "totalQuantity": 3,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-10T10:00:00.000Z",
+      "originalEndDate": "2026-01-27T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-15T13:45:00.000Z",
+      "scheduledEndDate": "2026-01-15T15:45:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-silver-plate",
+        "wo-silver-deburr"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-15T13:45:00.000Z",
+          "endDate": "2026-01-15T15:45:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-purple-pack#1",
+      "workOrderId": "wo-purple-pack",
+      "workOrderNumber": "WO-1004-PACK",
+      "manufacturingOrderId": "mo-purple-valve",
+      "manufacturingOrderNumber": "MO-1004",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-06T10:00:00.000Z",
+      "originalEndDate": "2026-01-20T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-15T15:45:00.000Z",
+      "scheduledEndDate": "2026-01-15T17:15:00.000Z",
+      "durationMinutes": 90,
+      "dependsOnWorkOrderIds": [
+        "wo-purple-cut"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-15T15:45:00.000Z",
+          "endDate": "2026-01-15T17:15:00.000Z",
+          "workingMinutes": 90
+        }
+      ]
+    },
+    {
+      "executionId": "wo-purple-pack#2",
+      "workOrderId": "wo-purple-pack",
+      "workOrderNumber": "WO-1004-PACK",
+      "manufacturingOrderId": "mo-purple-valve",
+      "manufacturingOrderNumber": "MO-1004",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-06T10:00:00.000Z",
+      "originalEndDate": "2026-01-20T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-15T17:15:00.000Z",
+      "scheduledEndDate": "2026-01-16T10:45:00.000Z",
+      "durationMinutes": 90,
+      "dependsOnWorkOrderIds": [
+        "wo-purple-cut"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-15T17:15:00.000Z",
+          "endDate": "2026-01-15T18:00:00.000Z",
+          "workingMinutes": 45
+        },
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-16T10:00:00.000Z",
+          "endDate": "2026-01-16T10:45:00.000Z",
+          "workingMinutes": 45
+        }
+      ]
+    },
+    {
+      "executionId": "wo-amber-insert#1",
+      "workOrderId": "wo-amber-insert",
+      "workOrderNumber": "WO-1009-INSERT",
+      "manufacturingOrderId": "mo-amber-kit",
+      "manufacturingOrderNumber": "MO-1009",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-07T09:00:00.000Z",
+      "originalEndDate": "2026-01-23T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-15T13:45:00.000Z",
+      "scheduledEndDate": "2026-01-16T10:15:00.000Z",
+      "durationMinutes": 210,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-15T13:45:00.000Z",
+          "endDate": "2026-01-15T17:00:00.000Z",
+          "workingMinutes": 195
+        },
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-16T10:00:00.000Z",
+          "endDate": "2026-01-16T10:15:00.000Z",
+          "workingMinutes": 15
+        }
+      ]
+    },
+    {
+      "executionId": "wo-amber-insert#2",
+      "workOrderId": "wo-amber-insert",
+      "workOrderNumber": "WO-1009-INSERT",
+      "manufacturingOrderId": "mo-amber-kit",
+      "manufacturingOrderNumber": "MO-1009",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-07T09:00:00.000Z",
+      "originalEndDate": "2026-01-23T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-16T10:15:00.000Z",
+      "scheduledEndDate": "2026-01-16T13:45:00.000Z",
+      "durationMinutes": 210,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-16T10:15:00.000Z",
+          "endDate": "2026-01-16T13:45:00.000Z",
+          "workingMinutes": 210
+        }
+      ]
+    },
+    {
+      "executionId": "wo-white-bore#1",
+      "workOrderId": "wo-white-bore",
+      "workOrderNumber": "WO-1011-BORE",
+      "manufacturingOrderId": "mo-white-adapter",
+      "manufacturingOrderNumber": "MO-1011",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-10T09:00:00.000Z",
+      "originalEndDate": "2026-01-25T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-16T13:45:00.000Z",
+      "scheduledEndDate": "2026-01-16T16:45:00.000Z",
+      "durationMinutes": 180,
+      "dependsOnWorkOrderIds": [
+        "wo-white-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-16T13:45:00.000Z",
+          "endDate": "2026-01-16T16:45:00.000Z",
+          "workingMinutes": 180
+        }
+      ]
+    },
+    {
+      "executionId": "wo-white-clean#1",
+      "workOrderId": "wo-white-clean",
+      "workOrderNumber": "WO-1011-MNT",
+      "manufacturingOrderId": "mo-white-adapter",
+      "manufacturingOrderNumber": "MO-1011",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-11T09:00:00.000Z",
+      "originalEndDate": "2026-01-26T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-16T16:45:00.000Z",
+      "scheduledEndDate": "2026-01-19T09:45:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [
+        "wo-white-bore"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-16T16:45:00.000Z",
+          "endDate": "2026-01-16T17:00:00.000Z",
+          "workingMinutes": 15
+        },
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-19T09:00:00.000Z",
+          "endDate": "2026-01-19T09:45:00.000Z",
+          "workingMinutes": 45
+        }
+      ]
+    },
+    {
+      "executionId": "wo-white-pack#1",
+      "workOrderId": "wo-white-pack",
+      "workOrderNumber": "WO-1011-PACK",
+      "manufacturingOrderId": "mo-white-adapter",
+      "manufacturingOrderNumber": "MO-1011",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-12T10:00:00.000Z",
+      "originalEndDate": "2026-01-28T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-19T10:00:00.000Z",
+      "scheduledEndDate": "2026-01-19T12:00:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-white-clean"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-19T10:00:00.000Z",
+          "endDate": "2026-01-19T12:00:00.000Z",
+          "workingMinutes": 120
         }
       ]
     },
@@ -1127,19 +3721,19 @@
       "unitNumber": 1,
       "totalQuantity": 2,
       "remainingQuantityAfterExecution": 1,
-      "originalStartDate": "2026-01-02T10:00:00.000Z",
-      "originalEndDate": "2026-01-16T18:00:00.000Z",
-      "scheduledStartDate": "2026-01-09T11:45:00.000Z",
-      "scheduledEndDate": "2026-01-09T14:45:00.000Z",
+      "originalStartDate": "2026-01-08T10:00:00.000Z",
+      "originalEndDate": "2026-01-24T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-19T12:00:00.000Z",
+      "scheduledEndDate": "2026-01-19T15:00:00.000Z",
       "durationMinutes": 180,
       "dependsOnWorkOrderIds": [
-        "wo-yellow-line-check"
+        "wo-yellow-polish"
       ],
       "segments": [
         {
           "workCenterId": "wc-packaging",
-          "startDate": "2026-01-09T11:45:00.000Z",
-          "endDate": "2026-01-09T14:45:00.000Z",
+          "startDate": "2026-01-19T12:00:00.000Z",
+          "endDate": "2026-01-19T15:00:00.000Z",
           "workingMinutes": 180
         }
       ]
@@ -1154,20 +3748,304 @@
       "unitNumber": 2,
       "totalQuantity": 2,
       "remainingQuantityAfterExecution": 0,
-      "originalStartDate": "2026-01-02T10:00:00.000Z",
-      "originalEndDate": "2026-01-16T18:00:00.000Z",
-      "scheduledStartDate": "2026-01-09T14:45:00.000Z",
-      "scheduledEndDate": "2026-01-09T17:45:00.000Z",
+      "originalStartDate": "2026-01-08T10:00:00.000Z",
+      "originalEndDate": "2026-01-24T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-19T15:00:00.000Z",
+      "scheduledEndDate": "2026-01-19T18:00:00.000Z",
       "durationMinutes": 180,
       "dependsOnWorkOrderIds": [
-        "wo-yellow-line-check"
+        "wo-yellow-polish"
       ],
       "segments": [
         {
           "workCenterId": "wc-packaging",
-          "startDate": "2026-01-09T14:45:00.000Z",
-          "endDate": "2026-01-09T17:45:00.000Z",
+          "startDate": "2026-01-19T15:00:00.000Z",
+          "endDate": "2026-01-19T18:00:00.000Z",
           "workingMinutes": 180
+        }
+      ]
+    },
+    {
+      "executionId": "wo-amber-setup#1",
+      "workOrderId": "wo-amber-setup",
+      "workOrderNumber": "WO-1009-MNT",
+      "manufacturingOrderId": "mo-amber-kit",
+      "manufacturingOrderNumber": "MO-1009",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-08T10:00:00.000Z",
+      "originalEndDate": "2026-01-24T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-20T10:00:00.000Z",
+      "scheduledEndDate": "2026-01-20T11:00:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [
+        "wo-amber-shell",
+        "wo-amber-insert"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-20T10:00:00.000Z",
+          "endDate": "2026-01-20T11:00:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-amber-setup#2",
+      "workOrderId": "wo-amber-setup",
+      "workOrderNumber": "WO-1009-MNT",
+      "manufacturingOrderId": "mo-amber-kit",
+      "manufacturingOrderNumber": "MO-1009",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-08T10:00:00.000Z",
+      "originalEndDate": "2026-01-24T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-20T11:00:00.000Z",
+      "scheduledEndDate": "2026-01-20T12:00:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [
+        "wo-amber-shell",
+        "wo-amber-insert"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-20T11:00:00.000Z",
+          "endDate": "2026-01-20T12:00:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-teal-pack#2",
+      "workOrderId": "wo-teal-pack",
+      "workOrderNumber": "WO-1008-PACK",
+      "manufacturingOrderId": "mo-teal-hose",
+      "manufacturingOrderNumber": "MO-1008",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-09T10:00:00.000Z",
+      "originalEndDate": "2026-01-24T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-20T12:00:00.000Z",
+      "scheduledEndDate": "2026-01-20T14:00:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-teal-sanitize"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-20T12:00:00.000Z",
+          "endDate": "2026-01-20T14:00:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-white-bore#2",
+      "workOrderId": "wo-white-bore",
+      "workOrderNumber": "WO-1011-BORE",
+      "manufacturingOrderId": "mo-white-adapter",
+      "manufacturingOrderNumber": "MO-1011",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-10T09:00:00.000Z",
+      "originalEndDate": "2026-01-25T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-19T09:45:00.000Z",
+      "scheduledEndDate": "2026-01-19T12:45:00.000Z",
+      "durationMinutes": 180,
+      "dependsOnWorkOrderIds": [
+        "wo-white-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-19T09:45:00.000Z",
+          "endDate": "2026-01-19T12:45:00.000Z",
+          "workingMinutes": 180
+        }
+      ]
+    },
+    {
+      "executionId": "wo-amber-pack#1",
+      "workOrderId": "wo-amber-pack",
+      "workOrderNumber": "WO-1009-PACK",
+      "manufacturingOrderId": "mo-amber-kit",
+      "manufacturingOrderNumber": "MO-1009",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-10T10:00:00.000Z",
+      "originalEndDate": "2026-01-28T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-20T14:00:00.000Z",
+      "scheduledEndDate": "2026-01-20T18:00:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [
+        "wo-amber-setup"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-20T14:00:00.000Z",
+          "endDate": "2026-01-20T18:00:00.000Z",
+          "workingMinutes": 240
+        }
+      ]
+    },
+    {
+      "executionId": "wo-amber-pack#2",
+      "workOrderId": "wo-amber-pack",
+      "workOrderNumber": "WO-1009-PACK",
+      "manufacturingOrderId": "mo-amber-kit",
+      "manufacturingOrderNumber": "MO-1009",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-10T10:00:00.000Z",
+      "originalEndDate": "2026-01-28T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-21T10:00:00.000Z",
+      "scheduledEndDate": "2026-01-21T15:00:00.000Z",
+      "durationMinutes": 240,
+      "dependsOnWorkOrderIds": [
+        "wo-amber-setup"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-21T10:00:00.000Z",
+          "endDate": "2026-01-21T13:00:00.000Z",
+          "workingMinutes": 180
+        },
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-21T14:00:00.000Z",
+          "endDate": "2026-01-21T15:00:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-white-clean#2",
+      "workOrderId": "wo-white-clean",
+      "workOrderNumber": "WO-1011-MNT",
+      "manufacturingOrderId": "mo-white-adapter",
+      "manufacturingOrderNumber": "MO-1011",
+      "workCenterId": "wc-cutting",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-11T09:00:00.000Z",
+      "originalEndDate": "2026-01-26T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-19T12:45:00.000Z",
+      "scheduledEndDate": "2026-01-19T13:45:00.000Z",
+      "durationMinutes": 60,
+      "dependsOnWorkOrderIds": [
+        "wo-white-bore"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cutting",
+          "startDate": "2026-01-19T12:45:00.000Z",
+          "endDate": "2026-01-19T13:45:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-white-pack#2",
+      "workOrderId": "wo-white-pack",
+      "workOrderNumber": "WO-1011-PACK",
+      "manufacturingOrderId": "mo-white-adapter",
+      "manufacturingOrderNumber": "MO-1011",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-12T10:00:00.000Z",
+      "originalEndDate": "2026-01-28T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-21T15:00:00.000Z",
+      "scheduledEndDate": "2026-01-21T17:00:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [
+        "wo-white-clean"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-21T15:00:00.000Z",
+          "endDate": "2026-01-21T17:00:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-amber-audit#1",
+      "workOrderId": "wo-amber-audit",
+      "workOrderNumber": "WO-1009-AUD",
+      "manufacturingOrderId": "mo-amber-kit",
+      "manufacturingOrderNumber": "MO-1009",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-12T10:00:00.000Z",
+      "originalEndDate": "2026-01-29T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-21T17:00:00.000Z",
+      "scheduledEndDate": "2026-01-22T10:30:00.000Z",
+      "durationMinutes": 90,
+      "dependsOnWorkOrderIds": [
+        "wo-amber-pack"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-21T17:00:00.000Z",
+          "endDate": "2026-01-21T18:00:00.000Z",
+          "workingMinutes": 60
+        },
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-22T10:00:00.000Z",
+          "endDate": "2026-01-22T10:30:00.000Z",
+          "workingMinutes": 30
+        }
+      ]
+    },
+    {
+      "executionId": "wo-amber-audit#2",
+      "workOrderId": "wo-amber-audit",
+      "workOrderNumber": "WO-1009-AUD",
+      "manufacturingOrderId": "mo-amber-kit",
+      "manufacturingOrderNumber": "MO-1009",
+      "workCenterId": "wc-packaging",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-12T10:00:00.000Z",
+      "originalEndDate": "2026-01-29T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-22T10:30:00.000Z",
+      "scheduledEndDate": "2026-01-22T12:00:00.000Z",
+      "durationMinutes": 90,
+      "dependsOnWorkOrderIds": [
+        "wo-amber-pack"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-packaging",
+          "startDate": "2026-01-22T10:30:00.000Z",
+          "endDate": "2026-01-22T12:00:00.000Z",
+          "workingMinutes": 90
         }
       ]
     }

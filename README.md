@@ -65,6 +65,10 @@ The sample prints:
 - scheduled execution start/end times
 - working segments split by closed time or maintenance
 
+The bundled sample is intentionally large and varied: it uses exactly four work centers,
+twelve manufacturing orders, thirty-nine work orders, maintenance-type work orders,
+single-node DAGs, branching chains, and merge dependencies.
+
 ## Generate Visualisation Data
 
 ```bash
