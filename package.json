@@ -1,0 +1,18 @@
+{
+  "name": "production-schedule-reflow",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "sample:basic": "tsc --noEmit false && node dist/sample-data/run-basic-schedule.js",
+    "visualization:data": "tsc --noEmit false && node scripts/write-visualization-data.mjs"
+  },
+  "dependencies": {
+    "luxon": "^3.7.2"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.7.1",
+    "typescript": "^5.8.3"
+  }
+}
