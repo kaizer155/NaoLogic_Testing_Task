@@ -1,0 +1,247 @@
+{
+  "generatedAt": "2026-06-14T16:13:32.809Z",
+  "scenario": {
+    "id": "dependency-cycle",
+    "title": "Dependency Cycle Error",
+    "description": "Invalid sample where A depends on C, C depends on B, and B depends on A.",
+    "expectedStatus": "error",
+    "notes": [
+      "This should fail during dependency graph preparation.",
+      "The error should show the cycle path rather than trying to schedule the graph."
+    ]
+  },
+  "status": "error",
+  "error": {
+    "name": "DependencyCycleError",
+    "message": "Dependency cycle detected: wo-cycle-a -> wo-cycle-b -> wo-cycle-c -> wo-cycle-a",
+    "cyclePath": [
+      "wo-cycle-a",
+      "wo-cycle-b",
+      "wo-cycle-c",
+      "wo-cycle-a"
+    ]
+  },
+  "config": {
+    "horizonStartDate": "2026-01-01T00:00:00.000Z",
+    "horizonEndDate": "2026-02-01T00:00:00.000Z"
+  },
+  "workCenters": [
+    {
+      "docId": "wc-alpha",
+      "docType": "workCenter",
+      "data": {
+        "name": "Extrusion Alpha",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 8,
+            "endHour": 16
+          }
+        ],
+        "maintenanceWindows": [
+          {
+            "startDate": "2026-01-05T10:00:00.000Z",
+            "endDate": "2026-01-05T11:00:00.000Z",
+            "reason": "Short calibration stop"
+          }
+        ]
+      }
+    },
+    {
+      "docId": "wc-beta",
+      "docType": "workCenter",
+      "data": {
+        "name": "Extrusion Beta",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 8,
+            "endHour": 16
+          }
+        ],
+        "maintenanceWindows": []
+      }
+    },
+    {
+      "docId": "wc-cut",
+      "docType": "workCenter",
+      "data": {
+        "name": "Cutting Cell",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 9,
+            "endHour": 17
+          }
+        ],
+        "maintenanceWindows": [
+          {
+            "startDate": "2026-01-06T13:00:00.000Z",
+            "endDate": "2026-01-06T14:00:00.000Z",
+            "reason": "Blade inspection"
+          }
+        ]
+      }
+    },
+    {
+      "docId": "wc-pack",
+      "docType": "workCenter",
+      "data": {
+        "name": "Packaging Cell",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 10,
+            "endHour": 18
+          }
+        ],
+        "maintenanceWindows": []
+      }
+    }
+  ],
+  "manufacturingOrders": [
+    {
+      "docId": "mo-cycle",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-3001",
+        "itemId": "CYCLE-DETECTOR",
+        "quantity": 1,
+        "dueDate": "2026-01-10T17:00:00.000Z"
+      }
+    }
+  ],
+  "workOrders": [
+    {
+      "docId": "wo-cycle-a",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-3001-A",
+        "manufacturingOrderId": "mo-cycle",
+        "workCenterId": "wc-alpha",
+        "startDate": "2026-01-05T08:00:00.000Z",
+        "endDate": "2026-01-10T16:00:00.000Z",
+        "durationMinutes": 60,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-cycle-c"
+        ]
+      }
+    },
+    {
+      "docId": "wo-cycle-b",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-3001-B",
+        "manufacturingOrderId": "mo-cycle",
+        "workCenterId": "wc-beta",
+        "startDate": "2026-01-05T08:00:00.000Z",
+        "endDate": "2026-01-10T16:00:00.000Z",
+        "durationMinutes": 60,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-cycle-a"
+        ]
+      }
+    },
+    {
+      "docId": "wo-cycle-c",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-3001-C",
+        "manufacturingOrderId": "mo-cycle",
+        "workCenterId": "wc-cut",
+        "startDate": "2026-01-05T09:00:00.000Z",
+        "endDate": "2026-01-10T17:00:00.000Z",
+        "durationMinutes": 60,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-cycle-b"
+        ]
+      }
+    }
+  ],
+  "topologicalOrder": [],
+  "workCenterQueues": {},
+  "scheduledWorkOrders": []
+}

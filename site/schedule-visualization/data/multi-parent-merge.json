@@ -1,0 +1,495 @@
+{
+  "generatedAt": "2026-06-14T16:13:32.801Z",
+  "scenario": {
+    "id": "multi-parent-merge",
+    "title": "Multi-Parent Merge",
+    "description": "Successful DAG with two independent predecessors that must both finish before assembly can start.",
+    "expectedStatus": "scheduled",
+    "notes": [
+      "Quantity 2 expands the whole dependency chain into two unit executions.",
+      "Assembly depends on both shell and insert work orders."
+    ]
+  },
+  "status": "scheduled",
+  "config": {
+    "horizonStartDate": "2026-01-01T00:00:00.000Z",
+    "horizonEndDate": "2026-02-01T00:00:00.000Z"
+  },
+  "workCenters": [
+    {
+      "docId": "wc-alpha",
+      "docType": "workCenter",
+      "data": {
+        "name": "Extrusion Alpha",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 8,
+            "endHour": 16
+          }
+        ],
+        "maintenanceWindows": [
+          {
+            "startDate": "2026-01-05T10:00:00.000Z",
+            "endDate": "2026-01-05T11:00:00.000Z",
+            "reason": "Short calibration stop"
+          }
+        ]
+      }
+    },
+    {
+      "docId": "wc-beta",
+      "docType": "workCenter",
+      "data": {
+        "name": "Extrusion Beta",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 8,
+            "endHour": 16
+          }
+        ],
+        "maintenanceWindows": []
+      }
+    },
+    {
+      "docId": "wc-cut",
+      "docType": "workCenter",
+      "data": {
+        "name": "Cutting Cell",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 9,
+            "endHour": 17
+          }
+        ],
+        "maintenanceWindows": [
+          {
+            "startDate": "2026-01-06T13:00:00.000Z",
+            "endDate": "2026-01-06T14:00:00.000Z",
+            "reason": "Blade inspection"
+          }
+        ]
+      }
+    },
+    {
+      "docId": "wc-pack",
+      "docType": "workCenter",
+      "data": {
+        "name": "Packaging Cell",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 10,
+            "endHour": 18
+          }
+        ],
+        "maintenanceWindows": []
+      }
+    }
+  ],
+  "manufacturingOrders": [
+    {
+      "docId": "mo-merge-kit",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-2002",
+        "itemId": "MERGE-KIT",
+        "quantity": 2,
+        "dueDate": "2026-01-12T17:00:00.000Z"
+      }
+    }
+  ],
+  "workOrders": [
+    {
+      "docId": "wo-merge-shell",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-2002-SHELL",
+        "manufacturingOrderId": "mo-merge-kit",
+        "workCenterId": "wc-alpha",
+        "startDate": "2026-01-05T08:00:00.000Z",
+        "endDate": "2026-01-08T16:00:00.000Z",
+        "durationMinutes": 150,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-merge-insert",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-2002-INSERT",
+        "manufacturingOrderId": "mo-merge-kit",
+        "workCenterId": "wc-beta",
+        "startDate": "2026-01-05T08:00:00.000Z",
+        "endDate": "2026-01-08T16:00:00.000Z",
+        "durationMinutes": 120,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-merge-assemble",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-2002-ASM",
+        "manufacturingOrderId": "mo-merge-kit",
+        "workCenterId": "wc-cut",
+        "startDate": "2026-01-05T09:00:00.000Z",
+        "endDate": "2026-01-10T17:00:00.000Z",
+        "durationMinutes": 180,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-merge-shell",
+          "wo-merge-insert"
+        ]
+      }
+    },
+    {
+      "docId": "wo-merge-pack",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-2002-PACK",
+        "manufacturingOrderId": "mo-merge-kit",
+        "workCenterId": "wc-pack",
+        "startDate": "2026-01-06T10:00:00.000Z",
+        "endDate": "2026-01-12T18:00:00.000Z",
+        "durationMinutes": 90,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-merge-assemble"
+        ]
+      }
+    }
+  ],
+  "topologicalOrder": [
+    "wo-merge-insert",
+    "wo-merge-shell",
+    "wo-merge-assemble",
+    "wo-merge-pack"
+  ],
+  "workCenterQueues": {
+    "wc-beta": [
+      "wo-merge-insert#1",
+      "wo-merge-insert#2"
+    ],
+    "wc-alpha": [
+      "wo-merge-shell#1",
+      "wo-merge-shell#2"
+    ],
+    "wc-cut": [
+      "wo-merge-assemble#1",
+      "wo-merge-assemble#2"
+    ],
+    "wc-pack": [
+      "wo-merge-pack#1",
+      "wo-merge-pack#2"
+    ]
+  },
+  "scheduledWorkOrders": [
+    {
+      "executionId": "wo-merge-insert#1",
+      "workOrderId": "wo-merge-insert",
+      "workOrderNumber": "WO-2002-INSERT",
+      "manufacturingOrderId": "mo-merge-kit",
+      "manufacturingOrderNumber": "MO-2002",
+      "workCenterId": "wc-beta",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-05T08:00:00.000Z",
+      "originalEndDate": "2026-01-08T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T08:00:00.000Z",
+      "scheduledEndDate": "2026-01-05T10:00:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-beta",
+          "startDate": "2026-01-05T08:00:00.000Z",
+          "endDate": "2026-01-05T10:00:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-merge-shell#1",
+      "workOrderId": "wo-merge-shell",
+      "workOrderNumber": "WO-2002-SHELL",
+      "manufacturingOrderId": "mo-merge-kit",
+      "manufacturingOrderNumber": "MO-2002",
+      "workCenterId": "wc-alpha",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-05T08:00:00.000Z",
+      "originalEndDate": "2026-01-08T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T08:00:00.000Z",
+      "scheduledEndDate": "2026-01-05T11:30:00.000Z",
+      "durationMinutes": 150,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-alpha",
+          "startDate": "2026-01-05T08:00:00.000Z",
+          "endDate": "2026-01-05T10:00:00.000Z",
+          "workingMinutes": 120
+        },
+        {
+          "workCenterId": "wc-alpha",
+          "startDate": "2026-01-05T11:00:00.000Z",
+          "endDate": "2026-01-05T11:30:00.000Z",
+          "workingMinutes": 30
+        }
+      ]
+    },
+    {
+      "executionId": "wo-merge-assemble#1",
+      "workOrderId": "wo-merge-assemble",
+      "workOrderNumber": "WO-2002-ASM",
+      "manufacturingOrderId": "mo-merge-kit",
+      "manufacturingOrderNumber": "MO-2002",
+      "workCenterId": "wc-cut",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-05T09:00:00.000Z",
+      "originalEndDate": "2026-01-10T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T11:30:00.000Z",
+      "scheduledEndDate": "2026-01-05T14:30:00.000Z",
+      "durationMinutes": 180,
+      "dependsOnWorkOrderIds": [
+        "wo-merge-shell",
+        "wo-merge-insert"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cut",
+          "startDate": "2026-01-05T11:30:00.000Z",
+          "endDate": "2026-01-05T14:30:00.000Z",
+          "workingMinutes": 180
+        }
+      ]
+    },
+    {
+      "executionId": "wo-merge-pack#1",
+      "workOrderId": "wo-merge-pack",
+      "workOrderNumber": "WO-2002-PACK",
+      "manufacturingOrderId": "mo-merge-kit",
+      "manufacturingOrderNumber": "MO-2002",
+      "workCenterId": "wc-pack",
+      "unitNumber": 1,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 1,
+      "originalStartDate": "2026-01-06T10:00:00.000Z",
+      "originalEndDate": "2026-01-12T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T10:00:00.000Z",
+      "scheduledEndDate": "2026-01-06T11:30:00.000Z",
+      "durationMinutes": 90,
+      "dependsOnWorkOrderIds": [
+        "wo-merge-assemble"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-pack",
+          "startDate": "2026-01-06T10:00:00.000Z",
+          "endDate": "2026-01-06T11:30:00.000Z",
+          "workingMinutes": 90
+        }
+      ]
+    },
+    {
+      "executionId": "wo-merge-insert#2",
+      "workOrderId": "wo-merge-insert",
+      "workOrderNumber": "WO-2002-INSERT",
+      "manufacturingOrderId": "mo-merge-kit",
+      "manufacturingOrderNumber": "MO-2002",
+      "workCenterId": "wc-beta",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-05T08:00:00.000Z",
+      "originalEndDate": "2026-01-08T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T10:00:00.000Z",
+      "scheduledEndDate": "2026-01-05T12:00:00.000Z",
+      "durationMinutes": 120,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-beta",
+          "startDate": "2026-01-05T10:00:00.000Z",
+          "endDate": "2026-01-05T12:00:00.000Z",
+          "workingMinutes": 120
+        }
+      ]
+    },
+    {
+      "executionId": "wo-merge-shell#2",
+      "workOrderId": "wo-merge-shell",
+      "workOrderNumber": "WO-2002-SHELL",
+      "manufacturingOrderId": "mo-merge-kit",
+      "manufacturingOrderNumber": "MO-2002",
+      "workCenterId": "wc-alpha",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-05T08:00:00.000Z",
+      "originalEndDate": "2026-01-08T16:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T11:30:00.000Z",
+      "scheduledEndDate": "2026-01-05T14:00:00.000Z",
+      "durationMinutes": 150,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-alpha",
+          "startDate": "2026-01-05T11:30:00.000Z",
+          "endDate": "2026-01-05T14:00:00.000Z",
+          "workingMinutes": 150
+        }
+      ]
+    },
+    {
+      "executionId": "wo-merge-assemble#2",
+      "workOrderId": "wo-merge-assemble",
+      "workOrderNumber": "WO-2002-ASM",
+      "manufacturingOrderId": "mo-merge-kit",
+      "manufacturingOrderNumber": "MO-2002",
+      "workCenterId": "wc-cut",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-05T09:00:00.000Z",
+      "originalEndDate": "2026-01-10T17:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T14:30:00.000Z",
+      "scheduledEndDate": "2026-01-06T09:30:00.000Z",
+      "durationMinutes": 180,
+      "dependsOnWorkOrderIds": [
+        "wo-merge-shell",
+        "wo-merge-insert"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-cut",
+          "startDate": "2026-01-05T14:30:00.000Z",
+          "endDate": "2026-01-05T17:00:00.000Z",
+          "workingMinutes": 150
+        },
+        {
+          "workCenterId": "wc-cut",
+          "startDate": "2026-01-06T09:00:00.000Z",
+          "endDate": "2026-01-06T09:30:00.000Z",
+          "workingMinutes": 30
+        }
+      ]
+    },
+    {
+      "executionId": "wo-merge-pack#2",
+      "workOrderId": "wo-merge-pack",
+      "workOrderNumber": "WO-2002-PACK",
+      "manufacturingOrderId": "mo-merge-kit",
+      "manufacturingOrderNumber": "MO-2002",
+      "workCenterId": "wc-pack",
+      "unitNumber": 2,
+      "totalQuantity": 2,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-06T10:00:00.000Z",
+      "originalEndDate": "2026-01-12T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-06T11:30:00.000Z",
+      "scheduledEndDate": "2026-01-06T13:00:00.000Z",
+      "durationMinutes": 90,
+      "dependsOnWorkOrderIds": [
+        "wo-merge-assemble"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-pack",
+          "startDate": "2026-01-06T11:30:00.000Z",
+          "endDate": "2026-01-06T13:00:00.000Z",
+          "workingMinutes": 90
+        }
+      ]
+    }
+  ]
+}

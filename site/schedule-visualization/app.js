@@ -7,42 +7,161 @@ const WORK_ORDER_COLORS = {
 };
 const PRODUCT_COLOR_SEQUENCE = ["green", "blue", "yellow"];
 
-const data = await fetch("./schedule-data.json").then((response) => {
+let data = null;
+let scenarioIndex = null;
+let workCenterById = new Map();
+let manufacturingOrderById = new Map();
+let manufacturingOrderColorById = new Map();
+let workOrderById = new Map();
+let scheduledWorkOrderByWorkOrderAndUnit = new Map();
+let chartBounds = null;
+
+const tooltipById = new Map();
+
+installScheduleTooltips();
+await initializeApp();
+
+async function initializeApp() {
+  scenarioIndex = await fetchJson("./schedule-scenarios.json");
+  renderScenarioButtons();
+
+  const requestedScenarioId = new URLSearchParams(window.location.search).get("scenario");
+  const defaultScenarioId = scenarioIndex.defaultScenarioId ?? scenarioIndex.scenarios[0]?.id;
+  await loadScenario(requestedScenarioId ?? defaultScenarioId);
+}
+
+async function loadScenario(scenarioId) {
+  const scenarioSummary =
+    scenarioIndex.scenarios.find((scenario) => scenario.id === scenarioId) ??
+    scenarioIndex.scenarios[0];
+
+  if (scenarioSummary === undefined) {
+    throw new Error("No schedule scenarios are available.");
+  }
+
+  data = await fetchJson(scenarioSummary.dataPath);
+  rebuildScenarioState();
+  renderPage();
+  updateScenarioUrl(data.scenario.id);
+}
+
+async function fetchJson(path) {
+  const response = await fetch(path);
+
   if (!response.ok) {
-    throw new Error(`Cannot load schedule-data.json: ${response.status}`);
+    throw new Error(`Cannot load ${path}: ${response.status}`);
   }
 
   return response.json();
-});
+}
 
-const workCenterById = new Map(data.workCenters.map((workCenter) => [workCenter.docId, workCenter]));
-const manufacturingOrderById = new Map(
-  data.manufacturingOrders.map((manufacturingOrder) => [manufacturingOrder.docId, manufacturingOrder]),
-);
-const manufacturingOrderColorById = new Map(
-  data.manufacturingOrders.map((manufacturingOrder, index) => [
-    manufacturingOrder.docId,
-    WORK_ORDER_COLORS[manufacturingOrder.docId] ?? PRODUCT_COLOR_SEQUENCE[index % PRODUCT_COLOR_SEQUENCE.length],
-  ]),
-);
-const workOrderById = new Map(data.workOrders.map((workOrder) => [workOrder.docId, workOrder]));
-const scheduledWorkOrderByWorkOrderAndUnit = new Map(
-  data.scheduledWorkOrders.map((scheduledWorkOrder) => [
-    executionLookupKey(scheduledWorkOrder.workOrderId, scheduledWorkOrder.unitNumber),
-    scheduledWorkOrder,
-  ]),
-);
-const tooltipById = new Map();
-const chartBounds = getChartBounds(data);
+function rebuildScenarioState() {
+  workCenterById = new Map(data.workCenters.map((workCenter) => [workCenter.docId, workCenter]));
+  manufacturingOrderById = new Map(
+    data.manufacturingOrders.map((manufacturingOrder) => [
+      manufacturingOrder.docId,
+      manufacturingOrder,
+    ]),
+  );
+  manufacturingOrderColorById = new Map(
+    data.manufacturingOrders.map((manufacturingOrder, index) => [
+      manufacturingOrder.docId,
+      WORK_ORDER_COLORS[manufacturingOrder.docId] ??
+        PRODUCT_COLOR_SEQUENCE[index % PRODUCT_COLOR_SEQUENCE.length],
+    ]),
+  );
+  workOrderById = new Map(data.workOrders.map((workOrder) => [workOrder.docId, workOrder]));
+  scheduledWorkOrderByWorkOrderAndUnit = new Map(
+    data.scheduledWorkOrders.map((scheduledWorkOrder) => [
+      executionLookupKey(scheduledWorkOrder.workOrderId, scheduledWorkOrder.unitNumber),
+      scheduledWorkOrder,
+    ]),
+  );
+  chartBounds = getChartBounds(data);
+}
 
-renderHorizon();
-renderSummary();
-renderLegend();
-renderChart();
-installScheduleTooltips();
-renderTopologicalOrder();
-renderQueues();
-renderSourceTables();
+function renderPage() {
+  renderScenarioMeta();
+  renderScenarioMessage();
+  renderHorizon();
+  renderSummary();
+  renderLegend();
+  renderChart();
+  renderTopologicalOrder();
+  renderQueues();
+  renderSourceTables();
+}
+
+function renderScenarioButtons() {
+  document.querySelector("#scenario-buttons").innerHTML = scenarioIndex.scenarios
+    .map(
+      (scenario) => `
+        <button
+          type="button"
+          class="scenario-button"
+          data-scenario-id="${escapeHtml(scenario.id)}"
+        >
+          <span>${escapeHtml(scenario.title)}</span>
+          <small>${escapeHtml(scenario.expectedStatus)}</small>
+        </button>
+      `,
+    )
+    .join("");
+
+  document.querySelector("#scenario-buttons").addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-scenario-id]");
+
+    if (!button) {
+      return;
+    }
+
+    await loadScenario(button.dataset.scenarioId);
+  });
+}
+
+function renderScenarioMeta() {
+  document.querySelector("#scenario-title").textContent = data.scenario.title;
+  document.querySelector("#scenario-description").textContent = data.scenario.description;
+  document.querySelector("#scenario-notes").innerHTML = data.scenario.notes
+    .map((note) => `<li>${escapeHtml(note)}</li>`)
+    .join("");
+
+  for (const button of document.querySelectorAll("[data-scenario-id]")) {
+    button.classList.toggle("is-active", button.dataset.scenarioId === data.scenario.id);
+  }
+}
+
+function renderScenarioMessage() {
+  const message = document.querySelector("#scenario-message");
+
+  if (data.status === "scheduled") {
+    message.hidden = false;
+    message.className = "scenario-message success";
+    message.innerHTML = `
+      <strong>Schedule generated successfully.</strong>
+      <span>The algorithm accepted this sample and produced execution bars below.</span>
+    `;
+    return;
+  }
+
+  const cyclePath = data.error?.cyclePath?.length
+    ? `<p><strong>Cycle path:</strong> ${data.error.cyclePath.map(escapeHtml).join(" -> ")}</p>`
+    : "";
+
+  message.hidden = false;
+  message.className = "scenario-message error";
+  message.innerHTML = `
+    <strong>${escapeHtml(data.error?.name ?? "SchedulingError")}</strong>
+    <span>${escapeHtml(data.error?.message ?? "The scheduler rejected this sample.")}</span>
+    ${cyclePath}
+  `;
+}
+
+function updateScenarioUrl(scenarioId) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("scenario", scenarioId);
+  window.history.replaceState({}, "", url);
+}
 
 function renderHorizon() {
   document.querySelector("#horizon-label").textContent =
@@ -55,11 +174,12 @@ function renderSummary() {
     0,
   );
   const summaryItems = [
+    ["Status", data.status === "scheduled" ? "Scheduled" : "Error"],
     ["Work centers", data.workCenters.length],
     ["Work orders", data.workOrders.length],
     ["Manufacturing orders", data.manufacturingOrders.length],
     ["Scheduled executions", data.scheduledWorkOrders.length],
-    ["Maintenance windows", maintenanceCount],
+    ["Blocked windows", maintenanceCount],
   ];
 
   document.querySelector("#summary").innerHTML = summaryItems
@@ -85,6 +205,17 @@ function renderLegend() {
 }
 
 function renderChart() {
+  if (data.status !== "scheduled") {
+    tooltipById.clear();
+    document.querySelector("#schedule-chart").innerHTML = `
+      <div class="empty-chart">
+        <strong>No schedule was generated for this sample.</strong>
+        <span>The scheduler stopped on the error shown above, so there are no execution bars to display.</span>
+      </div>
+    `;
+    return;
+  }
+
   const timelineHours = hoursBetween(chartBounds.start, chartBounds.end);
   const timelineWidth = Math.ceil(timelineHours * PIXELS_PER_HOUR);
   const ticks = buildTicks(chartBounds.start, chartBounds.end);
@@ -570,12 +701,26 @@ function toInterval(start, end) {
 }
 
 function renderTopologicalOrder() {
+  if (data.topologicalOrder.length === 0) {
+    document.querySelector("#topological-order").innerHTML =
+      `<li>Unavailable because this scenario failed before a topological order could be saved.</li>`;
+    return;
+  }
+
   document.querySelector("#topological-order").innerHTML = data.topologicalOrder
     .map((workOrderId) => `<li>${escapeHtml(workOrderId)}</li>`)
     .join("");
 }
 
 function renderQueues() {
+  const queues = Object.entries(data.workCenterQueues);
+
+  if (queues.length === 0) {
+    document.querySelector("#work-center-queues").innerHTML =
+      `<p>No work center queues were generated for this scenario.</p>`;
+    return;
+  }
+
   document.querySelector("#work-center-queues").innerHTML = Object.entries(data.workCenterQueues)
     .map(([workCenterId, queue]) => {
       const workCenterName = workCenterById.get(workCenterId)?.data.name ?? workCenterId;
@@ -778,10 +923,24 @@ function getChartBounds(scheduleData) {
     ...scheduleData.scheduledWorkOrders.flatMap((workOrder) =>
       workOrder.segments.flatMap((segment) => [segment.startDate, segment.endDate]),
     ),
+    ...scheduleData.workOrders.flatMap((workOrder) => [
+      workOrder.data.startDate,
+      workOrder.data.endDate,
+    ]),
     ...scheduleData.workCenters.flatMap((workCenter) =>
       workCenter.data.maintenanceWindows.flatMap((window) => [window.startDate, window.endDate]),
     ),
-  ].map((date) => new Date(date));
+  ]
+    .map((date) => new Date(date))
+    .filter((date) => Number.isFinite(date.getTime()));
+
+  if (allDates.length === 0) {
+    return {
+      start: new Date(scheduleData.config.horizonStartDate),
+      end: new Date(scheduleData.config.horizonEndDate),
+    };
+  }
+
   const start = new Date(Math.min(...allDates.map((date) => date.getTime())));
   const end = new Date(Math.max(...allDates.map((date) => date.getTime())));
 

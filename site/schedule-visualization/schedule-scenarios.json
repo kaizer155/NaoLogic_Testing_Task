@@ -1,0 +1,54 @@
+{
+  "generatedAt": "2026-06-14T16:13:32.832Z",
+  "defaultScenarioId": "massive-varied",
+  "scenarios": [
+    {
+      "id": "massive-varied",
+      "title": "Massive Varied Schedule",
+      "description": "Large successful schedule with many manufacturing orders, quantities, maintenance windows, and mixed DAG shapes.",
+      "expectedStatus": "scheduled",
+      "status": "scheduled",
+      "dataPath": "./data/massive-varied.json"
+    },
+    {
+      "id": "maintenance-split",
+      "title": "Maintenance Split",
+      "description": "Small successful schedule where one work order must pause across a maintenance window before a dependent work order can run.",
+      "expectedStatus": "scheduled",
+      "status": "scheduled",
+      "dataPath": "./data/maintenance-split.json"
+    },
+    {
+      "id": "multi-parent-merge",
+      "title": "Multi-Parent Merge",
+      "description": "Successful DAG with two independent predecessors that must both finish before assembly can start.",
+      "expectedStatus": "scheduled",
+      "status": "scheduled",
+      "dataPath": "./data/multi-parent-merge.json"
+    },
+    {
+      "id": "dependency-cycle",
+      "title": "Dependency Cycle Error",
+      "description": "Invalid sample where A depends on C, C depends on B, and B depends on A.",
+      "expectedStatus": "error",
+      "status": "error",
+      "dataPath": "./data/dependency-cycle.json"
+    },
+    {
+      "id": "impossible-window",
+      "title": "Impossible Window Error",
+      "description": "Invalid sample where the work order needs more working minutes than can fit inside its own start/end window.",
+      "expectedStatus": "error",
+      "status": "error",
+      "dataPath": "./data/impossible-window.json"
+    },
+    {
+      "id": "missing-dependency",
+      "title": "Missing Dependency Error",
+      "description": "Invalid sample where a work order references a predecessor that does not exist.",
+      "expectedStatus": "error",
+      "status": "error",
+      "dataPath": "./data/missing-dependency.json"
+    }
+  ]
+}

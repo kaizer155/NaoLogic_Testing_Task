@@ -1,0 +1,288 @@
+{
+  "generatedAt": "2026-06-14T16:13:32.788Z",
+  "scenario": {
+    "id": "maintenance-split",
+    "title": "Maintenance Split",
+    "description": "Small successful schedule where one work order must pause across a maintenance window before a dependent work order can run.",
+    "expectedStatus": "scheduled",
+    "notes": [
+      "The first work order starts before a maintenance window and resumes after it.",
+      "The dependent packaging work order waits for the split execution to finish."
+    ]
+  },
+  "status": "scheduled",
+  "config": {
+    "horizonStartDate": "2026-01-01T00:00:00.000Z",
+    "horizonEndDate": "2026-02-01T00:00:00.000Z"
+  },
+  "workCenters": [
+    {
+      "docId": "wc-alpha",
+      "docType": "workCenter",
+      "data": {
+        "name": "Extrusion Alpha",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 8,
+            "endHour": 16
+          }
+        ],
+        "maintenanceWindows": [
+          {
+            "startDate": "2026-01-05T10:00:00.000Z",
+            "endDate": "2026-01-05T11:00:00.000Z",
+            "reason": "Short calibration stop"
+          }
+        ]
+      }
+    },
+    {
+      "docId": "wc-beta",
+      "docType": "workCenter",
+      "data": {
+        "name": "Extrusion Beta",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 8,
+            "endHour": 16
+          }
+        ],
+        "maintenanceWindows": []
+      }
+    },
+    {
+      "docId": "wc-cut",
+      "docType": "workCenter",
+      "data": {
+        "name": "Cutting Cell",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 9,
+            "endHour": 17
+          }
+        ],
+        "maintenanceWindows": [
+          {
+            "startDate": "2026-01-06T13:00:00.000Z",
+            "endDate": "2026-01-06T14:00:00.000Z",
+            "reason": "Blade inspection"
+          }
+        ]
+      }
+    },
+    {
+      "docId": "wc-pack",
+      "docType": "workCenter",
+      "data": {
+        "name": "Packaging Cell",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 10,
+            "endHour": 18
+          }
+        ],
+        "maintenanceWindows": []
+      }
+    }
+  ],
+  "manufacturingOrders": [
+    {
+      "docId": "mo-maintenance-split",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-2001",
+        "itemId": "SPLIT-PIPE-50MM",
+        "quantity": 1,
+        "dueDate": "2026-01-08T17:00:00.000Z"
+      }
+    }
+  ],
+  "workOrders": [
+    {
+      "docId": "wo-split-extrude",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-2001-EX",
+        "manufacturingOrderId": "mo-maintenance-split",
+        "workCenterId": "wc-alpha",
+        "startDate": "2026-01-05T08:00:00.000Z",
+        "endDate": "2026-01-05T13:00:00.000Z",
+        "durationMinutes": 180,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    },
+    {
+      "docId": "wo-split-pack",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-2001-PACK",
+        "manufacturingOrderId": "mo-maintenance-split",
+        "workCenterId": "wc-pack",
+        "startDate": "2026-01-05T12:00:00.000Z",
+        "endDate": "2026-01-06T18:00:00.000Z",
+        "durationMinutes": 90,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-split-extrude"
+        ]
+      }
+    }
+  ],
+  "topologicalOrder": [
+    "wo-split-extrude",
+    "wo-split-pack"
+  ],
+  "workCenterQueues": {
+    "wc-alpha": [
+      "wo-split-extrude#1"
+    ],
+    "wc-pack": [
+      "wo-split-pack#1"
+    ]
+  },
+  "scheduledWorkOrders": [
+    {
+      "executionId": "wo-split-extrude#1",
+      "workOrderId": "wo-split-extrude",
+      "workOrderNumber": "WO-2001-EX",
+      "manufacturingOrderId": "mo-maintenance-split",
+      "manufacturingOrderNumber": "MO-2001",
+      "workCenterId": "wc-alpha",
+      "unitNumber": 1,
+      "totalQuantity": 1,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-05T08:00:00.000Z",
+      "originalEndDate": "2026-01-05T13:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T08:00:00.000Z",
+      "scheduledEndDate": "2026-01-05T12:00:00.000Z",
+      "durationMinutes": 180,
+      "dependsOnWorkOrderIds": [],
+      "segments": [
+        {
+          "workCenterId": "wc-alpha",
+          "startDate": "2026-01-05T08:00:00.000Z",
+          "endDate": "2026-01-05T10:00:00.000Z",
+          "workingMinutes": 120
+        },
+        {
+          "workCenterId": "wc-alpha",
+          "startDate": "2026-01-05T11:00:00.000Z",
+          "endDate": "2026-01-05T12:00:00.000Z",
+          "workingMinutes": 60
+        }
+      ]
+    },
+    {
+      "executionId": "wo-split-pack#1",
+      "workOrderId": "wo-split-pack",
+      "workOrderNumber": "WO-2001-PACK",
+      "manufacturingOrderId": "mo-maintenance-split",
+      "manufacturingOrderNumber": "MO-2001",
+      "workCenterId": "wc-pack",
+      "unitNumber": 1,
+      "totalQuantity": 1,
+      "remainingQuantityAfterExecution": 0,
+      "originalStartDate": "2026-01-05T12:00:00.000Z",
+      "originalEndDate": "2026-01-06T18:00:00.000Z",
+      "scheduledStartDate": "2026-01-05T12:00:00.000Z",
+      "scheduledEndDate": "2026-01-05T13:30:00.000Z",
+      "durationMinutes": 90,
+      "dependsOnWorkOrderIds": [
+        "wo-split-extrude"
+      ],
+      "segments": [
+        {
+          "workCenterId": "wc-pack",
+          "startDate": "2026-01-05T12:00:00.000Z",
+          "endDate": "2026-01-05T13:30:00.000Z",
+          "workingMinutes": 90
+        }
+      ]
+    }
+  ]
+}

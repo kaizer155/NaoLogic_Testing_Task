@@ -82,6 +82,112 @@ h3 {
   background: var(--surface);
 }
 
+.scenario-switcher {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 440px);
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.scenario-copy {
+  min-width: 0;
+}
+
+.scenario-kicker {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.scenario-copy p {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.scenario-notes {
+  display: grid;
+  gap: 5px;
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: #34445f;
+  font-size: 13px;
+}
+
+.scenario-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.scenario-button {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.scenario-button:hover,
+.scenario-button.is-active {
+  border-color: var(--blue);
+  background: var(--blue-soft);
+}
+
+.scenario-button span {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scenario-button small {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.scenario-message {
+  display: grid;
+  gap: 5px;
+  margin-bottom: 14px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.scenario-message.success {
+  border-color: #86c9a8;
+  background: #eefbf4;
+}
+
+.scenario-message.error {
+  border-color: #f2a8a8;
+  background: #fff1f1;
+}
+
+.scenario-message span,
+.scenario-message p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .range span,
 .summary-label,
 .section-heading p,
@@ -94,7 +200,7 @@ h3 {
 
 .summary {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 10px;
   margin-bottom: 16px;
 }
@@ -195,6 +301,19 @@ h3 {
   overflow-x: auto;
   border: 1px solid var(--line);
   border-radius: 8px;
+}
+
+.empty-chart {
+  display: grid;
+  gap: 5px;
+  padding: 28px;
+  background: #f8fafc;
+  color: var(--text);
+}
+
+.empty-chart span {
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .timeline-content {
@@ -836,8 +955,13 @@ code {
     flex-direction: column;
   }
 
+  .scenario-switcher,
   .summary,
   .details {
+    grid-template-columns: 1fr;
+  }
+
+  .scenario-buttons {
     grid-template-columns: 1fr;
   }
 

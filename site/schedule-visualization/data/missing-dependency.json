@@ -1,0 +1,209 @@
+{
+  "generatedAt": "2026-06-14T16:13:32.832Z",
+  "scenario": {
+    "id": "missing-dependency",
+    "title": "Missing Dependency Error",
+    "description": "Invalid sample where a work order references a predecessor that does not exist.",
+    "expectedStatus": "error",
+    "notes": [
+      "This should fail before topological sorting can complete.",
+      "The error should point to the missing work order id."
+    ]
+  },
+  "status": "error",
+  "error": {
+    "name": "SchedulingError",
+    "message": "Work order wo-missing-pack depends on missing work order wo-missing-extrude."
+  },
+  "config": {
+    "horizonStartDate": "2026-01-01T00:00:00.000Z",
+    "horizonEndDate": "2026-02-01T00:00:00.000Z"
+  },
+  "workCenters": [
+    {
+      "docId": "wc-alpha",
+      "docType": "workCenter",
+      "data": {
+        "name": "Extrusion Alpha",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 8,
+            "endHour": 16
+          }
+        ],
+        "maintenanceWindows": [
+          {
+            "startDate": "2026-01-05T10:00:00.000Z",
+            "endDate": "2026-01-05T11:00:00.000Z",
+            "reason": "Short calibration stop"
+          }
+        ]
+      }
+    },
+    {
+      "docId": "wc-beta",
+      "docType": "workCenter",
+      "data": {
+        "name": "Extrusion Beta",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 8,
+            "endHour": 16
+          }
+        ],
+        "maintenanceWindows": []
+      }
+    },
+    {
+      "docId": "wc-cut",
+      "docType": "workCenter",
+      "data": {
+        "name": "Cutting Cell",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 9,
+            "endHour": 17
+          }
+        ],
+        "maintenanceWindows": [
+          {
+            "startDate": "2026-01-06T13:00:00.000Z",
+            "endDate": "2026-01-06T14:00:00.000Z",
+            "reason": "Blade inspection"
+          }
+        ]
+      }
+    },
+    {
+      "docId": "wc-pack",
+      "docType": "workCenter",
+      "data": {
+        "name": "Packaging Cell",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 10,
+            "endHour": 18
+          }
+        ],
+        "maintenanceWindows": []
+      }
+    }
+  ],
+  "manufacturingOrders": [
+    {
+      "docId": "mo-missing-dependency",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-3003",
+        "itemId": "MISSING-PARENT",
+        "quantity": 1,
+        "dueDate": "2026-01-09T17:00:00.000Z"
+      }
+    }
+  ],
+  "workOrders": [
+    {
+      "docId": "wo-missing-pack",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-3003-PACK",
+        "manufacturingOrderId": "mo-missing-dependency",
+        "workCenterId": "wc-pack",
+        "startDate": "2026-01-05T10:00:00.000Z",
+        "endDate": "2026-01-09T18:00:00.000Z",
+        "durationMinutes": 90,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": [
+          "wo-missing-extrude"
+        ]
+      }
+    }
+  ],
+  "topologicalOrder": [],
+  "workCenterQueues": {},
+  "scheduledWorkOrders": []
+}

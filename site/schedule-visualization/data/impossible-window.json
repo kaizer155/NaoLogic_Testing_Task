@@ -1,0 +1,209 @@
+{
+  "generatedAt": "2026-06-14T16:13:32.822Z",
+  "scenario": {
+    "id": "impossible-window",
+    "title": "Impossible Window Error",
+    "description": "Invalid sample where the work order needs more working minutes than can fit inside its own start/end window.",
+    "expectedStatus": "error",
+    "notes": [
+      "This should pass dependency preparation and fail during placement.",
+      "The error should mention the execution that cannot fit before the window closes."
+    ]
+  },
+  "status": "error",
+  "error": {
+    "name": "SchedulingError",
+    "message": "Execution wo-tight-extrude#1 cannot fit inside its work order window ending 2026-01-05T10:00:00.000Z before the planning horizon ending 2026-02-01T00:00:00.000Z. Remaining minutes: 120."
+  },
+  "config": {
+    "horizonStartDate": "2026-01-01T00:00:00.000Z",
+    "horizonEndDate": "2026-02-01T00:00:00.000Z"
+  },
+  "workCenters": [
+    {
+      "docId": "wc-alpha",
+      "docType": "workCenter",
+      "data": {
+        "name": "Extrusion Alpha",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 8,
+            "endHour": 16
+          }
+        ],
+        "maintenanceWindows": [
+          {
+            "startDate": "2026-01-05T10:00:00.000Z",
+            "endDate": "2026-01-05T11:00:00.000Z",
+            "reason": "Short calibration stop"
+          }
+        ]
+      }
+    },
+    {
+      "docId": "wc-beta",
+      "docType": "workCenter",
+      "data": {
+        "name": "Extrusion Beta",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 8,
+            "endHour": 16
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 8,
+            "endHour": 16
+          }
+        ],
+        "maintenanceWindows": []
+      }
+    },
+    {
+      "docId": "wc-cut",
+      "docType": "workCenter",
+      "data": {
+        "name": "Cutting Cell",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 9,
+            "endHour": 17
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 9,
+            "endHour": 17
+          }
+        ],
+        "maintenanceWindows": [
+          {
+            "startDate": "2026-01-06T13:00:00.000Z",
+            "endDate": "2026-01-06T14:00:00.000Z",
+            "reason": "Blade inspection"
+          }
+        ]
+      }
+    },
+    {
+      "docId": "wc-pack",
+      "docType": "workCenter",
+      "data": {
+        "name": "Packaging Cell",
+        "shifts": [
+          {
+            "dayOfWeek": 1,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 2,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 3,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 4,
+            "startHour": 10,
+            "endHour": 18
+          },
+          {
+            "dayOfWeek": 5,
+            "startHour": 10,
+            "endHour": 18
+          }
+        ],
+        "maintenanceWindows": []
+      }
+    }
+  ],
+  "manufacturingOrders": [
+    {
+      "docId": "mo-impossible-window",
+      "docType": "manufacturingOrder",
+      "data": {
+        "manufacturingOrderNumber": "MO-3002",
+        "itemId": "TOO-TIGHT-PIPE",
+        "quantity": 1,
+        "dueDate": "2026-01-06T17:00:00.000Z"
+      }
+    }
+  ],
+  "workOrders": [
+    {
+      "docId": "wo-tight-extrude",
+      "docType": "workOrder",
+      "data": {
+        "workOrderNumber": "WO-3002-EX",
+        "manufacturingOrderId": "mo-impossible-window",
+        "workCenterId": "wc-alpha",
+        "startDate": "2026-01-05T09:00:00.000Z",
+        "endDate": "2026-01-05T10:00:00.000Z",
+        "durationMinutes": 180,
+        "isMaintenance": false,
+        "dependsOnWorkOrderIds": []
+      }
+    }
+  ],
+  "topologicalOrder": [
+    "wo-tight-extrude"
+  ],
+  "workCenterQueues": {},
+  "scheduledWorkOrders": []
+}

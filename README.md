@@ -75,13 +75,16 @@ single-node DAGs, branching chains, and merge dependencies.
 npm run visualization:data
 ```
 
-This compiles the TypeScript and writes:
+This compiles the TypeScript and writes the default schedule snapshot plus a scenario catalog:
 
 ```text
 site/schedule-visualization/schedule-data.json
+site/schedule-visualization/schedule-scenarios.json
+site/schedule-visualization/data/*.json
 ```
 
-The static page reads this JSON and renders the schedule.
+The static page can switch between successful samples and expected-error samples, including
+dependency cycle, impossible work-order window, and missing-dependency scenarios.
 
 ## View The Schedule
 
