@@ -106,6 +106,7 @@ http://127.0.0.1:4177/schedule-visualization/
 8. Schedule each execution at the earliest time allowed by:
    - its dependencies,
    - its work center's next free time,
+   - its work order start/end window,
    - available work-center intervals.
 
 ## Current Limitations

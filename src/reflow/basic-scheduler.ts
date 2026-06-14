@@ -63,11 +63,23 @@ export function buildBasicSchedule(preparedState: PreparedScheduleState): BasicS
     );
     const workCenterReadyAt =
       workCenterNextFreeAt.get(execution.workOrder.data.workCenterId) ?? horizon.start;
-    const earliestStart = maxDateTime(dependencyReadyAt, workCenterReadyAt);
+    const workOrderWindowStart = parseUtcDateTime(
+      execution.workOrder.data.startDate,
+      `${execution.workOrder.docId}.startDate`,
+    );
+    const workOrderWindowEnd = parseUtcDateTime(
+      execution.workOrder.data.endDate,
+      `${execution.workOrder.docId}.endDate`,
+    );
+    const earliestStart = maxDateTime(
+      maxDateTime(dependencyReadyAt, workCenterReadyAt),
+      workOrderWindowStart,
+    );
     const scheduledWorkOrder = placeWorkOrder(
       execution,
       availabilityByWorkCenter[execution.workOrder.data.workCenterId] ?? [],
       earliestStart,
+      workOrderWindowEnd,
       horizon,
     );
 
@@ -299,18 +311,32 @@ function placeWorkOrder(
   execution: WorkOrderExecution,
   availabilityIntervals: DateTimeInterval[],
   earliestStart: DateTime,
+  latestEnd: DateTime,
   horizon: DateTimeInterval,
 ): ScheduledWorkOrder {
   let remainingMinutes = execution.workOrder.data.durationMinutes;
   const segments: ScheduledWorkSegment[] = [];
+
+  if (latestEnd.toMillis() <= earliestStart.toMillis()) {
+    throw new SchedulingError(
+      `Execution ${execution.executionId} cannot start before its work order window closes at ${toUtcIso(
+        latestEnd,
+      )}.`,
+    );
+  }
 
   for (const interval of availabilityIntervals) {
     if (interval.end.toMillis() <= earliestStart.toMillis()) {
       continue;
     }
 
+    if (interval.start.toMillis() >= latestEnd.toMillis()) {
+      break;
+    }
+
     const segmentStart = maxDateTime(interval.start, earliestStart);
-    const availableMinutes = minutesBetween(segmentStart, interval.end);
+    const segmentBoundary = minDateTime(interval.end, latestEnd);
+    const availableMinutes = minutesBetween(segmentStart, segmentBoundary);
 
     if (availableMinutes <= 0) {
       continue;
@@ -336,9 +362,15 @@ function placeWorkOrder(
   }
 
   throw new SchedulingError(
-    `Execution ${execution.executionId} cannot fit inside the planning horizon ending ${toUtcIso(
-      horizon.end,
-    )}. Remaining minutes: ${remainingMinutes}.`,
+    `Execution ${execution.executionId} cannot fit inside its work order window ending ${toUtcIso(
+      latestEnd,
+    )} before the planning horizon ending ${toUtcIso(horizon.end)}. Remaining minutes: ${remainingMinutes}.`,
+  );
+}
+
+function minDateTime(...values: DateTime[]): DateTime {
+  return values.reduce((minimum, value) =>
+    value.toMillis() < minimum.toMillis() ? value : minimum,
   );
 }
 
