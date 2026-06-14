@@ -587,32 +587,162 @@ function renderSourceTables() {
       formatMaintenanceWindows(workCenter.data.maintenanceWindows),
     ]),
   );
-  document.querySelector("#manufacturing-orders-table").innerHTML = renderTable(
-    ["Manufacturing order", "Item", "Quantity", "Due date"],
-    data.manufacturingOrders.map((manufacturingOrder) => [
-      code(manufacturingOrder.data.manufacturingOrderNumber),
-      `${dot(WORK_ORDER_COLORS[manufacturingOrder.docId] ?? "blue")}${manufacturingOrder.data.itemId}`,
-      manufacturingOrder.data.quantity,
-      formatDateTime(manufacturingOrder.data.dueDate),
-    ]),
+  document.querySelector("#manufacturing-order-groups").innerHTML = data.manufacturingOrders
+    .map(renderManufacturingOrderGroup)
+    .join("");
+}
+
+function renderManufacturingOrderGroup(manufacturingOrder) {
+  const color = WORK_ORDER_COLORS[manufacturingOrder.docId] ?? "blue";
+  const workOrders = getManufacturingOrderWorkOrders(manufacturingOrder.docId);
+
+  return `
+    <section class="manufacturing-order-group">
+      <aside class="product-panel ${escapeHtml(color)}">
+        <span class="product-kicker">Product</span>
+        <h4>${dot(color)}${escapeHtml(manufacturingOrder.data.itemId)}</h4>
+        <dl>
+          ${renderProductFact("Manufacturing Order", manufacturingOrder.data.manufacturingOrderNumber)}
+          ${renderProductFact("Quantity", manufacturingOrder.data.quantity)}
+          ${renderProductFact("Due Date", formatDateTime(manufacturingOrder.data.dueDate))}
+          ${renderProductFact("Work Order Steps", workOrders.length)}
+        </dl>
+      </aside>
+      <div class="work-order-flow">
+        <div class="work-order-flow-heading">
+          <strong>Dependencies and steps</strong>
+          <span>${escapeHtml(manufacturingOrder.data.manufacturingOrderNumber)} production chain</span>
+        </div>
+        <div class="work-order-step-list">
+          ${
+            workOrders.length === 0
+              ? `<p class="empty-state">No work orders are linked to this manufacturing order.</p>`
+              : workOrders.map((workOrder, index) => renderGroupedWorkOrderStep(workOrder, index + 1)).join("")
+          }
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderGroupedWorkOrderStep(workOrder, stepNumber) {
+  const workCenter = workCenterById.get(workOrder.data.workCenterId);
+  const dependencies = workOrder.data.dependsOnWorkOrderIds;
+  const dependents = getDependentWorkOrders(workOrder.docId);
+  const executions = getScheduledExecutionsForWorkOrder(workOrder.docId);
+
+  return `
+    <article class="work-order-step">
+      <div class="step-index">${stepNumber}</div>
+      <div class="step-body">
+        <div class="step-title">
+          <div>
+            <strong>${escapeHtml(workOrder.data.workOrderNumber)}</strong>
+            <span>${escapeHtml(workOrder.docId)}</span>
+          </div>
+          <code>${escapeHtml(workOrder.data.isMaintenance ? "maintenance" : "production")}</code>
+        </div>
+        <dl class="step-facts">
+          ${renderStepFact("Work Center", `${workCenter?.data.name ?? workOrder.data.workCenterId} (${workOrder.data.workCenterId})`)}
+          ${renderStepFact("Start Date", formatDateTime(workOrder.data.startDate))}
+          ${renderStepFact("End Date", formatDateTime(workOrder.data.endDate))}
+          ${renderStepFact("Duration", `${workOrder.data.durationMinutes} min`)}
+        </dl>
+        <div class="dependency-grid">
+          ${renderDependencyBlock("Depends on", dependencies, "No predecessors", (dependencyId) => {
+            const dependency = workOrderById.get(dependencyId);
+            return `${dependency?.data.workOrderNumber ?? dependencyId} -> ${workOrder.data.workOrderNumber}`;
+          })}
+          ${renderDependencyBlock("Unlocks", dependents.map((dependent) => dependent.docId), "No dependents", (dependentId) => {
+            const dependent = workOrderById.get(dependentId);
+            return `${workOrder.data.workOrderNumber} -> ${dependent?.data.workOrderNumber ?? dependentId}`;
+          })}
+        </div>
+        ${renderExecutionSummary(executions)}
+      </div>
+    </article>
+  `;
+}
+
+function renderProductFact(label, value) {
+  return `
+    <div>
+      <dt>${escapeHtml(label)}</dt>
+      <dd>${escapeHtml(value)}</dd>
+    </div>
+  `;
+}
+
+function renderStepFact(label, value) {
+  return `
+    <div>
+      <dt>${escapeHtml(label)}</dt>
+      <dd>${escapeHtml(value)}</dd>
+    </div>
+  `;
+}
+
+function renderDependencyBlock(label, dependencyIds, emptyText, formatDependency) {
+  return `
+    <section>
+      <h5>${escapeHtml(label)}</h5>
+      ${
+        dependencyIds.length === 0
+          ? `<p>${escapeHtml(emptyText)}</p>`
+          : `<ul>${dependencyIds
+              .map((dependencyId) => `<li>${escapeHtml(formatDependency(dependencyId))}</li>`)
+              .join("")}</ul>`
+      }
+    </section>
+  `;
+}
+
+function renderExecutionSummary(executions) {
+  return `
+    <div class="execution-summary">
+      <h5>Scheduled unit executions</h5>
+      ${
+        executions.length === 0
+          ? `<p>No executions were scheduled for this work order.</p>`
+          : `<div class="execution-pills">${executions
+              .map(
+                (execution) => `
+                  <span>
+                    Unit ${execution.unitNumber}/${execution.totalQuantity}
+                    <strong>${formatDateTime(execution.scheduledStartDate)}-${formatDateTime(execution.scheduledEndDate)}</strong>
+                  </span>
+                `,
+              )
+              .join("")}</div>`
+      }
+    </div>
+  `;
+}
+
+function getManufacturingOrderWorkOrders(manufacturingOrderId) {
+  const topologicalPositionByWorkOrderId = new Map(
+    data.topologicalOrder.map((workOrderId, index) => [workOrderId, index]),
   );
-  document.querySelector("#work-orders-table").innerHTML = renderTable(
-    ["Work order", "Manufacturing order", "Work center", "Start date", "End date", "Duration", "Depends on"],
-    data.workOrders.map((workOrder) => [
-      code(workOrder.data.workOrderNumber),
-      manufacturingOrderById.get(workOrder.data.manufacturingOrderId)?.data.manufacturingOrderNumber ??
-        workOrder.data.manufacturingOrderId,
-      workCenterById.get(workOrder.data.workCenterId)?.data.name ?? workOrder.data.workCenterId,
-      formatDateTime(workOrder.data.startDate),
-      formatDateTime(workOrder.data.endDate),
-      `${workOrder.data.durationMinutes} min`,
-      workOrder.data.dependsOnWorkOrderIds.length === 0
-        ? "None"
-        : workOrder.data.dependsOnWorkOrderIds
-            .map((dependencyId) => workOrderById.get(dependencyId)?.data.workOrderNumber ?? dependencyId)
-            .join(", "),
-    ]),
-  );
+
+  return data.workOrders
+    .filter((workOrder) => workOrder.data.manufacturingOrderId === manufacturingOrderId)
+    .sort((left, right) => {
+      const topologicalComparison =
+        (topologicalPositionByWorkOrderId.get(left.docId) ?? Number.MAX_SAFE_INTEGER) -
+        (topologicalPositionByWorkOrderId.get(right.docId) ?? Number.MAX_SAFE_INTEGER);
+
+      if (topologicalComparison !== 0) {
+        return topologicalComparison;
+      }
+
+      return compareDates(left.data.startDate, right.data.startDate);
+    });
+}
+
+function getScheduledExecutionsForWorkOrder(workOrderId) {
+  return data.scheduledWorkOrders
+    .filter((scheduledWorkOrder) => scheduledWorkOrder.workOrderId === workOrderId)
+    .sort((left, right) => left.unitNumber - right.unitNumber);
 }
 
 function renderTable(headers, rows) {
@@ -686,6 +816,10 @@ function positionInterval(startDate, endDate, options = {}) {
 
 function hoursBetween(start, end) {
   return (end.getTime() - start.getTime()) / 3_600_000;
+}
+
+function compareDates(left, right) {
+  return new Date(left).getTime() - new Date(right).getTime();
 }
 
 function formatShifts(shifts) {

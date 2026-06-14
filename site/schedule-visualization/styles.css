@@ -535,6 +535,242 @@ h3 {
   border-radius: 8px;
 }
 
+.manufacturing-order-groups {
+  display: grid;
+  gap: 14px;
+}
+
+.manufacturing-order-group {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.product-panel {
+  align-self: start;
+  padding: 14px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+}
+
+.product-panel.green {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.product-panel.blue {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.product-panel.yellow {
+  background: var(--yellow-soft);
+  color: var(--yellow);
+}
+
+.product-kicker {
+  display: block;
+  margin-bottom: 8px;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.product-panel h4 {
+  margin: 0 0 14px;
+  color: var(--text);
+  font-size: 17px;
+}
+
+.product-panel dl,
+.step-facts {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+}
+
+.product-panel dt,
+.step-facts dt {
+  margin: 0 0 2px;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.product-panel dd,
+.step-facts dd {
+  margin: 0;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.work-order-flow {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.work-order-flow-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.work-order-flow-heading strong {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.work-order-flow-heading span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.work-order-step-list {
+  display: grid;
+  gap: 10px;
+}
+
+.work-order-step {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 10px;
+  min-width: 0;
+}
+
+.step-index {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #172033;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.step-body {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.step-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 11px;
+}
+
+.step-title strong,
+.step-title span {
+  display: block;
+}
+
+.step-title strong {
+  color: var(--text);
+}
+
+.step-title span {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.step-facts {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.dependency-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.dependency-grid section,
+.execution-summary {
+  padding: 10px;
+  border: 1px solid #e1e8f2;
+  border-radius: 7px;
+  background: #f8fafc;
+}
+
+.dependency-grid h5,
+.execution-summary h5 {
+  margin: 0 0 7px;
+  color: #34445f;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.dependency-grid p,
+.execution-summary p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dependency-grid ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dependency-grid li {
+  padding-left: 9px;
+  border-left: 2px solid #60a5fa;
+  color: #24324a;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.execution-summary {
+  margin-top: 10px;
+}
+
+.execution-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.execution-pills span {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #ffffff;
+  color: #34445f;
+  font-size: 12px;
+}
+
+.execution-pills strong {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.empty-state {
+  margin: 0;
+  color: var(--muted);
+}
+
 table {
   width: 100%;
   min-width: 760px;
@@ -603,6 +839,18 @@ code {
   .summary,
   .details {
     grid-template-columns: 1fr;
+  }
+
+  .manufacturing-order-group,
+  .step-facts,
+  .dependency-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .work-order-flow-heading,
+  .step-title {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   h1 {
