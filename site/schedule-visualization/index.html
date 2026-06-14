@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Production Schedule Visualization</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">Basic scheduler snapshot</p>
+          <h1>Production Schedule</h1>
+        </div>
+        <div class="range">
+          <span>Horizon</span>
+          <strong id="horizon-label">Loading...</strong>
+        </div>
+      </header>
+
+      <section id="summary" class="summary" aria-label="Schedule summary"></section>
+
+      <section class="chart-section" aria-labelledby="chart-title">
+        <div class="section-heading">
+          <div>
+            <h2 id="chart-title">Scheduled Distribution</h2>
+            <p>Bars show generated execution instances. Hatched blocks are maintenance windows.</p>
+          </div>
+          <div id="legend" class="legend" aria-label="Legend"></div>
+        </div>
+        <div id="schedule-chart" class="timeline-frame" aria-label="Schedule timeline"></div>
+      </section>
+
+      <section class="details">
+        <article>
+          <h2>Topological Order</h2>
+          <ol id="topological-order" class="order-list"></ol>
+        </article>
+
+        <article>
+          <h2>Work Center Queues</h2>
+          <div id="work-center-queues" class="queue-list"></div>
+        </article>
+      </section>
+
+      <section class="data-section" aria-labelledby="source-data-title">
+        <div class="section-heading">
+          <div>
+            <h2 id="source-data-title">Source Data</h2>
+            <p>These are the work centers, manufacturing orders, and work orders used for the schedule above.</p>
+          </div>
+        </div>
+
+        <article class="data-card">
+          <h3>Work Centers</h3>
+          <div id="work-centers-table" class="table-wrap"></div>
+        </article>
+
+        <article class="data-card">
+          <h3>Manufacturing Orders</h3>
+          <div id="manufacturing-orders-table" class="table-wrap"></div>
+        </article>
+
+        <article class="data-card">
+          <h3>Work Orders</h3>
+          <div id="work-orders-table" class="table-wrap"></div>
+        </article>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
