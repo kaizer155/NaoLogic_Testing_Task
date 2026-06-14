@@ -884,63 +884,311 @@ function buildDelaySimulation(executionId) {
 }
 
 function calculateDelayedSchedule(executionId) {
-  const selectedIndex = data.scheduledWorkOrders.findIndex(
-    (scheduledWorkOrder) => scheduledWorkOrder.executionId === executionId,
+  const originalByExecutionId = new Map(
+    data.scheduledWorkOrders.map((scheduledWorkOrder) => [
+      scheduledWorkOrder.executionId,
+      scheduledWorkOrder,
+    ]),
+  );
+  const resultByExecutionId = new Map(
+    data.scheduledWorkOrders.map((scheduledWorkOrder) => [
+      scheduledWorkOrder.executionId,
+      cloneScheduledWorkOrder(scheduledWorkOrder),
+    ]),
   );
 
-  if (selectedIndex === -1) {
+  if (!originalByExecutionId.has(executionId)) {
     throw new Error(`Execution ${executionId} was not found in the current scenario.`);
   }
 
   const availableByWorkCenter = buildAvailableIntervalsByWorkCenter();
-  const workCenterNextFreeAt = initializeReflowWorkCenterReadiness(availableByWorkCenter);
-  const scheduledByKey = new Map();
-  const result = [];
+  const occupancyByWorkCenter = buildOccupancyByWorkCenter(resultByExecutionId.values());
+  const queue = [];
+  const queuedExecutionIds = new Set();
 
-  for (let index = 0; index < data.scheduledWorkOrders.length; index += 1) {
-    const original = data.scheduledWorkOrders[index];
+  enqueueAffectedExecution(executionId, {
+    queue,
+    queuedExecutionIds,
+    occupancyByWorkCenter,
+    resultByExecutionId,
+  });
+
+  while (queue.length > 0) {
+    const currentExecutionId = takeNextReflowExecution(queue, queuedExecutionIds, resultByExecutionId);
+    const current = resultByExecutionId.get(currentExecutionId);
+    const original = originalByExecutionId.get(currentExecutionId);
+
+    if (current === undefined || original === undefined) {
+      throw new Error(`Execution ${currentExecutionId} was not found while reflowing delay.`);
+    }
+
     const scheduled =
-      index < selectedIndex
-        ? cloneScheduledWorkOrder(original)
-        : rescheduleExecutionLinearly(original, {
+      currentExecutionId === executionId
+        ? rescheduleDelayedSource(original, {
             availableByWorkCenter,
-            scheduledByKey,
-            workCenterNextFreeAt,
-            extraDurationMinutes: original.executionId === executionId ? CLICK_DELAY_MINUTES : 0,
+            extraDurationMinutes: CLICK_DELAY_MINUTES,
+          })
+        : rescheduleAffectedExecution(original, {
+            availableByWorkCenter,
+            occupancyByWorkCenter,
+            resultByExecutionId,
+            queue,
+            queuedExecutionIds,
           });
+    resultByExecutionId.set(currentExecutionId, scheduled);
+    addOccupancy(scheduled, occupancyByWorkCenter);
 
-    result.push(scheduled);
-    scheduledByKey.set(executionLookupKey(scheduled.workOrderId, scheduled.unitNumber), scheduled);
-    moveWorkCenterReadiness(
-      workCenterNextFreeAt,
-      scheduled.workCenterId,
-      new Date(scheduled.scheduledEndDate),
-    );
+    const overlappedExecutionIds =
+      currentExecutionId === executionId
+        ? findOverlappingExecutionIds(scheduled, occupancyByWorkCenter)
+        : [];
+
+    for (const overlappedExecutionId of overlappedExecutionIds) {
+      enqueueAffectedExecution(overlappedExecutionId, {
+        queue,
+        queuedExecutionIds,
+        occupancyByWorkCenter,
+        resultByExecutionId,
+      });
+    }
+
+    for (const dependentExecutionId of getDependentExecutionIds(scheduled)) {
+      const dependent = resultByExecutionId.get(dependentExecutionId);
+
+      if (dependent === undefined) {
+        continue;
+      }
+
+      const dependencyReadyAt = getReflowDependencyReadyAt(dependent, resultByExecutionId);
+
+      if (
+        dependencyReadyAt > new Date(dependent.scheduledStartDate)
+      ) {
+        enqueueAffectedExecution(dependentExecutionId, {
+          queue,
+          queuedExecutionIds,
+          occupancyByWorkCenter,
+          resultByExecutionId,
+        });
+      }
+    }
   }
 
-  return result;
+  return data.scheduledWorkOrders.map((scheduledWorkOrder) => {
+    const reflowed = resultByExecutionId.get(scheduledWorkOrder.executionId);
+
+    if (reflowed === undefined) {
+      throw new Error(`Execution ${scheduledWorkOrder.executionId} disappeared during reflow.`);
+    }
+
+    return reflowed;
+  });
 }
 
-function rescheduleExecutionLinearly(original, context) {
-  const workOrderWindowStart = new Date(original.originalStartDate);
-  const workOrderWindowEnd = new Date(original.originalEndDate);
-  const baselineStart = new Date(original.scheduledStartDate);
-  const dependencyReadyAt = getReflowDependencyReadyAt(original, context.scheduledByKey);
-  const workCenterReadyAt =
-    context.workCenterNextFreeAt.get(original.workCenterId) ??
-    getFirstAvailableStart(context.availableByWorkCenter[original.workCenterId]) ??
-    new Date(data.config.horizonStartDate);
+function enqueueAffectedExecution(
+  executionId,
+  { queue, queuedExecutionIds, occupancyByWorkCenter, resultByExecutionId },
+) {
+  if (queuedExecutionIds.has(executionId)) {
+    return;
+  }
+
+  const scheduledWorkOrder = resultByExecutionId.get(executionId);
+
+  if (scheduledWorkOrder === undefined) {
+    return;
+  }
+
+  // Remove the affected execution from its old place immediately. The reflow
+  // pass will search the remaining schedule for the first gap where it fits.
+  removeOccupancy(executionId, occupancyByWorkCenter);
+  queue.push(executionId);
+  queuedExecutionIds.add(executionId);
+}
+
+function takeNextReflowExecution(queue, queuedExecutionIds, resultByExecutionId) {
+  queue.sort(compareExecutionIdsByBaselineOrder);
+
+  const readyIndex = queue.findIndex((executionId) => {
+    const scheduledWorkOrder = resultByExecutionId.get(executionId);
+
+    if (scheduledWorkOrder === undefined) {
+      return true;
+    }
+
+    return scheduledWorkOrder.dependsOnWorkOrderIds.every((dependencyId) => {
+      const dependencyExecutionId = executionLookupKey(
+        dependencyId,
+        scheduledWorkOrder.unitNumber,
+      );
+
+      return !queuedExecutionIds.has(dependencyExecutionId);
+    });
+  });
+  const selectedIndex = readyIndex === -1 ? 0 : readyIndex;
+  const [executionId] = queue.splice(selectedIndex, 1);
+
+  if (executionId === undefined) {
+    throw new Error("Reflow queue unexpectedly became empty.");
+  }
+
+  queuedExecutionIds.delete(executionId);
+  return executionId;
+}
+
+function compareExecutionIdsByBaselineOrder(leftExecutionId, rightExecutionId) {
+  return getBaselineExecutionRank(leftExecutionId) - getBaselineExecutionRank(rightExecutionId);
+}
+
+function getBaselineExecutionRank(executionId) {
+  const index = data.scheduledWorkOrders.findIndex(
+    (scheduledWorkOrder) => scheduledWorkOrder.executionId === executionId,
+  );
+
+  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+}
+
+function buildOccupancyByWorkCenter(scheduledWorkOrders) {
+  const occupancyByWorkCenter = new Map();
+
+  for (const scheduledWorkOrder of scheduledWorkOrders) {
+    addOccupancy(scheduledWorkOrder, occupancyByWorkCenter);
+  }
+
+  return occupancyByWorkCenter;
+}
+
+function addOccupancy(scheduledWorkOrder, occupancyByWorkCenter) {
+  const occupancy = occupancyByWorkCenter.get(scheduledWorkOrder.workCenterId) ?? [];
+
+  for (const segment of scheduledWorkOrder.segments) {
+    occupancy.push({
+      executionId: scheduledWorkOrder.executionId,
+      workCenterId: scheduledWorkOrder.workCenterId,
+      startDate: segment.startDate,
+      endDate: segment.endDate,
+    });
+  }
+
+  occupancy.sort(compareIntervals);
+  occupancyByWorkCenter.set(scheduledWorkOrder.workCenterId, occupancy);
+}
+
+function removeOccupancy(executionId, occupancyByWorkCenter) {
+  for (const [workCenterId, occupancy] of occupancyByWorkCenter.entries()) {
+    occupancyByWorkCenter.set(
+      workCenterId,
+      occupancy.filter((interval) => interval.executionId !== executionId),
+    );
+  }
+}
+
+function findOverlappingExecutionIds(scheduledWorkOrder, occupancyByWorkCenter) {
+  const overlappingExecutionIds = new Set();
+  const occupancy = occupancyByWorkCenter.get(scheduledWorkOrder.workCenterId) ?? [];
+
+  for (const segment of scheduledWorkOrder.segments) {
+    for (const occupiedInterval of occupancy) {
+      if (
+        occupiedInterval.executionId !== scheduledWorkOrder.executionId &&
+        intervalsOverlap(segment, occupiedInterval)
+      ) {
+        overlappingExecutionIds.add(occupiedInterval.executionId);
+      }
+    }
+  }
+
+  return [...overlappingExecutionIds].sort(compareExecutionIdsByBaselineOrder);
+}
+
+function findNextBlockingExecutionId({
+  workCenterId,
+  earliestStart,
+  latestEnd,
+  occupancyByWorkCenter,
+}) {
+  const blocker = (occupancyByWorkCenter.get(workCenterId) ?? [])
+    .filter((interval) => new Date(interval.endDate) > earliestStart)
+    .filter((interval) => new Date(interval.startDate) < latestEnd)
+    .sort(
+      (left, right) =>
+        compareIntervals(left, right) ||
+        compareExecutionIdsByBaselineOrder(left.executionId, right.executionId),
+    )[0];
+
+  return blocker?.executionId ?? null;
+}
+
+function getDependentExecutionIds(scheduledWorkOrder) {
+  return data.workOrders
+    .filter((workOrder) =>
+      workOrder.data.dependsOnWorkOrderIds.includes(scheduledWorkOrder.workOrderId),
+    )
+    .map((workOrder) => executionLookupKey(workOrder.docId, scheduledWorkOrder.unitNumber));
+}
+
+function rescheduleDelayedSource(original, context) {
+  return placeExecution(original, {
+    availableByWorkCenter: context.availableByWorkCenter,
+    blockedIntervals: [],
+    earliestStart: maxDate(
+      new Date(original.scheduledStartDate),
+      new Date(original.originalStartDate),
+    ),
+    durationMinutes: original.durationMinutes + context.extraDurationMinutes,
+  });
+}
+
+function rescheduleAffectedExecution(original, context) {
+  const dependencyReadyAt = getReflowDependencyReadyAt(original, context.resultByExecutionId);
   const earliestStart = maxDate(
     dependencyReadyAt,
-    workCenterReadyAt,
-    workOrderWindowStart,
-    baselineStart,
+    new Date(original.originalStartDate),
+    new Date(original.scheduledStartDate),
   );
-  const durationMinutes = original.durationMinutes + context.extraDurationMinutes;
+  let lastError = null;
+
+  for (let attempt = 0; attempt <= data.scheduledWorkOrders.length; attempt += 1) {
+    try {
+      return placeExecution(original, {
+        availableByWorkCenter: context.availableByWorkCenter,
+        blockedIntervals: context.occupancyByWorkCenter.get(original.workCenterId) ?? [],
+        earliestStart,
+        durationMinutes: original.durationMinutes,
+      });
+    } catch (error) {
+      lastError = error;
+
+      const blockerExecutionId = findNextBlockingExecutionId({
+        workCenterId: original.workCenterId,
+        earliestStart,
+        latestEnd: new Date(original.originalEndDate),
+        occupancyByWorkCenter: context.occupancyByWorkCenter,
+      });
+
+      if (blockerExecutionId === null) {
+        throw error;
+      }
+
+      enqueueAffectedExecution(blockerExecutionId, {
+        queue: context.queue,
+        queuedExecutionIds: context.queuedExecutionIds,
+        occupancyByWorkCenter: context.occupancyByWorkCenter,
+        resultByExecutionId: context.resultByExecutionId,
+      });
+    }
+  }
+
+  throw lastError ?? new Error(`Execution ${original.executionId} could not be reflowed.`);
+}
+
+function placeExecution(original, context) {
+  const workOrderWindowEnd = new Date(original.originalEndDate);
   const segments = placeDurationInAvailability({
     availabilityIntervals: context.availableByWorkCenter[original.workCenterId] ?? [],
-    durationMinutes,
-    earliestStart,
+    blockedIntervals: context.blockedIntervals,
+    durationMinutes: context.durationMinutes,
+    earliestStart: context.earliestStart,
     latestEnd: workOrderWindowEnd,
     executionId: original.executionId,
   });
@@ -953,16 +1201,16 @@ function rescheduleExecutionLinearly(original, context) {
 
   return {
     ...original,
-    durationMinutes,
+    durationMinutes: context.durationMinutes,
     scheduledStartDate: firstSegment.startDate,
     scheduledEndDate: lastSegment.endDate,
     segments,
   };
 }
 
-function getReflowDependencyReadyAt(scheduledWorkOrder, scheduledByKey) {
+function getReflowDependencyReadyAt(scheduledWorkOrder, resultByExecutionId) {
   const dependencyEndDates = scheduledWorkOrder.dependsOnWorkOrderIds.map((dependencyId) => {
-    const dependency = scheduledByKey.get(
+    const dependency = resultByExecutionId.get(
       executionLookupKey(dependencyId, scheduledWorkOrder.unitNumber),
     );
 
@@ -980,6 +1228,7 @@ function getReflowDependencyReadyAt(scheduledWorkOrder, scheduledByKey) {
 
 function placeDurationInAvailability({
   availabilityIntervals,
+  blockedIntervals = [],
   durationMinutes,
   earliestStart,
   latestEnd,
@@ -987,8 +1236,9 @@ function placeDurationInAvailability({
 }) {
   let remainingMinutes = durationMinutes;
   const segments = [];
+  const openIntervals = subtractBlockedIntervals(availabilityIntervals, blockedIntervals);
 
-  for (const interval of availabilityIntervals) {
+  for (const interval of openIntervals) {
     const intervalStart = new Date(interval.startDate);
     const intervalEnd = new Date(interval.endDate);
 
@@ -1165,7 +1415,7 @@ function clipInterval(start, end, min, max) {
 
 function mergeIntervals(intervals) {
   const sorted = [...intervals].sort(
-    (left, right) => new Date(left.startDate).getTime() - new Date(right.startDate).getTime(),
+    compareIntervals,
   );
   const merged = [];
 
@@ -1183,6 +1433,15 @@ function mergeIntervals(intervals) {
   }
 
   return merged;
+}
+
+function compareIntervals(left, right) {
+  return new Date(left.startDate).getTime() - new Date(right.startDate).getTime();
+}
+
+function intervalsOverlap(left, right) {
+  return new Date(left.startDate) < new Date(right.endDate) &&
+    new Date(right.startDate) < new Date(left.endDate);
 }
 
 function toInterval(start, end) {
