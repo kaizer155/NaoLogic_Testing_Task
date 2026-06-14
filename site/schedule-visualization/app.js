@@ -19,12 +19,20 @@ const manufacturingOrderById = new Map(
   data.manufacturingOrders.map((manufacturingOrder) => [manufacturingOrder.docId, manufacturingOrder]),
 );
 const workOrderById = new Map(data.workOrders.map((workOrder) => [workOrder.docId, workOrder]));
+const scheduledWorkOrderByWorkOrderAndUnit = new Map(
+  data.scheduledWorkOrders.map((scheduledWorkOrder) => [
+    executionLookupKey(scheduledWorkOrder.workOrderId, scheduledWorkOrder.unitNumber),
+    scheduledWorkOrder,
+  ]),
+);
+const tooltipById = new Map();
 const chartBounds = getChartBounds(data);
 
 renderHorizon();
 renderSummary();
 renderLegend();
 renderChart();
+installScheduleTooltips();
 renderTopologicalOrder();
 renderQueues();
 renderSourceTables();
@@ -73,6 +81,7 @@ function renderChart() {
   const timelineHours = hoursBetween(chartBounds.start, chartBounds.end);
   const timelineWidth = Math.ceil(timelineHours * PIXELS_PER_HOUR);
   const ticks = buildTicks(chartBounds.start, chartBounds.end);
+  tooltipById.clear();
   const rows = data.workCenters
     .map((workCenter) => renderWorkCenterLane(workCenter, timelineWidth))
     .join("");
@@ -108,7 +117,9 @@ function renderWorkCenterLane(workCenter, timelineWidth) {
       workOrder.segments.map((segment) => renderWorkSegment(workOrder, segment)),
     )
     .join("");
-  const maintenanceBars = workCenter.data.maintenanceWindows.map(renderMaintenanceWindow).join("");
+  const maintenanceBars = workCenter.data.maintenanceWindows
+    .map((window) => renderMaintenanceWindow(workCenter, window))
+    .join("");
 
   return `
     <div class="lane">
@@ -142,34 +153,305 @@ function renderWorkSegment(scheduledWorkOrder, segment) {
   const color = WORK_ORDER_COLORS[scheduledWorkOrder.manufacturingOrderId] ?? "blue";
   const position = positionInterval(segment.startDate, segment.endDate);
   const title = `${scheduledWorkOrder.workOrderNumber} #${scheduledWorkOrder.unitNumber}`;
+  const tooltipId = toTooltipId("work", scheduledWorkOrder.executionId, segment.startDate);
+  tooltipById.set(tooltipId, renderWorkTooltip(scheduledWorkOrder, segment, workOrder));
 
   return `
     <div
       class="bar ${color}"
       style="left: ${position.left}px; width: ${position.width}px"
-      title="${escapeHtml(title)}"
+      tabindex="0"
+      aria-describedby="schedule-card-tooltip"
+      aria-label="${escapeHtml(title)}"
+      data-tooltip-id="${escapeHtml(tooltipId)}"
     >
-      <strong>${escapeHtml(title)}</strong>
-      <span>${formatTimeRange(segment.startDate, segment.endDate)}</span>
-      <em>${segment.workingMinutes} min, unit ${scheduledWorkOrder.unitNumber}/${scheduledWorkOrder.totalQuantity}, remaining ${scheduledWorkOrder.remainingQuantityAfterExecution}</em>
+      <div class="bar-content">
+        <strong>${escapeHtml(title)}</strong>
+        <span>${formatTimeRange(segment.startDate, segment.endDate)}</span>
+        <em>${segment.workingMinutes} min, unit ${scheduledWorkOrder.unitNumber}/${scheduledWorkOrder.totalQuantity}, remaining ${scheduledWorkOrder.remainingQuantityAfterExecution}</em>
+      </div>
     </div>
   `;
 }
 
-function renderMaintenanceWindow(window) {
+function renderMaintenanceWindow(workCenter, window) {
   const position = positionInterval(window.startDate, window.endDate);
+  const tooltipId = toTooltipId("maintenance", workCenter.docId, window.startDate);
+  tooltipById.set(tooltipId, renderMaintenanceTooltip(workCenter, window));
 
   return `
     <div
       class="bar maintenance"
       style="left: ${position.left}px; width: ${position.width}px"
-      title="${escapeHtml(window.reason ?? "Maintenance")}"
+      tabindex="0"
+      aria-describedby="schedule-card-tooltip"
+      aria-label="${escapeHtml(window.reason ?? "Maintenance")}"
+      data-tooltip-id="${escapeHtml(tooltipId)}"
     >
-      <strong>Maintenance</strong>
-      <span>${formatTimeRange(window.startDate, window.endDate)}</span>
-      <em>${escapeHtml(window.reason ?? "Blocked")}</em>
+      <div class="bar-content">
+        <strong>Maintenance</strong>
+        <span>${formatTimeRange(window.startDate, window.endDate)}</span>
+        <em>${escapeHtml(window.reason ?? "Blocked")}</em>
+      </div>
     </div>
   `;
+}
+
+function renderWorkTooltip(scheduledWorkOrder, segment, workOrder) {
+  const manufacturingOrder = manufacturingOrderById.get(scheduledWorkOrder.manufacturingOrderId);
+  const workCenter = workCenterById.get(scheduledWorkOrder.workCenterId);
+  const dependsOnRows = scheduledWorkOrder.dependsOnWorkOrderIds.map((dependencyId) =>
+    getDependencyRow(dependencyId, scheduledWorkOrder),
+  );
+  const dependentRows = getDependentWorkOrders(scheduledWorkOrder.workOrderId).map((dependentWorkOrder) =>
+    getDependentRow(scheduledWorkOrder, dependentWorkOrder),
+  );
+
+  return `
+    <div class="tooltip-header">
+      <strong>${escapeHtml(scheduledWorkOrder.workOrderNumber)}</strong>
+      <span>${escapeHtml(scheduledWorkOrder.executionId)}</span>
+    </div>
+    <dl class="tooltip-grid">
+      ${renderTooltipItem("Manufacturing Order", `${scheduledWorkOrder.manufacturingOrderNumber} (${scheduledWorkOrder.manufacturingOrderId})`)}
+      ${renderTooltipItem("Item", manufacturingOrder?.data.itemId ?? "Unknown")}
+      ${renderTooltipItem("Work Center", `${workCenter?.data.name ?? scheduledWorkOrder.workCenterId} (${scheduledWorkOrder.workCenterId})`)}
+      ${renderTooltipItem("Unit", `${scheduledWorkOrder.unitNumber}/${scheduledWorkOrder.totalQuantity}`)}
+      ${renderTooltipItem("Remaining Quantity", scheduledWorkOrder.remainingQuantityAfterExecution)}
+      ${renderTooltipItem("Segment", `${formatTimeRange(segment.startDate, segment.endDate)} (${segment.workingMinutes} min)`)}
+      ${renderTooltipItem("Scheduled Execution", `${formatDateTime(scheduledWorkOrder.scheduledStartDate)}-${formatDateTime(scheduledWorkOrder.scheduledEndDate)}`)}
+      ${renderTooltipItem("Original Window", `${formatDateTime(workOrder?.data.startDate ?? scheduledWorkOrder.originalStartDate)}-${formatDateTime(workOrder?.data.endDate ?? scheduledWorkOrder.originalEndDate)}`)}
+      ${renderTooltipItem("Duration", `${scheduledWorkOrder.durationMinutes} min`)}
+    </dl>
+    ${renderDependencyList("Depends On", dependsOnRows, "This work order has no predecessors.")}
+    ${renderDependencyList("Dependents", dependentRows, "No later work order depends on this one.")}
+  `;
+}
+
+function renderMaintenanceTooltip(workCenter, window) {
+  return `
+    <div class="tooltip-header">
+      <strong>Maintenance Window</strong>
+      <span>${escapeHtml(workCenter.data.name)}</span>
+    </div>
+    <dl class="tooltip-grid">
+      ${renderTooltipItem("Work Center", `${workCenter.data.name} (${workCenter.docId})`)}
+      ${renderTooltipItem("Time", formatTimeRange(window.startDate, window.endDate))}
+      ${renderTooltipItem("Reason", window.reason ?? "Blocked")}
+    </dl>
+  `;
+}
+
+function renderTooltipItem(label, value) {
+  return `
+    <div>
+      <dt>${escapeHtml(label)}</dt>
+      <dd>${escapeHtml(value)}</dd>
+    </div>
+  `;
+}
+
+function renderDependencyList(title, rows, emptyText) {
+  return `
+    <section class="tooltip-section">
+      <h4>${escapeHtml(title)}</h4>
+      ${
+        rows.length === 0
+          ? `<p>${escapeHtml(emptyText)}</p>`
+          : `<ul>${rows
+              .map(
+                (row) => `
+                  <li>
+                    <strong>${escapeHtml(row.relation)}</strong>
+                    <span>${escapeHtml(row.detail)}</span>
+                  </li>
+                `,
+              )
+              .join("")}</ul>`
+      }
+    </section>
+  `;
+}
+
+function getDependencyRow(dependencyId, scheduledWorkOrder) {
+  const dependencyExecution = getScheduledExecution(dependencyId, scheduledWorkOrder.unitNumber);
+  const dependencyLabel = formatWorkOrderReference(dependencyId);
+
+  return {
+    relation: `${dependencyLabel} -> ${scheduledWorkOrder.workOrderNumber}`,
+    detail: dependencyExecution
+      ? `Unit ${dependencyExecution.unitNumber}, ${dependencyExecution.executionId}, finishes ${formatDateTime(dependencyExecution.scheduledEndDate)}`
+      : `Unit ${scheduledWorkOrder.unitNumber}, not scheduled in the current result`,
+  };
+}
+
+function getDependentRow(scheduledWorkOrder, dependentWorkOrder) {
+  const dependentExecution = getScheduledExecution(dependentWorkOrder.docId, scheduledWorkOrder.unitNumber);
+  const dependentLabel = formatWorkOrderReference(dependentWorkOrder.docId);
+
+  return {
+    relation: `${scheduledWorkOrder.workOrderNumber} -> ${dependentLabel}`,
+    detail: dependentExecution
+      ? `Unit ${dependentExecution.unitNumber}, ${dependentExecution.executionId}, starts ${formatDateTime(dependentExecution.scheduledStartDate)}`
+      : `Unit ${scheduledWorkOrder.unitNumber}, not scheduled in the current result`,
+  };
+}
+
+function getDependentWorkOrders(workOrderId) {
+  return data.workOrders.filter((candidate) => candidate.data.dependsOnWorkOrderIds.includes(workOrderId));
+}
+
+function getScheduledExecution(workOrderId, unitNumber) {
+  return scheduledWorkOrderByWorkOrderAndUnit.get(executionLookupKey(workOrderId, unitNumber)) ?? null;
+}
+
+function formatWorkOrderReference(workOrderId) {
+  const workOrder = workOrderById.get(workOrderId);
+
+  if (!workOrder) {
+    return workOrderId;
+  }
+
+  return `${workOrder.data.workOrderNumber} (${workOrder.docId})`;
+}
+
+function executionLookupKey(workOrderId, unitNumber) {
+  return `${workOrderId}#${unitNumber}`;
+}
+
+function toTooltipId(...parts) {
+  return parts.join("--").replace(/[^a-zA-Z0-9_-]/g, "-");
+}
+
+function installScheduleTooltips() {
+  const tooltip = document.createElement("div");
+  tooltip.id = "schedule-card-tooltip";
+  tooltip.className = "schedule-tooltip";
+  tooltip.setAttribute("role", "tooltip");
+  document.body.append(tooltip);
+
+  const chart = document.querySelector("#schedule-chart");
+  let activeCard = null;
+
+  // The fixed overlay avoids clipping inside the horizontally scrollable timeline.
+  const activateFromEvent = (event) => {
+    const card = getTooltipCard(event.target);
+
+    if (!card || card === activeCard) {
+      return;
+    }
+
+    activeCard = card;
+    showScheduleTooltip(tooltip, activeCard);
+  };
+
+  const deactivateFromEvent = (event) => {
+    const card = getTooltipCard(event.target);
+
+    if (!card || card.contains(event.relatedTarget)) {
+      return;
+    }
+
+    activeCard = null;
+    hideScheduleTooltip(tooltip);
+  };
+
+  chart.addEventListener("pointerover", activateFromEvent);
+  chart.addEventListener("mouseover", activateFromEvent);
+  chart.addEventListener("mousemove", activateFromEvent);
+
+  chart.addEventListener("pointerout", deactivateFromEvent);
+  chart.addEventListener("mouseout", deactivateFromEvent);
+
+  chart.addEventListener("focusin", (event) => {
+    const card = getTooltipCard(event.target);
+
+    if (!card) {
+      return;
+    }
+
+    activeCard = card;
+    showScheduleTooltip(tooltip, activeCard);
+  });
+
+  chart.addEventListener("focusout", (event) => {
+    const card = getTooltipCard(event.target);
+
+    if (!card || card.contains(event.relatedTarget)) {
+      return;
+    }
+
+    activeCard = null;
+    hideScheduleTooltip(tooltip);
+  });
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (activeCard) {
+        positionScheduleTooltip(tooltip, activeCard);
+      }
+    },
+    true,
+  );
+  window.addEventListener("resize", () => {
+    if (activeCard) {
+      positionScheduleTooltip(tooltip, activeCard);
+    }
+  });
+}
+
+function getTooltipCard(target) {
+  if (!(target instanceof Element)) {
+    return null;
+  }
+
+  return target.closest("[data-tooltip-id]");
+}
+
+function showScheduleTooltip(tooltip, card) {
+  const tooltipHtml = tooltipById.get(card.dataset.tooltipId);
+
+  if (!tooltipHtml) {
+    hideScheduleTooltip(tooltip);
+    return;
+  }
+
+  tooltip.innerHTML = tooltipHtml;
+  tooltip.classList.add("is-visible");
+  positionScheduleTooltip(tooltip, card);
+}
+
+function hideScheduleTooltip(tooltip) {
+  tooltip.classList.remove("is-visible", "is-below");
+}
+
+function positionScheduleTooltip(tooltip, card) {
+  const cardRect = card.getBoundingClientRect();
+  const margin = 12;
+
+  tooltip.style.maxHeight = `${window.innerHeight - margin * 2}px`;
+
+  const tooltipRect = tooltip.getBoundingClientRect();
+  const maxLeft = Math.max(margin, window.innerWidth - tooltipRect.width - margin);
+  const hasRightSpace = cardRect.right + margin + tooltipRect.width <= window.innerWidth - margin;
+  const hasLeftSpace = cardRect.left - margin - tooltipRect.width >= margin;
+  let left = cardRect.right + margin;
+  let top = cardRect.top + cardRect.height / 2 - tooltipRect.height / 2;
+
+  tooltip.classList.remove("is-below");
+
+  if (!hasRightSpace && hasLeftSpace) {
+    left = cardRect.left - tooltipRect.width - margin;
+  } else if (!hasRightSpace) {
+    const centeredLeft = cardRect.left + cardRect.width / 2 - tooltipRect.width / 2;
+    left = Math.max(margin, Math.min(maxLeft, centeredLeft));
+  }
+
+  top = Math.max(margin, Math.min(window.innerHeight - tooltipRect.height - margin, top));
+
+  tooltip.style.left = `${left}px`;
+  tooltip.style.top = `${top}px`;
 }
 
 function getClosedIntervals(workCenter) {

@@ -86,8 +86,8 @@ h3 {
 .summary-label,
 .section-heading p,
 .lane-label span,
-.bar span,
-.bar em,
+.bar-content span,
+.bar-content em,
 .queue-list {
   color: var(--muted);
 }
@@ -274,28 +274,44 @@ h3 {
   z-index: 2;
   top: 12px;
   min-height: 48px;
-  padding: 7px 9px;
   border: 1px solid currentColor;
   border-radius: 6px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 5px 12px rgb(23 32 51 / 0.08);
 }
 
-.bar strong,
-.bar span,
-.bar em {
+.bar:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.bar:hover,
+.bar:focus-visible {
+  z-index: 5;
+}
+
+.bar-content {
+  min-height: 48px;
+  padding: 7px 9px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.bar-content strong,
+.bar-content span,
+.bar-content em {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.bar strong {
+.bar-content strong {
   font-size: 12px;
 }
 
-.bar span,
-.bar em {
+.bar-content span,
+.bar-content em {
   margin-top: 2px;
   font-size: 11px;
   font-style: normal;
@@ -329,6 +345,127 @@ h3 {
   );
   color: var(--maintenance);
   opacity: 0.92;
+}
+
+.bar.maintenance .bar-content {
+  min-height: 34px;
+}
+
+.schedule-tooltip {
+  position: fixed;
+  z-index: 100;
+  width: min(360px, calc(100vw - 24px));
+  max-height: min(520px, calc(100vh - 24px));
+  padding: 14px;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #0f172a;
+  box-shadow: 0 18px 45px rgb(15 23 42 / 0.24);
+  color: #dbe7f7;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0;
+  overflow-y: auto;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease,
+    visibility 120ms ease;
+  visibility: hidden;
+}
+
+.schedule-tooltip.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.tooltip-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(148 163 184 / 0.25);
+}
+
+.tooltip-header strong {
+  color: #f8fafc;
+  font-size: 14px;
+}
+
+.tooltip-header span {
+  color: #93a4bb;
+  text-align: right;
+}
+
+.tooltip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px 12px;
+  margin: 0;
+}
+
+.tooltip-grid div {
+  min-width: 0;
+}
+
+.tooltip-grid dt {
+  margin: 0 0 2px;
+  color: #93a4bb;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.tooltip-grid dd {
+  margin: 0;
+  color: #f8fafc;
+  overflow-wrap: anywhere;
+}
+
+.tooltip-section {
+  margin-top: 14px;
+}
+
+.tooltip-section h4 {
+  margin: 0 0 7px;
+  color: #f8fafc;
+  font-size: 12px;
+}
+
+.tooltip-section p {
+  margin: 0;
+  color: #cbd5e1;
+}
+
+.tooltip-section ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tooltip-section li {
+  padding-left: 9px;
+  border-left: 2px solid #60a5fa;
+}
+
+.tooltip-section li strong,
+.tooltip-section li span {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.tooltip-section li strong {
+  color: #f8fafc;
+}
+
+.tooltip-section li span {
+  margin-top: 2px;
+  color: #cbd5e1;
 }
 
 .closed-window {
