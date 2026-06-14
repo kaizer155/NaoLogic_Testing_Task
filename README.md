@@ -123,13 +123,9 @@ http://127.0.0.1:4177/schedule-visualization/
 
 ## Current Limitations
 
-- This is still a basic scheduler, not an optimizer.
 - It schedules greedily from ready executions, with topological order as a fallback.
-- Maintenance work orders are not yet treated as fixed occupied intervals.
 - There is no automated test suite yet.
 - The visualisation is display-only.
-
-Future improvements are intentionally left small and visible so the next scheduling phase can evolve cleanly.
 
 ## AI Prompt Documentation
 
