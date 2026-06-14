@@ -200,6 +200,8 @@ function renderMaintenanceWindow(workCenter, window) {
 function renderWorkTooltip(scheduledWorkOrder, segment, workOrder) {
   const manufacturingOrder = manufacturingOrderById.get(scheduledWorkOrder.manufacturingOrderId);
   const workCenter = workCenterById.get(scheduledWorkOrder.workCenterId);
+  const workOrderStartDate = workOrder?.data.startDate ?? scheduledWorkOrder.originalStartDate;
+  const workOrderEndDate = workOrder?.data.endDate ?? scheduledWorkOrder.originalEndDate;
   const dependsOnRows = scheduledWorkOrder.dependsOnWorkOrderIds.map((dependencyId) =>
     getDependencyRow(dependencyId, scheduledWorkOrder),
   );
@@ -220,7 +222,9 @@ function renderWorkTooltip(scheduledWorkOrder, segment, workOrder) {
       ${renderTooltipItem("Remaining Quantity", scheduledWorkOrder.remainingQuantityAfterExecution)}
       ${renderTooltipItem("Segment", `${formatTimeRange(segment.startDate, segment.endDate)} (${segment.workingMinutes} min)`)}
       ${renderTooltipItem("Scheduled Execution", `${formatDateTime(scheduledWorkOrder.scheduledStartDate)}-${formatDateTime(scheduledWorkOrder.scheduledEndDate)}`)}
-      ${renderTooltipItem("Original Window", `${formatDateTime(workOrder?.data.startDate ?? scheduledWorkOrder.originalStartDate)}-${formatDateTime(workOrder?.data.endDate ?? scheduledWorkOrder.originalEndDate)}`)}
+      ${renderTooltipItem("Work Order Start", formatDateTime(workOrderStartDate))}
+      ${renderTooltipItem("Work Order End", formatDateTime(workOrderEndDate))}
+      ${renderTooltipItem("Original Window", `${formatDateTime(workOrderStartDate)}-${formatDateTime(workOrderEndDate)}`)}
       ${renderTooltipItem("Duration", `${scheduledWorkOrder.durationMinutes} min`)}
     </dl>
     ${renderDependencyList("Depends On", dependsOnRows, "This work order has no predecessors.")}
@@ -593,12 +597,14 @@ function renderSourceTables() {
     ]),
   );
   document.querySelector("#work-orders-table").innerHTML = renderTable(
-    ["Work order", "Manufacturing order", "Work center", "Duration", "Depends on"],
+    ["Work order", "Manufacturing order", "Work center", "Start date", "End date", "Duration", "Depends on"],
     data.workOrders.map((workOrder) => [
       code(workOrder.data.workOrderNumber),
       manufacturingOrderById.get(workOrder.data.manufacturingOrderId)?.data.manufacturingOrderNumber ??
         workOrder.data.manufacturingOrderId,
       workCenterById.get(workOrder.data.workCenterId)?.data.name ?? workOrder.data.workCenterId,
+      formatDateTime(workOrder.data.startDate),
+      formatDateTime(workOrder.data.endDate),
       `${workOrder.data.durationMinutes} min`,
       workOrder.data.dependsOnWorkOrderIds.length === 0
         ? "None"
