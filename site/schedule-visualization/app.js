@@ -1077,7 +1077,7 @@ function getReflowChangeReason({
   }
 
   if (baseline.workCenterId === reflowed.workCenterId) {
-    return "Moved to the first available work-center gap after a local conflict.";
+    return "Moved to the first complete work-center gap after a local conflict.";
   }
 
   return "Moved by the reflow preview.";
@@ -1355,6 +1355,7 @@ function rescheduleAffectedExecution(original, context) {
         blockedIntervals: context.occupancyByWorkCenter.get(original.workCenterId) ?? [],
         earliestStart,
         durationMinutes: original.durationMinutes,
+        requireCompleteGap: true,
       });
     } catch (error) {
       lastError = error;
@@ -1384,14 +1385,17 @@ function rescheduleAffectedExecution(original, context) {
 
 function placeExecution(original, context) {
   const workOrderWindowEnd = new Date(original.originalEndDate);
-  const segments = placeDurationInAvailability({
+  const placementContext = {
     availabilityIntervals: context.availableByWorkCenter[original.workCenterId] ?? [],
     blockedIntervals: context.blockedIntervals,
     durationMinutes: context.durationMinutes,
     earliestStart: context.earliestStart,
     latestEnd: workOrderWindowEnd,
     executionId: original.executionId,
-  });
+  };
+  const segments = context.requireCompleteGap
+    ? placeDurationInFirstCompleteGap(placementContext)
+    : placeDurationInAvailability(placementContext);
   const firstSegment = segments[0];
   const lastSegment = segments.at(-1);
 
@@ -1406,6 +1410,82 @@ function placeExecution(original, context) {
     scheduledEndDate: lastSegment.endDate,
     segments,
   };
+}
+
+function placeDurationInFirstCompleteGap(context) {
+  // A displaced execution must move as a whole. It may pause across closed or
+  // maintenance time, but it cannot borrow minutes from separate gaps split by
+  // another work order.
+  const blockers = mergeIntervals(context.blockedIntervals)
+    .filter((interval) => new Date(interval.endDate) > context.earliestStart)
+    .filter((interval) => new Date(interval.startDate) < context.latestEnd)
+    .sort(compareIntervals);
+  let gapStart = context.earliestStart;
+
+  for (const blocker of blockers) {
+    const blockerStart = new Date(blocker.startDate);
+
+    if (gapStart < blockerStart) {
+      const placement = tryPlaceDurationInGap(context, gapStart, blockerStart);
+
+      if (placement !== null) {
+        return placement;
+      }
+    }
+
+    gapStart = maxDate(gapStart, new Date(blocker.endDate));
+
+    if (gapStart >= context.latestEnd) {
+      break;
+    }
+  }
+
+  const placement = tryPlaceDurationInGap(context, gapStart, context.latestEnd);
+
+  if (placement !== null) {
+    return placement;
+  }
+
+  throw new Error(
+    `Execution ${context.executionId} cannot fit as a whole after the delay before its work order window closes at ${context.latestEnd.toISOString()}.`,
+  );
+}
+
+function tryPlaceDurationInGap(context, gapStart, gapEnd) {
+  if (gapStart >= gapEnd) {
+    return null;
+  }
+
+  const gapAvailability = context.availabilityIntervals
+    .map((interval) => {
+      const clippedInterval = clipInterval(
+        new Date(interval.startDate),
+        new Date(interval.endDate),
+        gapStart,
+        gapEnd,
+      );
+
+      return clippedInterval === null
+        ? null
+        : {
+            ...clippedInterval,
+            workCenterId: interval.workCenterId,
+          };
+    })
+    .filter((interval) => interval !== null);
+
+  try {
+    return placeDurationInAvailability({
+      availabilityIntervals: gapAvailability,
+      blockedIntervals: [],
+      durationMinutes: context.durationMinutes,
+      earliestStart: gapStart,
+      latestEnd: gapEnd,
+      executionId: context.executionId,
+    });
+  } catch {
+    return null;
+  }
 }
 
 function getReflowDependencyReadyAt(scheduledWorkOrder, resultByExecutionId) {
