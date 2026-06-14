@@ -15,6 +15,7 @@ let manufacturingOrderById = new Map();
 let manufacturingOrderColorById = new Map();
 let workOrderById = new Map();
 let scheduledWorkOrderByWorkOrderAndUnit = new Map();
+let availabilityByWorkCenter = {};
 let chartBounds = null;
 let activeDelaySimulation = null;
 
@@ -75,6 +76,7 @@ function rebuildScenarioState() {
     ]),
   );
   workOrderById = new Map(data.workOrders.map((workOrder) => [workOrder.docId, workOrder]));
+  availabilityByWorkCenter = buildAvailableIntervalsByWorkCenter();
   scheduledWorkOrderByWorkOrderAndUnit = new Map(
     data.scheduledWorkOrders.map((scheduledWorkOrder) => [
       executionLookupKey(scheduledWorkOrder.workOrderId, scheduledWorkOrder.unitNumber),
@@ -92,6 +94,7 @@ function renderPage() {
   renderLegend();
   tooltipById.clear();
   renderChart();
+  renderScheduleUtilization();
   renderReflowSection();
   renderTopologicalOrder();
   renderQueues();
@@ -230,16 +233,29 @@ function renderChart() {
   });
 }
 
+function renderScheduleUtilization() {
+  const panel = document.querySelector("#schedule-utilization");
+
+  if (data.status !== "scheduled") {
+    panel.innerHTML = "";
+    return;
+  }
+
+  panel.innerHTML = renderUtilizationPanel("Work Center Activity", data.scheduledWorkOrders);
+}
+
 function renderReflowSection() {
   const section = document.querySelector("#reflow-section");
   const chart = document.querySelector("#reflow-chart");
   const report = document.querySelector("#reflow-report");
+  const utilization = document.querySelector("#reflow-utilization");
   const summary = document.querySelector("#reflow-summary");
 
   if (activeDelaySimulation === null || data.status !== "scheduled") {
     section.hidden = true;
     chart.innerHTML = "";
     report.innerHTML = "";
+    utilization.innerHTML = "";
     summary.textContent = "";
     return;
   }
@@ -250,6 +266,7 @@ function renderReflowSection() {
 
   if (activeDelaySimulation.error !== null) {
     report.innerHTML = "";
+    utilization.innerHTML = "";
     chart.innerHTML = `
       <div class="empty-chart">
         <strong>Reflow failed.</strong>
@@ -268,6 +285,10 @@ function renderReflowSection() {
     selectedOriginalDurationMinutes: activeDelaySimulation.originalDurationMinutes,
     scheduledLookup: activeDelaySimulation.scheduledLookup,
   });
+  utilization.innerHTML = renderUtilizationPanel(
+    "Reflow Work Center Activity",
+    activeDelaySimulation.scheduledWorkOrders,
+  );
 }
 
 function renderScheduleChart(container, scheduledWorkOrders, options) {
@@ -299,6 +320,108 @@ function renderScheduleChart(container, scheduledWorkOrders, options) {
   `;
 }
 
+function renderUtilizationPanel(title, scheduledWorkOrders) {
+  const rows = buildWorkCenterUtilization(scheduledWorkOrders);
+  const totalWorkingMinutes = rows.reduce((total, row) => total + row.workingMinutes, 0);
+  const totalAvailableMinutes = rows.reduce((total, row) => total + row.availableMinutes, 0);
+  const totalIdleMinutes = rows.reduce((total, row) => total + row.idleMinutes, 0);
+  const overallUtilization =
+    totalAvailableMinutes === 0 ? 0 : (totalWorkingMinutes / totalAvailableMinutes) * 100;
+
+  return `
+    <section class="utilization-card" aria-label="${escapeHtml(title)}">
+      <div class="utilization-heading">
+        <div>
+          <h3>${escapeHtml(title)}</h3>
+          <p>Utilization is total scheduled working minutes divided by total available shift minutes in the horizon.</p>
+        </div>
+        <dl>
+          ${renderUtilizationFact("Overall", formatPercent(overallUtilization))}
+          ${renderUtilizationFact("Working", formatDurationMinutes(totalWorkingMinutes))}
+          ${renderUtilizationFact("Available", formatDurationMinutes(totalAvailableMinutes))}
+          ${renderUtilizationFact("Idle", formatDurationMinutes(totalIdleMinutes))}
+        </dl>
+      </div>
+      <div class="utilization-list">
+        ${rows.map(renderUtilizationRow).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderUtilizationRow(row) {
+  const fillWidth = Math.min(100, Math.max(0, row.utilizationPercent));
+  const largestIdleLabel =
+    row.largestIdleInterval === null
+      ? "None"
+      : `${formatDurationMinutes(row.largestIdleMinutes)} (${formatTimeRange(row.largestIdleInterval.startDate, row.largestIdleInterval.endDate)})`;
+
+  return `
+    <article class="utilization-row">
+      <div class="utilization-name">
+        <strong>${escapeHtml(row.workCenterName)}</strong>
+        <span>${escapeHtml(row.workCenterId)}</span>
+      </div>
+      <div class="utilization-meter" aria-label="${escapeHtml(row.workCenterName)} utilization ${formatPercent(row.utilizationPercent)}">
+        <span style="width: ${fillWidth}%"></span>
+      </div>
+      <dl>
+        ${renderUtilizationFact("Utilization", formatPercent(row.utilizationPercent))}
+        ${renderUtilizationFact("Working", formatDurationMinutes(row.workingMinutes))}
+        ${renderUtilizationFact("Available", formatDurationMinutes(row.availableMinutes))}
+        ${renderUtilizationFact("Idle", formatDurationMinutes(row.idleMinutes))}
+        ${renderUtilizationFact("Idle Windows", row.idleWindowCount)}
+        ${renderUtilizationFact("Largest Idle", largestIdleLabel)}
+      </dl>
+    </article>
+  `;
+}
+
+function renderUtilizationFact(label, value) {
+  return `
+    <div>
+      <dt>${escapeHtml(label)}</dt>
+      <dd>${escapeHtml(value)}</dd>
+    </div>
+  `;
+}
+
+function buildWorkCenterUtilization(scheduledWorkOrders) {
+  return data.workCenters.map((workCenter) => {
+    const workSegments = scheduledWorkOrders
+      .filter((scheduledWorkOrder) => scheduledWorkOrder.workCenterId === workCenter.docId)
+      .flatMap((scheduledWorkOrder) => scheduledWorkOrder.segments);
+    const availableIntervals = availabilityByWorkCenter[workCenter.docId] ?? [];
+    const occupiedIntervals = workSegments.map((segment) => ({
+      workCenterId: segment.workCenterId,
+      startDate: segment.startDate,
+      endDate: segment.endDate,
+    }));
+    const idleIntervals = subtractBlockedIntervals(availableIntervals, occupiedIntervals);
+    const availableMinutes = sumIntervals(availableIntervals);
+    const workingMinutes = workSegments.reduce(
+      (total, segment) => total + segment.workingMinutes,
+      0,
+    );
+    const idleMinutes = sumIntervals(idleIntervals);
+    const largestIdleInterval = getLargestInterval(idleIntervals);
+    const largestIdleMinutes =
+      largestIdleInterval === null ? 0 : intervalMinutes(largestIdleInterval);
+
+    return {
+      workCenterId: workCenter.docId,
+      workCenterName: workCenter.data.name,
+      availableMinutes,
+      workingMinutes,
+      idleMinutes,
+      idleWindowCount: idleIntervals.length,
+      largestIdleInterval,
+      largestIdleMinutes,
+      utilizationPercent: availableMinutes === 0 ? 0 : (workingMinutes / availableMinutes) * 100,
+    };
+  });
+}
+
 function renderReflowReport(report) {
   const changeRows =
     report.changes.length === 0
@@ -311,7 +434,7 @@ function renderReflowReport(report) {
 
   return `
     <div class="reflow-metrics" aria-label="Reflow metrics">
-      ${renderReflowMetric("Total Delay", `${report.totalDelayMinutes} min`, "Sum(new end - original end)")}
+      ${renderReflowMetric("Total Delay", `${report.totalDelayMinutes} min`, "Sum of positive working-time end movement")}
       ${renderReflowMetric("Affected Work Orders", report.affectedWorkOrderCount, "Unique work orders moved")}
       ${renderReflowMetric("Affected End Dates", report.affectedEndDateCount, "Executions with changed end")}
       ${renderReflowMetric("Moved Executions", report.movedExecutionCount, "Execution instances changed")}
@@ -346,7 +469,8 @@ function renderReflowChange(change) {
       <dl>
         ${renderChangeFact("From", `${formatDateTime(change.originalStartDate)}-${formatDateTime(change.originalEndDate)}`)}
         ${renderChangeFact("To", `${formatDateTime(change.newStartDate)}-${formatDateTime(change.newEndDate)}`)}
-        ${renderChangeFact("End Delta", formatSignedMinutes(change.endDeltaMinutes))}
+        ${renderChangeFact("Working Delay", formatSignedMinutes(change.workingEndDeltaMinutes))}
+        ${renderChangeFact("Calendar Move", formatSignedMinutes(change.calendarEndDeltaMinutes))}
         ${renderChangeFact("Delay Added", `${change.delayContributionMinutes} min`)}
       </dl>
       <p>${escapeHtml(change.reason)}</p>
@@ -457,6 +581,7 @@ function splitSegmentsByWorkingMinutes(segments, baseWorkingMinutes) {
 
 function renderWorkSegment(scheduledWorkOrder, segment, options) {
   const workOrder = workOrderById.get(scheduledWorkOrder.workOrderId);
+  const canDelay = options.clickable && !isMaintenanceExecution(scheduledWorkOrder);
   const color =
     options.segmentKind === "delay"
       ? "delay-extension"
@@ -489,7 +614,7 @@ function renderWorkSegment(scheduledWorkOrder, segment, options) {
       aria-describedby="schedule-card-tooltip"
       aria-label="${escapeHtml(title)}"
       data-tooltip-id="${escapeHtml(tooltipId)}"
-      ${options.clickable ? `data-delay-source="true" data-execution-id="${escapeHtml(scheduledWorkOrder.executionId)}"` : ""}
+      ${canDelay ? `data-delay-source="true" data-execution-id="${escapeHtml(scheduledWorkOrder.executionId)}"` : ""}
     >
       <div class="bar-content">
         <strong>${escapeHtml(title)}</strong>
@@ -545,6 +670,7 @@ function renderWorkTooltip(scheduledWorkOrder, segment, workOrder, options) {
       ${renderTooltipItem("Manufacturing Order", `${scheduledWorkOrder.manufacturingOrderNumber} (${scheduledWorkOrder.manufacturingOrderId})`)}
       ${renderTooltipItem("Item", manufacturingOrder?.data.itemId ?? "Unknown")}
       ${renderTooltipItem("Work Center", `${workCenter?.data.name ?? scheduledWorkOrder.workCenterId} (${scheduledWorkOrder.workCenterId})`)}
+      ${renderTooltipItem("Maintenance Work Order", isMaintenanceExecution(scheduledWorkOrder) ? "Yes, fixed during reflow" : "No")}
       ${renderTooltipItem("Unit", `${scheduledWorkOrder.unitNumber}/${scheduledWorkOrder.totalQuantity}`)}
       ${renderTooltipItem("Remaining Quantity", scheduledWorkOrder.remainingQuantityAfterExecution)}
       ${renderTooltipItem(segmentLabel, `${formatTimeRange(segment.startDate, segment.endDate)} (${segment.workingMinutes} min)`)}
@@ -928,6 +1054,20 @@ function buildDelaySimulation(executionId) {
     };
   }
 
+  if (isMaintenanceExecution(selectedExecution)) {
+    return {
+      executionId,
+      workOrderNumber: selectedExecution.workOrderNumber,
+      originalDurationMinutes: selectedExecution.durationMinutes,
+      report: null,
+      scheduledWorkOrders: [],
+      scheduledLookup: new Map(),
+      error: {
+        message: `Maintenance execution ${executionId} is fixed and cannot be delayed or rescheduled.`,
+      },
+    };
+  }
+
   try {
     const scheduledWorkOrders = calculateDelayedSchedule(executionId);
     const report = buildReflowReport({
@@ -987,7 +1127,7 @@ function buildReflowReport({
       continue;
     }
 
-    const endDeltaMinutes = minutesBetweenDates(
+    const calendarEndDeltaMinutes = minutesBetweenDates(
       new Date(baseline.scheduledEndDate),
       new Date(reflowed.scheduledEndDate),
     );
@@ -995,6 +1135,7 @@ function buildReflowReport({
       new Date(baseline.scheduledStartDate),
       new Date(reflowed.scheduledStartDate),
     );
+    const workingEndDeltaMinutes = calculateWorkingEndDeltaMinutes(baseline, reflowed);
     const workCenter = workCenterById.get(reflowed.workCenterId);
 
     changes.push({
@@ -1008,8 +1149,9 @@ function buildReflowReport({
       newStartDate: reflowed.scheduledStartDate,
       newEndDate: reflowed.scheduledEndDate,
       startDeltaMinutes,
-      endDeltaMinutes,
-      delayContributionMinutes: Math.max(0, endDeltaMinutes),
+      calendarEndDeltaMinutes,
+      workingEndDeltaMinutes,
+      delayContributionMinutes: Math.max(0, workingEndDeltaMinutes),
       reason: getReflowChangeReason({
         baseline,
         reflowed,
@@ -1021,12 +1163,13 @@ function buildReflowReport({
 
   changes.sort(
     (left, right) =>
-      Math.abs(right.endDeltaMinutes) - Math.abs(left.endDeltaMinutes) ||
+      Math.abs(right.workingEndDeltaMinutes) - Math.abs(left.workingEndDeltaMinutes) ||
+      Math.abs(right.calendarEndDeltaMinutes) - Math.abs(left.calendarEndDeltaMinutes) ||
       getBaselineExecutionRank(left.executionId) - getBaselineExecutionRank(right.executionId),
   );
 
   const affectedWorkOrderIds = new Set(changes.map((change) => change.workOrderId));
-  const affectedEndDateCount = changes.filter((change) => change.endDeltaMinutes !== 0).length;
+  const affectedEndDateCount = changes.filter((change) => change.calendarEndDeltaMinutes !== 0).length;
   const totalDelayMinutes = changes.reduce(
     (total, change) => total + change.delayContributionMinutes,
     0,
@@ -1047,6 +1190,29 @@ function scheduledExecutionChanged(baseline, reflowed) {
     baseline.scheduledStartDate !== reflowed.scheduledStartDate ||
     baseline.scheduledEndDate !== reflowed.scheduledEndDate ||
     baseline.durationMinutes !== reflowed.durationMinutes
+  );
+}
+
+function calculateWorkingEndDeltaMinutes(baseline, reflowed) {
+  const originalEnd = new Date(baseline.scheduledEndDate);
+  const newEnd = new Date(reflowed.scheduledEndDate);
+
+  if (newEnd > originalEnd) {
+    return sumAvailableMinutesBetween(reflowed.workCenterId, originalEnd, newEnd);
+  }
+
+  if (newEnd < originalEnd) {
+    return -sumAvailableMinutesBetween(reflowed.workCenterId, newEnd, originalEnd);
+  }
+
+  return 0;
+}
+
+function sumAvailableMinutesBetween(workCenterId, start, end) {
+  return sumIntervals(
+    (availabilityByWorkCenter[workCenterId] ?? [])
+      .map((interval) => clipInterval(new Date(interval.startDate), new Date(interval.endDate), start, end))
+      .filter((interval) => interval !== null),
   );
 }
 
@@ -1127,6 +1293,11 @@ function calculateDelayedSchedule(executionId) {
         ? rescheduleDelayedSource(original, {
             availableByWorkCenter,
             extraDurationMinutes: CLICK_DELAY_MINUTES,
+            fixedBlockedIntervals: getFixedBlockedIntervals(
+              original.workCenterId,
+              occupancyByWorkCenter,
+              resultByExecutionId,
+            ),
           })
         : rescheduleAffectedExecution(original, {
             availableByWorkCenter,
@@ -1164,6 +1335,12 @@ function calculateDelayedSchedule(executionId) {
       if (
         dependencyReadyAt > new Date(dependent.scheduledStartDate)
       ) {
+        if (isMaintenanceExecution(dependent)) {
+          throw new Error(
+            `Maintenance execution ${dependent.executionId} is fixed and cannot move after dependency ${scheduled.workOrderNumber} was delayed.`,
+          );
+        }
+
         enqueueAffectedExecution(dependentExecutionId, {
           queue,
           queuedExecutionIds,
@@ -1197,6 +1374,12 @@ function enqueueAffectedExecution(
 
   if (scheduledWorkOrder === undefined) {
     return;
+  }
+
+  if (isMaintenanceExecution(scheduledWorkOrder)) {
+    throw new Error(
+      `Maintenance execution ${executionId} is fixed and cannot be rescheduled by the delay preview.`,
+    );
   }
 
   // Remove the affected execution from its old place immediately. The reflow
@@ -1283,6 +1466,20 @@ function removeOccupancy(executionId, occupancyByWorkCenter) {
   }
 }
 
+function getFixedBlockedIntervals(workCenterId, occupancyByWorkCenter, resultByExecutionId) {
+  return (occupancyByWorkCenter.get(workCenterId) ?? [])
+    .filter((interval) => {
+      const scheduledWorkOrder = resultByExecutionId.get(interval.executionId);
+
+      return scheduledWorkOrder !== undefined && isMaintenanceExecution(scheduledWorkOrder);
+    })
+    .map((interval) => ({ ...interval }));
+}
+
+function isMaintenanceExecution(scheduledWorkOrder) {
+  return workOrderById.get(scheduledWorkOrder.workOrderId)?.data.isMaintenance === true;
+}
+
 function findOverlappingExecutionIds(scheduledWorkOrder, occupancyByWorkCenter) {
   const overlappingExecutionIds = new Set();
   const occupancy = occupancyByWorkCenter.get(scheduledWorkOrder.workCenterId) ?? [];
@@ -1306,10 +1503,16 @@ function findNextBlockingExecutionId({
   earliestStart,
   latestEnd,
   occupancyByWorkCenter,
+  resultByExecutionId,
 }) {
   const blocker = (occupancyByWorkCenter.get(workCenterId) ?? [])
     .filter((interval) => new Date(interval.endDate) > earliestStart)
     .filter((interval) => new Date(interval.startDate) < latestEnd)
+    .filter((interval) => {
+      const scheduledWorkOrder = resultByExecutionId.get(interval.executionId);
+
+      return scheduledWorkOrder === undefined || !isMaintenanceExecution(scheduledWorkOrder);
+    })
     .sort(
       (left, right) =>
         compareIntervals(left, right) ||
@@ -1330,7 +1533,7 @@ function getDependentExecutionIds(scheduledWorkOrder) {
 function rescheduleDelayedSource(original, context) {
   return placeExecution(original, {
     availableByWorkCenter: context.availableByWorkCenter,
-    blockedIntervals: [],
+    blockedIntervals: context.fixedBlockedIntervals,
     earliestStart: maxDate(
       new Date(original.scheduledStartDate),
       new Date(original.originalStartDate),
@@ -1365,6 +1568,7 @@ function rescheduleAffectedExecution(original, context) {
         earliestStart,
         latestEnd: new Date(original.originalEndDate),
         occupancyByWorkCenter: context.occupancyByWorkCenter,
+        resultByExecutionId: context.resultByExecutionId,
       });
 
       if (blockerExecutionId === null) {
@@ -2019,12 +2223,51 @@ function minutesBetweenDates(start, end) {
   return Math.floor((end.getTime() - start.getTime()) / 60_000);
 }
 
+function intervalMinutes(interval) {
+  return minutesBetweenDates(new Date(interval.startDate), new Date(interval.endDate));
+}
+
+function sumIntervals(intervals) {
+  return intervals.reduce((total, interval) => total + intervalMinutes(interval), 0);
+}
+
+function getLargestInterval(intervals) {
+  return intervals.reduce((largest, interval) => {
+    if (largest === null || intervalMinutes(interval) > intervalMinutes(largest)) {
+      return interval;
+    }
+
+    return largest;
+  }, null);
+}
+
 function formatSignedMinutes(minutes) {
   if (minutes === 0) {
     return "0 min";
   }
 
   return `${minutes > 0 ? "+" : ""}${minutes} min`;
+}
+
+function formatDurationMinutes(minutes) {
+  const sign = minutes < 0 ? "-" : "";
+  const absoluteMinutes = Math.abs(minutes);
+  const hours = Math.floor(absoluteMinutes / 60);
+  const remainingMinutes = absoluteMinutes % 60;
+
+  if (hours === 0) {
+    return `${sign}${remainingMinutes} min`;
+  }
+
+  if (remainingMinutes === 0) {
+    return `${sign}${hours}h`;
+  }
+
+  return `${sign}${hours}h ${remainingMinutes}m`;
+}
+
+function formatPercent(value) {
+  return `${Math.round(value)}%`;
 }
 
 function addMinutes(date, minutes) {
