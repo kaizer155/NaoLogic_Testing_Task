@@ -233,11 +233,13 @@ function renderChart() {
 function renderReflowSection() {
   const section = document.querySelector("#reflow-section");
   const chart = document.querySelector("#reflow-chart");
+  const report = document.querySelector("#reflow-report");
   const summary = document.querySelector("#reflow-summary");
 
   if (activeDelaySimulation === null || data.status !== "scheduled") {
     section.hidden = true;
     chart.innerHTML = "";
+    report.innerHTML = "";
     summary.textContent = "";
     return;
   }
@@ -247,6 +249,7 @@ function renderReflowSection() {
     `${activeDelaySimulation.workOrderNumber} ${activeDelaySimulation.executionId} was extended by ${CLICK_DELAY_MINUTES} working minutes. Later executions were placed linearly after their dependencies and work-center availability.`;
 
   if (activeDelaySimulation.error !== null) {
+    report.innerHTML = "";
     chart.innerHTML = `
       <div class="empty-chart">
         <strong>Reflow failed.</strong>
@@ -255,6 +258,8 @@ function renderReflowSection() {
     `;
     return;
   }
+
+  report.innerHTML = renderReflowReport(activeDelaySimulation.report);
 
   renderScheduleChart(chart, activeDelaySimulation.scheduledWorkOrders, {
     clickable: false,
@@ -290,6 +295,70 @@ function renderScheduleChart(container, scheduledWorkOrders, options) {
         </div>
       </div>
       ${rows}
+    </div>
+  `;
+}
+
+function renderReflowReport(report) {
+  const changeRows =
+    report.changes.length === 0
+      ? `<p class="empty-state">No execution dates changed after the delay.</p>`
+      : `
+        <div class="reflow-change-list">
+          ${report.changes.map(renderReflowChange).join("")}
+        </div>
+      `;
+
+  return `
+    <div class="reflow-metrics" aria-label="Reflow metrics">
+      ${renderReflowMetric("Total Delay", `${report.totalDelayMinutes} min`, "Sum(new end - original end)")}
+      ${renderReflowMetric("Affected Work Orders", report.affectedWorkOrderCount, "Unique work orders moved")}
+      ${renderReflowMetric("Affected End Dates", report.affectedEndDateCount, "Executions with changed end")}
+      ${renderReflowMetric("Moved Executions", report.movedExecutionCount, "Execution instances changed")}
+    </div>
+    <section class="reflow-changes" aria-label="Reflow changes">
+      <div class="reflow-changes-heading">
+        <strong>Movement report</strong>
+        <span>${report.unchangedExecutionCount} executions stayed in their original position.</span>
+      </div>
+      ${changeRows}
+    </section>
+  `;
+}
+
+function renderReflowMetric(label, value, hint) {
+  return `
+    <div>
+      <span class="reflow-metric-value">${escapeHtml(value)}</span>
+      <strong>${escapeHtml(label)}</strong>
+      <em>${escapeHtml(hint)}</em>
+    </div>
+  `;
+}
+
+function renderReflowChange(change) {
+  return `
+    <article class="reflow-change">
+      <div>
+        <strong>${escapeHtml(change.workOrderNumber)} ${escapeHtml(change.executionId)}</strong>
+        <span>${escapeHtml(change.manufacturingOrderNumber)} - ${escapeHtml(change.workCenterName)}</span>
+      </div>
+      <dl>
+        ${renderChangeFact("From", `${formatDateTime(change.originalStartDate)}-${formatDateTime(change.originalEndDate)}`)}
+        ${renderChangeFact("To", `${formatDateTime(change.newStartDate)}-${formatDateTime(change.newEndDate)}`)}
+        ${renderChangeFact("End Delta", formatSignedMinutes(change.endDeltaMinutes))}
+        ${renderChangeFact("Delay Added", `${change.delayContributionMinutes} min`)}
+      </dl>
+      <p>${escapeHtml(change.reason)}</p>
+    </article>
+  `;
+}
+
+function renderChangeFact(label, value) {
+  return `
+    <div>
+      <dt>${escapeHtml(label)}</dt>
+      <dd>${escapeHtml(value)}</dd>
     </div>
   `;
 }
@@ -850,6 +919,7 @@ function buildDelaySimulation(executionId) {
       executionId,
       workOrderNumber: executionId,
       originalDurationMinutes: 0,
+      report: null,
       scheduledWorkOrders: [],
       scheduledLookup: new Map(),
       error: {
@@ -860,11 +930,17 @@ function buildDelaySimulation(executionId) {
 
   try {
     const scheduledWorkOrders = calculateDelayedSchedule(executionId);
+    const report = buildReflowReport({
+      baselineScheduledWorkOrders: data.scheduledWorkOrders,
+      reflowedScheduledWorkOrders: scheduledWorkOrders,
+      selectedExecution,
+    });
 
     return {
       executionId,
       workOrderNumber: selectedExecution.workOrderNumber,
       originalDurationMinutes: selectedExecution.durationMinutes,
+      report,
       scheduledWorkOrders,
       scheduledLookup: buildScheduledLookup(scheduledWorkOrders),
       error: null,
@@ -874,6 +950,7 @@ function buildDelaySimulation(executionId) {
       executionId,
       workOrderNumber: selectedExecution.workOrderNumber,
       originalDurationMinutes: selectedExecution.durationMinutes,
+      report: null,
       scheduledWorkOrders: [],
       scheduledLookup: new Map(),
       error: {
@@ -881,6 +958,129 @@ function buildDelaySimulation(executionId) {
       },
     };
   }
+}
+
+function buildReflowReport({
+  baselineScheduledWorkOrders,
+  reflowedScheduledWorkOrders,
+  selectedExecution,
+}) {
+  const baselineByExecutionId = new Map(
+    baselineScheduledWorkOrders.map((scheduledWorkOrder) => [
+      scheduledWorkOrder.executionId,
+      scheduledWorkOrder,
+    ]),
+  );
+  const reflowedByExecutionId = new Map(
+    reflowedScheduledWorkOrders.map((scheduledWorkOrder) => [
+      scheduledWorkOrder.executionId,
+      scheduledWorkOrder,
+    ]),
+  );
+  const reflowedByWorkOrderAndUnit = buildScheduledLookup(reflowedScheduledWorkOrders);
+  const changes = [];
+
+  for (const reflowed of reflowedScheduledWorkOrders) {
+    const baseline = baselineByExecutionId.get(reflowed.executionId);
+
+    if (baseline === undefined || !scheduledExecutionChanged(baseline, reflowed)) {
+      continue;
+    }
+
+    const endDeltaMinutes = minutesBetweenDates(
+      new Date(baseline.scheduledEndDate),
+      new Date(reflowed.scheduledEndDate),
+    );
+    const startDeltaMinutes = minutesBetweenDates(
+      new Date(baseline.scheduledStartDate),
+      new Date(reflowed.scheduledStartDate),
+    );
+    const workCenter = workCenterById.get(reflowed.workCenterId);
+
+    changes.push({
+      executionId: reflowed.executionId,
+      workOrderId: reflowed.workOrderId,
+      workOrderNumber: reflowed.workOrderNumber,
+      manufacturingOrderNumber: reflowed.manufacturingOrderNumber,
+      workCenterName: workCenter?.data.name ?? reflowed.workCenterId,
+      originalStartDate: baseline.scheduledStartDate,
+      originalEndDate: baseline.scheduledEndDate,
+      newStartDate: reflowed.scheduledStartDate,
+      newEndDate: reflowed.scheduledEndDate,
+      startDeltaMinutes,
+      endDeltaMinutes,
+      delayContributionMinutes: Math.max(0, endDeltaMinutes),
+      reason: getReflowChangeReason({
+        baseline,
+        reflowed,
+        selectedExecutionId: selectedExecution.executionId,
+        reflowedByWorkOrderAndUnit,
+      }),
+    });
+  }
+
+  changes.sort(
+    (left, right) =>
+      Math.abs(right.endDeltaMinutes) - Math.abs(left.endDeltaMinutes) ||
+      getBaselineExecutionRank(left.executionId) - getBaselineExecutionRank(right.executionId),
+  );
+
+  const affectedWorkOrderIds = new Set(changes.map((change) => change.workOrderId));
+  const affectedEndDateCount = changes.filter((change) => change.endDeltaMinutes !== 0).length;
+  const totalDelayMinutes = changes.reduce(
+    (total, change) => total + change.delayContributionMinutes,
+    0,
+  );
+
+  return {
+    affectedEndDateCount,
+    affectedWorkOrderCount: affectedWorkOrderIds.size,
+    changes,
+    movedExecutionCount: changes.length,
+    totalDelayMinutes,
+    unchangedExecutionCount: reflowedScheduledWorkOrders.length - changes.length,
+  };
+}
+
+function scheduledExecutionChanged(baseline, reflowed) {
+  return (
+    baseline.scheduledStartDate !== reflowed.scheduledStartDate ||
+    baseline.scheduledEndDate !== reflowed.scheduledEndDate ||
+    baseline.durationMinutes !== reflowed.durationMinutes
+  );
+}
+
+function getReflowChangeReason({
+  baseline,
+  reflowed,
+  selectedExecutionId,
+  reflowedByWorkOrderAndUnit,
+}) {
+  if (reflowed.executionId === selectedExecutionId) {
+    return `Clicked execution was extended by ${CLICK_DELAY_MINUTES} working minutes.`;
+  }
+
+  const delayedDependencies = baseline.dependsOnWorkOrderIds
+    .map((dependencyId) =>
+      reflowedByWorkOrderAndUnit.get(executionLookupKey(dependencyId, baseline.unitNumber)),
+    )
+    .filter((dependency) => dependency !== undefined)
+    .filter(
+      (dependency) =>
+        new Date(dependency.scheduledEndDate) > new Date(baseline.scheduledStartDate),
+    );
+
+  if (delayedDependencies.length > 0) {
+    return `Moved after dependency ${delayedDependencies
+      .map((dependency) => dependency.workOrderNumber)
+      .join(", ")} finished.`;
+  }
+
+  if (baseline.workCenterId === reflowed.workCenterId) {
+    return "Moved to the first available work-center gap after a local conflict.";
+  }
+
+  return "Moved by the reflow preview.";
 }
 
 function calculateDelayedSchedule(executionId) {
@@ -1737,6 +1937,14 @@ function hoursBetween(start, end) {
 
 function minutesBetweenDates(start, end) {
   return Math.floor((end.getTime() - start.getTime()) / 60_000);
+}
+
+function formatSignedMinutes(minutes) {
+  if (minutes === 0) {
+    return "0 min";
+  }
+
+  return `${minutes > 0 ? "+" : ""}${minutes} min`;
 }
 
 function addMinutes(date, minutes) {

@@ -240,6 +240,118 @@ h3 {
   margin-top: 16px;
 }
 
+.reflow-report {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.reflow-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.reflow-metrics > div,
+.reflow-changes {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.reflow-metrics > div {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+}
+
+.reflow-metric-value {
+  color: var(--delay);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.reflow-metrics strong {
+  color: var(--text);
+  font-size: 13px;
+}
+
+.reflow-metrics em {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+}
+
+.reflow-changes {
+  padding: 12px;
+}
+
+.reflow-changes-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.reflow-changes-heading span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.reflow-change-list {
+  display: grid;
+  gap: 8px;
+}
+
+.reflow-change {
+  display: grid;
+  grid-template-columns: minmax(180px, 260px) 1fr minmax(180px, 260px);
+  gap: 10px;
+  align-items: start;
+  padding: 10px;
+  border: 1px solid #e1e8f2;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.reflow-change strong,
+.reflow-change span {
+  display: block;
+}
+
+.reflow-change span,
+.reflow-change p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.reflow-change p {
+  margin: 0;
+}
+
+.reflow-change dl {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.reflow-change dt {
+  margin: 0 0 2px;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.reflow-change dd {
+  margin: 0;
+  color: var(--text);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
 .section-heading {
   align-items: flex-start;
   margin-bottom: 14px;
@@ -983,12 +1095,20 @@ code {
 
   .scenario-switcher,
   .summary,
-  .details {
+  .details,
+  .reflow-metrics,
+  .reflow-change,
+  .reflow-change dl {
     grid-template-columns: 1fr;
   }
 
   .scenario-buttons {
     grid-template-columns: 1fr;
+  }
+
+  .reflow-changes-heading {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .manufacturing-order-group,
